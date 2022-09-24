@@ -17,7 +17,10 @@ export default function UserButton ({ className = '' }: { className?: string }) 
   return (session && session.user)
     ? <Menu as="div" className="dropdown h-10">
       <Menu.Button className="btn h-10 text-sm font-semibold px-1">
-        <Avatar src={session.user.image || session.user.picture} alt={session.user.name} />
+        {
+          // @ts-ignore
+          <Avatar src={session.user.image || session.user.picture} alt={session.user.name} />
+        }
         <span className="hidden pr-2 sm:block">{session.user.name ?? session.user.email}</span>
       </Menu.Button>
       <Menu.Items className="dropdown-menu">
