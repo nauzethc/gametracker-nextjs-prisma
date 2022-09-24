@@ -1,5 +1,5 @@
 import { useForm } from '../../hooks/forms'
-import ReactStars from 'react-rating-stars-component'
+const ReactStars: any = require('react-rating-stars-component')
 
 export type GameplayData = {
   gameplayType: string,
