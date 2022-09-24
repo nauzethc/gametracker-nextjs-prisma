@@ -14,6 +14,7 @@ export default async function handler (
   req: NextApiRequest,
   res: NextApiResponse<Game | GameSearch | error>
 ) {
+  // @ts-ignore
   const { user } = await unstable_getServerSession(req, res, authOptions)
   try {
     switch (req.method) {

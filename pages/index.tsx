@@ -76,6 +76,7 @@ export default function HomeView ({
 }
 
 export async function getServerSideProps (context: GetServerSidePropsContext) {
+  // @ts-ignore
   const { user } = await unstable_getServerSession(
     context.req,
     context.res,
