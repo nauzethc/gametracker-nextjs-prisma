@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  database:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: gametracker
+      POSTGRES_PASSWORD: pass4admin
+      POSTGRES_DB: gametracker
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  pgdata:

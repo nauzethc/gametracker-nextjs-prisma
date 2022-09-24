@@ -1,0 +1,105 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  accounts      Account[]
+  sessions      Session[]
+  games         Game[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Platform {
+  igdbId       Int     @id @map("igdb_id")
+  name         String
+  abbreviation String?
+  logo         String?
+
+  games Game[]
+}
+
+model Game {
+  id                   String    @id @default(cuid())
+  name                 String
+  slug                 String?
+  type                 String
+  releaseDate          DateTime? @map("release_date")
+  summary              String?
+  cover                String?
+  genres               String[]
+  developers           String[]
+  publishers           String[]
+  igdbRating           Float?    @map("igdb_rating")
+  igdbId               Int       @map("igdb_id")
+  igdbUrl              String    @map("igdb_url")
+  platformId           Int
+  gameplayType         String    @map("gameplay_type")
+  status               String
+  startedOn            DateTime  @map("started_on")
+  finishedOn           DateTime? @map("finished_on")
+  totalHours           Int?      @map("total_hours")
+  progress             Int       @default(0) @map("progress")
+  achievementsTotal    Int       @default(0) @map("achievements_total")
+  achievementsUnlocked Int       @default(0) @map("achievements_unlocked")
+  comment              String?
+  rating               Float?
+  fixed                Boolean?
+  favorite             Boolean?
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  userId               String
+
+  platform Platform @relation(fields: [platformId], references: [igdbId], onDelete: NoAction)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("games")
+}
