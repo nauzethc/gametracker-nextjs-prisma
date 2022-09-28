@@ -2,6 +2,7 @@ import NextAuth from 'next-auth'
 import type { NextAuthOptions } from 'next-auth'
 
 import GithubProvider from 'next-auth/providers/github'
+import TwitchProvider from 'next-auth/providers/Twitch'
 // import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '../../../lib/prisma'
@@ -12,6 +13,10 @@ export const authOptions: NextAuthOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID ?? '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? ''
+    }),
+    TwitchProvider({
+      clientId: process.env.TWITCH_CLIENT_ID ?? '',
+      clientSecret: process.env.TWITCH_CLIENT_SECRET ?? ''
     })
     /*
     GoogleProvider({
