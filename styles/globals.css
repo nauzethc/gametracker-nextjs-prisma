@@ -304,6 +304,21 @@ form [type=submit]:active,
   @apply bg-blue-600 text-gray-100;
 }
 
+.btn-twitch {
+  @apply text-white bg-purple-500;
+}
+
+.btn-twitch:focus-visible {
+  @apply outline-purple-500;
+}
+
+.btn-twitch:hover {
+  @apply bg-purple-600 text-gray-100;
+}
+
+.btn-twitch:active {
+  @apply bg-purple-700 text-gray-200;
+}
 
 /* Components */
 
@@ -513,6 +528,7 @@ form [type=submit]:active,
   .btn-github:active {
     @apply bg-gray-100 text-gray-900;
   }
+
 
   /* Components */
 
