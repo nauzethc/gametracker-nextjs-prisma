@@ -12,6 +12,8 @@ import GamePreview from '../components/game-create/game-preview'
 import { Game } from '@prisma/client'
 import { GameCreate } from '../types/games'
 import { parseGameCreate } from '../utils/games'
+import { HeaderPortal } from '../components/app/header'
+import UserButton from '../components/common/user-button'
 
 export default function TrackView () {
   const igdb = useEndpoint<IGDBSearch>('/api/igdb/games')
@@ -42,6 +44,9 @@ export default function TrackView () {
           <Error error={game.state.error} />
         </Dialog.Panel>
       </Modal>
+      <HeaderPortal>
+        <UserButton />
+      </HeaderPortal>
     </div>
   )
 }
