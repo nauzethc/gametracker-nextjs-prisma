@@ -38,6 +38,30 @@ blockquote::after {
   content: close-quote;
 }
 
+table {
+  @apply border-separate border-spacing-1;
+}
+
+table caption {
+  @apply text-left text-lg font-semibold border-b-2 mb-1;
+}
+
+table thead th {
+  @apply rounded px-2 py-1 font-semibold;
+}
+
+table tbody td {
+  @apply rounded px-2 py-1;
+}
+
+table tbody td:first-child {
+  @apply font-semibold;
+}
+
+table tbody td:not(:first-child) {
+  @apply text-center;
+}
+
 
 /**
  * Forms
@@ -124,11 +148,11 @@ button:focus-visible,
 }
 
 .dropdown .dropdown-menu {
-  @apply absolute right-0 mt-2 w-56 origin-top-right rounded-md shadow-lg p-1;
+  @apply absolute right-0 mt-1 origin-top-right rounded-lg shadow-lg;
 }
 
 .dropdown .dropdown-item {
-  @apply flex items-center gap-4 w-full rounded-lg justify-start px-4 h-10 bg-transparent;
+  @apply flex items-center gap-2 w-full rounded-lg justify-between px-4 h-10 bg-transparent;
 }
 
 .error {
@@ -374,6 +398,18 @@ form [type=submit]:active,
   @apply bg-red-200 text-red-600;
 }
 
+table thead th {
+  @apply bg-slate-200;
+}
+
+table tbody td {
+  @apply bg-slate-100;
+}
+
+table tbody tr:hover td {
+  @apply bg-slate-300;
+}
+
 
 /*
  * Dark theme
@@ -566,5 +602,17 @@ form [type=submit]:active,
 
   .error {
     @apply text-red-200 bg-red-600;
+  }
+
+  table thead th {
+    @apply bg-slate-800;
+  }
+
+  table tbody td {
+    @apply bg-slate-900;
+  }
+
+  table tbody tr:hover td {
+    @apply bg-slate-700;
   }
 }
