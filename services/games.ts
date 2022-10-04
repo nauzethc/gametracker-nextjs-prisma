@@ -1,6 +1,15 @@
 import prisma from '../lib/prisma'
 import { Platform, Game } from '@prisma/client'
-import { GameCreate, GameQueryParams, GameUpdate, GameWithPlatform, GameSearch } from '../types/games'
+import {
+  GameCreate,
+  GameQueryParams,
+  GameUpdate,
+  GameWithPlatform,
+  GameSearch,
+  GameStats,
+  PlatformStats,
+  StatusStats
+} from '../types/games'
 
 async function createOrUpdatePlatform (data: Platform): Promise<Platform> {
   return prisma.platform.upsert({
@@ -76,5 +85,83 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   return {
     count: await prisma.game.count({ where }),
     data: await prisma.game.findMany({ ...options, where })
+  }
+}
+
+export async function getStats (userId: string): Promise<{
+  status: StatusStats[],
+  games: GameStats[],
+  platforms: PlatformStats[]
+}> {
+  const status = await prisma.game.groupBy({
+    by: ['status'],
+    where: { userId },
+    _count: {
+      _all: true
+    },
+    _avg: {
+      totalHours: true
+    },
+    _sum: {
+      totalHours: true
+    }
+  })
+
+  const games = await prisma.game.groupBy({
+    by: ['igdbId', 'id', 'name', 'cover'],
+    where: { userId },
+    _count: {
+      _all: true
+    },
+    _sum: {
+      totalHours: true
+    },
+    _max: {
+      finishedOn: true
+    },
+    orderBy: {
+      _sum: {
+        totalHours: 'desc'
+      }
+    },
+    take: 3
+  })
+
+  const platformStats = await prisma.game.groupBy({
+    by: ['platformId'],
+    where: { userId },
+    _count: {
+      _all: true
+    },
+    _sum: {
+      totalHours: true
+    },
+    orderBy: {
+      platformId: 'desc'
+    }
+  })
+
+  const platformData = await prisma.platform.findMany({
+    where: {
+      games: {
+        some: {
+          userId: {
+            equals: userId
+          }
+        }
+      }
+    },
+    orderBy: {
+      igdbId: 'desc'
+    }
+  })
+
+  return {
+    status,
+    games,
+    platforms: platformData.map((platform, index) => ({
+      ...platform,
+      ...platformStats[index]
+    }))
   }
 }
