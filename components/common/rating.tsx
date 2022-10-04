@@ -1,5 +1,6 @@
 import { StarIcon } from '@heroicons/react/solid'
 import { StarIcon as EmptyStarIcon } from '@heroicons/react/outline'
+import { HalfStarIcon } from './icons'
 
 export default function Rating ({
   className = '',
@@ -18,15 +19,7 @@ export default function Rating ({
   return (
     <div className={`rating flex items-center ${className}`}>
       {[...new Array(fillStars)].map((_, index) => <StarIcon className={`w-${size} h-${size}`} key={index} />)}
-      {hasHalf
-        ? <div className={`relative w-${size} h-${size}`}>
-          <span className={`h-${size} absolute overflow-hidden`} style={{ width: '50%' }}>
-            <StarIcon className={`w-${size} h-${size}`} />
-          </span>
-          <EmptyStarIcon className={`absolute w-${size} h-${size}`} />
-        </div>
-        : null
-      }
+      {hasHalf ? <HalfStarIcon className={`w-${size} h-${size}`} /> : null}
       {[...new Array(emptyStars)].map((_, index) => <EmptyStarIcon className={`w-${size} h-${size}`} key={index} />)}
     </div>
   )
