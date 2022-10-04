@@ -1,6 +1,7 @@
 import { Menu } from '@headlessui/react'
-import { LogoutIcon, UserCircleIcon } from '@heroicons/react/solid'
+import { ChartBarIcon, LogoutIcon, UserCircleIcon } from '@heroicons/react/solid'
 import { useSession, signOut } from 'next-auth/react'
+import Link from 'next/link'
 
 function Avatar ({ src, alt }: { src?: string | null, alt?: string | null }) {
   return src
@@ -23,11 +24,20 @@ export default function UserButton ({ className = '' }: { className?: string }) 
         }
         <span className="hidden pr-2 sm:block">{session.user.name ?? session.user.email}</span>
       </Menu.Button>
-      <Menu.Items className="dropdown-menu">
+      <Menu.Items className="dropdown-menu min-w-full w-36 p-1 grid gap-1">
+        <Menu.Item>
+          <Link href="/stats">
+            <a className="btn dropdown-item">
+              <span className="text-sm">Stats</span>
+              <ChartBarIcon className="w-5 h-5" />
+            </a>
+          </Link>
+        </Menu.Item>
+        <hr className="w-full border-slate-300 dark:border-slate-700" />
         <Menu.Item>
           <button className="dropdown-item" onClick={handleLogout}>
-            <LogoutIcon className="w-6 h-6" />
-            <span>Logout</span>
+            <span className="text-sm">Logout</span>
+            <LogoutIcon className="w-5 h-5" />
           </button>
         </Menu.Item>
       </Menu.Items>
