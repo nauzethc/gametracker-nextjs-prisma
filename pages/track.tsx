@@ -36,7 +36,7 @@ export default function TrackView () {
 
   // Update results on query change
   useEffect(() => {
-    igdb.retrieve(query)
+    if (query.q) igdb.retrieve(query)
   }, [query])
 
   return (
