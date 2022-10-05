@@ -73,7 +73,8 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   const where = { userId }
 
   if (params.q) {
-    Object.assign(where, { name: { search: params.q } })
+    console.log(params.q)
+    Object.assign(where, { name: { contains: params.q, mode: 'insensitive' } })
   }
   if (params.platformId) {
     Object.assign(where, { platformId: { equals: params.platformId } })
