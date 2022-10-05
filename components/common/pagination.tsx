@@ -3,7 +3,7 @@ type PaginationProps = {
   total: number,
   pageSize: number,
   page?: number,
-  onChange?: Function | ((page: Number) => void)
+  onChange?: Function | ((page: number) => void)
 }
 
 export default function Pagination ({
@@ -15,7 +15,7 @@ export default function Pagination ({
 }: PaginationProps) {
   const numPages = Math.ceil(total / pageSize)
   const pages = [...new Array(numPages)].map((_, index) => index + 1)
-  const handleChange = (page: Number) => {
+  const handleChange = (page: number) => {
     if (typeof onChange === 'function') {
       onChange(page)
     }
