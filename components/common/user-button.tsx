@@ -11,7 +11,7 @@ function Avatar ({ src, alt }: { src?: string | null, alt?: string | null }) {
     : <UserCircleIcon className="w-8 h-8" />
 }
 
-export default function UserButton ({ className = '' }: { className?: string }) {
+export default function UserButton ({ className = '', extended }: { className?: string, extended?: boolean }) {
   const { data: session } = useSession()
   const handleLogout = () => signOut()
 
@@ -22,7 +22,7 @@ export default function UserButton ({ className = '' }: { className?: string }) 
           // @ts-ignore
           <Avatar src={session.user.image || session.user.picture} alt={session.user.name} />
         }
-        <span className="hidden pr-2 sm:block">{session.user.name ?? session.user.email}</span>
+        <span className={`${extended ? 'block' : 'hidden'} pr-2 sm:block`}>{session.user.name ?? session.user.email}</span>
       </Menu.Button>
       <Menu.Items className="dropdown-menu min-w-full w-36 p-1 grid gap-1">
         <Menu.Item>
