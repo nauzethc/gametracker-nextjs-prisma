@@ -6,7 +6,8 @@ export type GameUpdate = Partial<GameCreate>
 export type PlatformWithGameCount = Platform & { _count: { games: number } }
 
 export interface GameQueryParams {
-  q: string
+  q: string,
+  igdbId?: number,
   page_size?: number
   page?: number
   order_by?: string

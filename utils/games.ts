@@ -15,6 +15,7 @@ function toString (value: undefined | string[] | string): string | null {
 export function parseGameQuery (data: Record<string, any>): GameQueryParams {
   const {
     q,
+    igdbId,
     order_by,
     page,
     page_size,
@@ -24,6 +25,7 @@ export function parseGameQuery (data: Record<string, any>): GameQueryParams {
   } = data
   return {
     q: toString(q) ?? '',
+    igdbId: toNumber(igdbId) ?? undefined,
     page: toNumber(page) ?? 1,
     page_size: toNumber(page_size) ?? 10,
     order_by: toString(order_by) ?? 'startedOn',

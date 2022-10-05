@@ -81,6 +81,9 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   if (params.status) {
     Object.assign(where, { status: { equals: params.status } })
   }
+  if (params.igdbId) {
+    Object.assign(where, { igdbId: { equals: params.igdbId } })
+  }
 
   return {
     count: await prisma.game.count({ where }),
@@ -91,8 +94,11 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
 export async function getStats (userId: string): Promise<{
   status: StatusStats[],
   games: GameStats[],
+  lastYearGames: Pick<Game, 'id'|'name'|'totalHours'|'startedOn'|'status'>[],
   platforms: PlatformStats[]
 }> {
+  const today = new Date()
+  const yearAgo = new Date(Date.now() - (86400 * 365 * 1000))
   const status = await prisma.game.groupBy({
     by: ['status'],
     where: { userId },
@@ -109,7 +115,13 @@ export async function getStats (userId: string): Promise<{
 
   const games = await prisma.game.groupBy({
     by: ['igdbId', 'id', 'name', 'cover'],
-    where: { userId },
+    where: {
+      userId,
+      startedOn: {
+        lte: today,
+        gte: yearAgo
+      }
+    },
     _count: {
       _all: true
     },
@@ -125,6 +137,26 @@ export async function getStats (userId: string): Promise<{
       }
     },
     take: 3
+  })
+
+  const lastYearGames = await prisma.game.findMany({
+    select: {
+      id: true,
+      name: true,
+      totalHours: true,
+      startedOn: true,
+      status: true
+    },
+    where: {
+      userId,
+      startedOn: {
+        lte: today,
+        gte: yearAgo
+      }
+    },
+    orderBy: {
+      startedOn: 'asc'
+    }
   })
 
   const platformStats = await prisma.game.groupBy({
@@ -159,6 +191,7 @@ export async function getStats (userId: string): Promise<{
   return {
     status,
     games,
+    lastYearGames,
     platforms: platformData.map((platform, index) => ({
       ...platform,
       ...platformStats[index]
