@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEndpoint } from '../hooks/http'
-import { IGDBSearch, IGDBGameSelected } from '../types/igdb'
+import { IGDBSearch, IGDBGameSelected, IGDBQueryParams } from '../types/igdb'
 import { Dialog } from '@headlessui/react'
+import { DEFAULT_PAGE_SIZE } from '../config'
 
 import Modal from '../components/common/modal'
 import Error from '../components/common/error'
@@ -12,13 +13,15 @@ import GamePreview from '../components/game-create/game-preview'
 import { Game } from '@prisma/client'
 import { GameCreate } from '../types/games'
 import { parseGameCreate } from '../utils/games'
-import { HeaderPortal } from '../components/app/header'
+import Pagination from '../components/common/pagination'
 import UserButton from '../components/common/user-button'
+import { HeaderPortal } from '../components/app/header'
 
 export default function TrackView () {
   const igdb = useEndpoint<IGDBSearch>('/api/igdb/games')
   const game = useEndpoint<Game>('/api/games')
   const [selected, setSelected] = useState<IGDBGameSelected|null>(null)
+  const [query, setQuery] = useState<IGDBQueryParams>({ q: '' })
 
   async function handleSubmit (gameplayData: GameplayData) {
     if (selected !== null) {
@@ -31,11 +34,30 @@ export default function TrackView () {
     }
   }
 
+  // Update results on query change
+  useEffect(() => {
+    igdb.retrieve(query)
+  }, [query])
+
   return (
     <div id="add-game-view">
+      <HeaderPortal>
+        <UserButton extended />
+      </HeaderPortal>
       <div className="grid py-3 gap-8 md:grid-cols-2">
-        <SearchForm className="col-span-full" onSubmit={igdb.retrieve} pending={igdb.state.pending} />
-        <SearchResults results={igdb.state.data} onSelect={game => setSelected(game)} />
+        <SearchForm
+          className="col-span-full"
+          onSubmit={setQuery}
+          pending={igdb.state.pending} />
+        <SearchResults
+          results={igdb.state.data}
+          onSelect={game => setSelected(game)} />
+        <Pagination
+          className="col-span-full"
+          pageSize={query?.page_size ?? DEFAULT_PAGE_SIZE}
+          total={igdb.state.data?.count ?? 0}
+          page={query?.page ?? 1}
+          onChange={page => setQuery({ ...query, page })} />
       </div>
       <Modal open={Boolean(selected)} onClose={() => setSelected(null)}>
         <Dialog.Panel className="dialog-panel">
@@ -44,9 +66,6 @@ export default function TrackView () {
           <Error error={game.state.error} />
         </Dialog.Panel>
       </Modal>
-      <HeaderPortal>
-        <UserButton />
-      </HeaderPortal>
     </div>
   )
 }
