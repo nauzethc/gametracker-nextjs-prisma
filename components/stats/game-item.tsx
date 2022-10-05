@@ -12,7 +12,7 @@ export default function GameItem ({ data } : GameItemProps) {
     <div className="game-item flex flex-col gap-2">
       <div className="flex gap-x-6">
         <div className="media w-16 sm:w-24 flex-shrink-0">
-          <Link href={'/games/'}>
+          <Link href={`/?igdbId=${data.igdbId}`}>
             <a>
               <Cover src={data.cover || undefined} alt={data.name} />
             </a>
@@ -21,7 +21,7 @@ export default function GameItem ({ data } : GameItemProps) {
         <div className="meta flex-grow grid grid-cols-2 place-content-start gap-y-2 gap-x-4 sm:gap-y-3 md:grid-cols-1">
           <div className="col-span-full grid">
             <h1 className="font-semibold text-lg leading-6 whitespace-nowrap overflow-hidden text-ellipsis">
-              <Link href={'/games/'}><a>{data.name}</a></Link>
+              <Link href={`/?igdbId=${data.igdbId}`}><a>{data.name}</a></Link>
             </h1>
           </div>
           <div className="field items-center flex gap-3">

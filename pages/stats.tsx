@@ -39,7 +39,7 @@ export default function StatsView ({ data, error }: {
         <Error error={error} />
 
         <div className="grid gap-3">
-          <h3 className="text-lg font-semibold border-b-2">Most played</h3>
+          <h3 className="text-lg font-semibold border-b-2">Most played (last year)</h3>
           {data.games.map(game => <GameItem key={game.igdbId} data={game} />)}
         </div>
 
@@ -48,15 +48,19 @@ export default function StatsView ({ data, error }: {
           <thead>
             <tr>
               <th className="text-left">Status</th>
-              <th className="w-32">(avg)</th>
-              <th className="w-32">(sum)</th>
-              <th className="w-32">Total</th>
+              <th className="w-32">Average</th>
+              <th className="w-32">Hours</th>
+              <th className="w-32">Games</th>
             </tr>
           </thead>
           <tbody>
             {data.status.map(status =>
             <tr key={status.status}>
-              <td>{capitalize(status.status)}</td>
+              <td>
+                <Link href={`/?status=${status.status}`}>
+                  <a>{capitalize(status.status)}</a>
+                </Link>
+              </td>
               <td>{toFixed(status._avg.totalHours)}</td>
               <td>{status._sum.totalHours}h</td>
               <td>{status._count._all}</td>
@@ -70,14 +74,18 @@ export default function StatsView ({ data, error }: {
           <thead>
             <tr>
               <th className="text-left">Name</th>
-              <th className="w-32">(sum)</th>
+              <th className="w-32">Hours</th>
               <th className="w-32">Games</th>
             </tr>
           </thead>
           <tbody>
             {data.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
             <tr key={platform.igdbId}>
-              <td>{platform.name}</td>
+              <td>
+                <Link href={`/?platformId=${platform.igdbId}`}>
+                  <a>{platform.name}</a>
+                </Link>
+              </td>
               <td>{platform._sum.totalHours}h</td>
               <td>{platform._count._all}</td>
             </tr>
