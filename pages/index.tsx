@@ -35,7 +35,11 @@ export default function HomeView ({
   const router = useRouter()
 
   const handlePageChange = (page: Number) => setQuery({ ...query, page })
-  const handleSubmit = (query: Record<string, any>) => setQuery(query)
+  const handleSubmit = (query: Record<string, any>) => {
+    // Omit some values
+    const { igdbId, ...newQuery } = query
+    setQuery(newQuery)
+  }
 
   useEffect(() => {
     if (didMount) {
