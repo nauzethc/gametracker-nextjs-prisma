@@ -75,6 +75,7 @@ export default function SearchForm ({
           <option value="startedOn">Started on</option>
           <option value="name">Name</option>
           <option value="releaseDate">Release date</option>
+          <option value="totalHours">Total time</option>
         </select>
       </div>
 
