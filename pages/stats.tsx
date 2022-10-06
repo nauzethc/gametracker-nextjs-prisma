@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from 'next'
 import { getStats } from '../services/games'
-import { GameStats, PlatformStats, StatusStats } from '../types/games'
+import { AllStats } from '../types/games'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import Error from '../components/common/error'
@@ -10,19 +10,40 @@ import { HeaderPortal } from '../components/app/header'
 import UserButton from '../components/common/user-button'
 import { PlusCircleIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useDidMount } from '../hooks/lifecycle'
+import { useEndpoint } from '../hooks/http'
+import { useRouter } from 'next/router'
+import { toString } from '../utils/url'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
 }
 
-export default function StatsView ({ data, error }: {
-  data: {
-    status: StatusStats[],
-    games: GameStats[],
-    platforms: PlatformStats[]
-  },
+export default function StatsView ({
+  query: initialQuery,
+  data,
+  error
+}: {
+  query?: Record<string, any>,
+  data: AllStats,
   error: any
 }) {
+  const didMount = useDidMount()
+  const [query, setQuery] = useState<Record<string, any>>({ period: 'all', ...initialQuery })
+  const stats = useEndpoint<AllStats>('/api/stats', { data, error })
+  const router = useRouter()
+
+  const handlePeriodChange = (period: string) => setQuery({ ...query, period })
+
+  // Update stats on query change
+  useEffect(() => {
+    if (didMount) {
+      router.push({ pathname: '/stats', query }, undefined, { shallow: true })
+      stats.retrieve(query)
+    }
+  }, [query])
+
   return (
     <div id="stats-view">
       <div className="grid gap-8 pb-8">
@@ -38,9 +59,25 @@ export default function StatsView ({ data, error }: {
 
         <Error error={error} />
 
-        <div className="grid gap-3">
-          <h3 className="text-lg font-semibold border-b-2">Most played (last year)</h3>
-          {data.games.map(game => <GameItem key={game.igdbId} data={game} />)}
+        <form onSubmit={e => e.preventDefault()}>
+          <div className="field">
+            <label className="text-sm font-semibold" htmlFor="period">Period</label>
+            <select
+              className="form-input"
+              onChange={(e) => handlePeriodChange(e.target.value)}
+              value={query.period}>
+              <option value="all">All</option>
+              <option value="year">Last year</option>
+              <option value="semester">Last 6 months</option>
+            </select>
+          </div>
+        </form>
+
+        <h3 className="text-lg font-semibold border-b-2 -mb-4">Most played</h3>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {stats.state.data?.games.map((game, index) =>
+            <GameItem ranking={index + 1} key={game.igdbId} data={game} />
+          )}
         </div>
 
         <table>
@@ -54,7 +91,7 @@ export default function StatsView ({ data, error }: {
             </tr>
           </thead>
           <tbody>
-            {data.status.map(status =>
+            {stats.state.data?.status.map(status =>
             <tr key={status.status}>
               <td>
                 <Link href={`/?status=${status.status}`}>
@@ -79,7 +116,7 @@ export default function StatsView ({ data, error }: {
             </tr>
           </thead>
           <tbody>
-            {data.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
+            {stats.state.data?.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
             <tr key={platform.igdbId}>
               <td>
                 <Link href={`/?platformId=${platform.igdbId}`}>
@@ -104,20 +141,23 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
     context.res,
     authOptions
   )
+  const query = { period: toString(context.query.period) }
   try {
-    const data = await getStats(user.id)
+    const data = await getStats(user.id, query.period)
     return {
-      props: {
-        data: JSON.parse(JSON.stringify(data)),
+      props: JSON.parse(JSON.stringify({
+        data,
+        query,
         error: null
-      }
+      }))
     }
   } catch (error) {
     return {
-      props: {
+      props: JSON.parse(JSON.stringify({
         data: null,
-        error: JSON.parse(JSON.stringify(error))
-      }
+        query,
+        error
+      }))
     }
   }
 }
