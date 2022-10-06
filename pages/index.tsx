@@ -34,13 +34,14 @@ export default function HomeView ({
   const games = useEndpoint<GameSearch>('/api/games', { data, error })
   const router = useRouter()
 
-  const handlePageChange = (page: Number) => setQuery({ ...query, page })
+  const handlePageChange = (page: number) => setQuery({ ...query, page })
   const handleSubmit = (query: Record<string, any>) => {
     // Omit some values
     const { igdbId, ...newQuery } = query
     setQuery(newQuery)
   }
 
+  // Update results on query change
   useEffect(() => {
     if (didMount) {
       router.push({ pathname: '/', query }, undefined, { shallow: true })
@@ -91,21 +92,21 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
   try {
     const data = await findGames(user.id, query)
     return {
-      props: {
+      props: JSON.parse(JSON.stringify({
+        data,
+        platforms,
         error: null,
-        data: JSON.parse(JSON.stringify(data)),
-        platforms: JSON.parse(JSON.stringify(platforms)),
-        query: JSON.parse(JSON.stringify(query))
-      }
+        query
+      }))
     }
   } catch (error) {
     return {
-      props: {
-        error,
+      props: JSON.parse(JSON.stringify({
         data: { count: 0, data: [] },
-        platforms: JSON.parse(JSON.stringify(platforms)),
-        query: JSON.parse(JSON.stringify(query))
-      }
+        platforms,
+        error,
+        query
+      }))
     }
   }
 }
