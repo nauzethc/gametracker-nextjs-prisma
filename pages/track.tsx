@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useEndpoint } from '../hooks/http'
-import { IGDBSearch, IGDBGameSelected, IGDBQueryParams } from '../types/igdb'
+import { IGDBSearch, IGDBGameSelected, IGDBQueryParams, IGDBPlatform } from '../types/igdb'
 import { Dialog } from '@headlessui/react'
 import { DEFAULT_PAGE_SIZE } from '../config'
+import { useRouter } from 'next/router'
 
 import Modal from '../components/common/modal'
 import Error from '../components/common/error'
@@ -16,12 +17,35 @@ import { parseGameCreate } from '../utils/games'
 import Pagination from '../components/common/pagination'
 import UserButton from '../components/common/user-button'
 import { HeaderPortal } from '../components/app/header'
+import { GetServerSideProps } from 'next'
+import { findGamesByName, findPlatforms } from '../services/igdb'
+import { useDidMount } from '../hooks/lifecycle'
+import { parseGameQuery } from '../utils/igdb'
 
-export default function TrackView () {
-  const igdb = useEndpoint<IGDBSearch>('/api/igdb/games')
-  const game = useEndpoint<Game>('/api/games')
+export default function TrackView ({
+  query: initialQuery,
+  platforms = [],
+  data,
+  error
+}: {
+  query: IGDBQueryParams,
+  data: IGDBSearch,
+  platforms?: IGDBPlatform[],
+  error: any
+}) {
+  const router = useRouter()
+  const didMount = useDidMount()
+  const [query, setQuery] = useState<Record<string, any>>(initialQuery)
   const [selected, setSelected] = useState<IGDBGameSelected|null>(null)
-  const [query, setQuery] = useState<IGDBQueryParams>({ q: '' })
+  const igdb = useEndpoint<IGDBSearch>('/api/igdb/games', { data, error })
+  const game = useEndpoint<Game>('/api/games')
+
+  const handlePageChange = (page: number) => setQuery({ ...query, page })
+  const handleSubmitQuery = (query: Record<string, any>) => {
+    // Omit some values
+    const { page, ...newQuery } = query
+    setQuery(newQuery)
+  }
 
   async function handleSubmit (gameplayData: GameplayData) {
     if (selected !== null) {
@@ -36,7 +60,10 @@ export default function TrackView () {
 
   // Update results on query change
   useEffect(() => {
-    if (query.q) igdb.retrieve(query)
+    if (didMount && query.q) {
+      router.push({ pathname: '/track', query }, undefined, { shallow: true })
+      igdb.retrieve(query)
+    }
   }, [query])
 
   return (
@@ -46,8 +73,10 @@ export default function TrackView () {
       </HeaderPortal>
       <div className="grid py-3 gap-8 md:grid-cols-2">
         <SearchForm
+          initialData={{ q: '', ...query }}
           className="col-span-full"
-          onSubmit={setQuery}
+          onSubmit={handleSubmitQuery}
+          platforms={platforms}
           pending={igdb.state.pending} />
         <SearchResults
           results={igdb.state.data}
@@ -57,7 +86,7 @@ export default function TrackView () {
           pageSize={query?.page_size ?? DEFAULT_PAGE_SIZE}
           total={igdb.state.data?.count ?? 0}
           page={query?.page ?? 1}
-          onChange={page => setQuery({ ...query, page })} />
+          onChange={handlePageChange} />
       </div>
       <Modal open={Boolean(selected)} onClose={() => setSelected(null)}>
         <Dialog.Panel className="dialog-panel">
@@ -68,4 +97,29 @@ export default function TrackView () {
       </Modal>
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const query: IGDBQueryParams = parseGameQuery(context.query)
+  try {
+    const data = query.q ? await findGamesByName(query) : { count: 0, data: [] }
+    const platforms = await findPlatforms()
+    return {
+      props: JSON.parse(JSON.stringify({
+        data,
+        platforms: platforms.data,
+        error: null,
+        query
+      }))
+    }
+  } catch (error) {
+    return {
+      props: JSON.parse(JSON.stringify({
+        data: { count: 0, data: [] },
+        platforms: [],
+        error,
+        query
+      }))
+    }
+  }
 }

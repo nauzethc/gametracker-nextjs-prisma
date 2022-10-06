@@ -1,4 +1,4 @@
-export interface IGDBResult {
+export interface IGDBGameResult {
   id: number,
   name: string
   slug: string
@@ -38,6 +38,15 @@ export interface IGDBResult {
   }[]
 }
 
+export interface IGDBPlatformResult {
+  id: number,
+  name: string,
+  abbreviation?: string,
+  platform_logo?: {
+    image_id
+  }
+}
+
 export interface IGDBPlatform {
   igdbId: number
   name: string
@@ -67,7 +76,8 @@ export interface IGDBQueryParams {
   q: string,
   page_size?: number,
   page?: number,
-  order_by?: string
+  order_by?: string,
+  platformId?: number
 }
 
 export interface IGDBSearch {

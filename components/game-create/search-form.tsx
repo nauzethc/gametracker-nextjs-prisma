@@ -1,44 +1,68 @@
 import { useForm } from '../../hooks/forms'
 import { RefreshIcon, SearchIcon } from '@heroicons/react/solid'
+import { IGDBPlatform } from '../../types/igdb'
 
 type SearchData = {
-  q: string
+  q: string,
+  platformId?: number | string
 }
 
 const defaults: SearchData = {
-  q: ''
+  q: '',
+  platformId: ''
 }
 
 export default function SearchForm ({
   className = '',
+  platforms = [],
   pending,
   initialData,
   onSubmit
 }: {
   className?: string,
+  platforms?: IGDBPlatform[],
   pending?: boolean,
   initialData?: SearchData,
   onSubmit?: Function
 }) {
   const { data, handleChange, handleSubmit } = useForm<SearchData>({ defaults, initialData, onSubmit })
   return (
-    <form onSubmit={handleSubmit} className={`flex items-center gap-2 ${className}`}>
-      <input
-        className="flex-grow"
-        type="text"
-        name="q"
-        value={data.q}
-        aria-label="search"
-        placeholder="Search games..."
-        onChange={handleChange}
-        disabled={pending}
-        required />
-      <button className="h-10 w-10 p-2" type="submit" disabled={pending}>
-        {pending
-          ? <RefreshIcon className="w-6 h-6 animate-spin" />
-          : <SearchIcon className="w-6 h-6" />
-        }
-      </button>
+    <form onSubmit={handleSubmit} className={`grid grid-cols-3 gap-2 ${className}`}>
+      <div className="field col-span-full md:col-span-1">
+        <label htmlFor="platformId">Platform</label>
+        <select
+          className="flex-shrink"
+          name="platformId"
+          value={data.platformId}
+          aria-label="platform"
+          onChange={handleChange}
+          disabled={pending}>
+          <option value="">Any</option>
+          {platforms.map(platform =>
+            <option key={platform.igdbId} value={platform.igdbId}>
+              {platform.name}
+            </option>
+          )}
+        </select>
+      </div>
+      <div className="col-span-full md:col-span-2 flex items-end gap-2">
+        <input
+          className="w-full"
+          type="text"
+          name="q"
+          value={data.q}
+          aria-label="search"
+          placeholder="Search games..."
+          onChange={handleChange}
+          disabled={pending}
+          required />
+          <button className="h-10 w-10 p-2" type="submit" disabled={pending}>
+            {pending
+              ? <RefreshIcon className="w-6 h-6 animate-spin" />
+              : <SearchIcon className="w-6 h-6" />
+            }
+          </button>
+      </div>
     </form>
   )
 }

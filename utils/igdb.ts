@@ -1,5 +1,6 @@
 import { DEFAULT_PAGE_SIZE } from '../config'
-import { IGDBGame, IGDBQueryParams, IGDBResult } from '../types/igdb'
+import { IGDBGame, IGDBQueryParams, IGDBGameResult, IGDBPlatformResult, IGDBPlatform } from '../types/igdb'
+import { toNumber, toString } from './url'
 
 const IGDB_IMG_BASE_URL = process.env.IGDB_IMG_BASE_URL ?? ''
 
@@ -46,7 +47,17 @@ function getCategory (category: number): string {
   }
 }
 
-export function sanitizeGameRetrieve (igdbData: IGDBResult): IGDBGame {
+export function sanitizePlatformRetrieve (igdbData: IGDBPlatformResult): IGDBPlatform {
+  return {
+    igdbId: igdbData.id,
+    name: igdbData.name,
+    abbreviation: igdbData.abbreviation,
+    logo: igdbData.platform_logo?.image_id &&
+      getImageURL(igdbData.platform_logo.image_id, 'logo_med')
+  }
+}
+
+export function sanitizeGameRetrieve (igdbData: IGDBGameResult): IGDBGame {
   return {
     igdbId: igdbData.id,
     name: igdbData.name,
@@ -66,13 +77,7 @@ export function sanitizeGameRetrieve (igdbData: IGDBResult): IGDBGame {
     type: getCategory(igdbData.category),
     genres: (igdbData.genres ?? [])
       .map(({ name }) => name),
-    platforms: (igdbData.platforms ?? []).map(platform => ({
-      igdbId: platform.id,
-      name: platform.name,
-      abbreviation: platform.abbreviation,
-      logo: platform.platform_logo?.image_id &&
-        getImageURL(platform.platform_logo.image_id, 'logo_med')
-    }))
+    platforms: (igdbData.platforms ?? []).map(sanitizePlatformRetrieve)
   }
 }
 
@@ -89,4 +94,21 @@ export function sanitizeGameQuery (query: IGDBQueryParams): {
     ? 'name asc'
     : 'first_release_date desc'
   return { search: query.q, limit, offset, sort }
+}
+
+export function parseGameQuery (data: Record<string, any>): IGDBQueryParams {
+  const {
+    q,
+    order_by,
+    page,
+    page_size,
+    platformId
+  } = data
+  return {
+    q: toString(q) ?? '',
+    page: toNumber(page) ?? 1,
+    page_size: toNumber(page_size) ?? DEFAULT_PAGE_SIZE,
+    order_by: toString(order_by),
+    platformId: toNumber(platformId)
+  }
 }
