@@ -1,12 +1,24 @@
-import { IGDBGame, IGDBQueryParams, IGDBResult, IGDBToken } from '../types/igdb'
-import { sanitizeGameRetrieve, sanitizeGameQuery } from '../utils/igdb'
+import {
+  IGDBGame,
+  IGDBPlatform,
+  IGDBQueryParams,
+  IGDBGameResult,
+  IGDBPlatformResult,
+  IGDBToken
+} from '../types/igdb'
+
+import {
+  sanitizeGameRetrieve,
+  sanitizeGameQuery,
+  sanitizePlatformRetrieve
+} from '../utils/igdb'
 
 const AUTH_BASE_URL = process.env.TWITCH_AUTH_BASE_URL ?? ''
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID ?? ''
 const CLIENT_SECRET = process.env.TWITCH_CLIENT_SECRET ?? ''
 const IGDB_BASE_URL = process.env.IGDB_BASE_URL ?? ''
 
-const FIELDS = [
+const GAME_FIELDS = [
   'name',
   'slug',
   'cover.url',
@@ -28,6 +40,12 @@ const FIELDS = [
   'screenshots.height',
   'screenshots.image_id',
   'screenshots.url'
+]
+
+const PLATFORM_FIELDS = [
+  'name',
+  'abbreviation',
+  'platform_logo.image_id'
 ]
 
 let _token: IGDBToken
@@ -57,13 +75,17 @@ export async function findGamesByName (query: IGDBQueryParams): Promise<{ count:
       Authorization: `Bearer ${token.access_token}`
     },
     body: `
-      search "${search}";
-      fields ${FIELDS.join(',')};
-      limit ${limit};
-      offset ${offset};
-    `
+    search "${search}";
+    fields ${GAME_FIELDS.join(',')};
+    limit ${limit};
+    offset ${offset};
+    ${query.platformId
+      ? `where release_dates.platform = ${query.platformId};`
+      : ''
+    }
+  `
   })
-  const games: IGDBResult[] = await response.json() as IGDBResult[]
+  const games: IGDBGameResult[] = await response.json() as IGDBGameResult[]
   return {
     count: Number(response.headers.get('x-count') || 0),
     data: games.map(sanitizeGameRetrieve)
@@ -80,9 +102,30 @@ export async function findGameById (id: string): Promise<IGDBGame | undefined> {
     },
     body: `
       where id = ${id};
-      fields ${FIELDS.join(',')};
+      fields ${GAME_FIELDS.join(',')};
     `
   })
-  const games: IGDBResult[] = await response.json() as IGDBResult[]
+  const games: IGDBGameResult[] = await response.json() as IGDBGameResult[]
   return games.map(sanitizeGameRetrieve).pop()
+}
+
+export async function findPlatforms (): Promise<{ count: number, data: IGDBPlatform[] }> {
+  const token = await getToken()
+  const response = await fetch(`${IGDB_BASE_URL}/platforms`, {
+    method: 'POST',
+    headers: {
+      'Client-ID': CLIENT_ID,
+      Authorization: `Bearer ${token.access_token}`
+    },
+    body: `
+      fields ${PLATFORM_FIELDS.join(',')};
+      limit 500;
+      sort name asc;
+    `
+  })
+  const platforms: IGDBPlatformResult[] = await response.json() as IGDBPlatformResult[]
+  return {
+    count: Number(response.headers.get('x-count') || 0),
+    data: platforms.map(sanitizePlatformRetrieve)
+  }
 }

@@ -38,3 +38,9 @@ export type PlatformStats = Pick<Platform, 'igdbId'|'name'> & {
   _count: { _all: number },
   _sum: { totalHours: number | null }
 }
+
+export interface AllStats {
+  status: StatusStats[],
+  games: GameStats[],
+  platforms: PlatformStats[]
+}
