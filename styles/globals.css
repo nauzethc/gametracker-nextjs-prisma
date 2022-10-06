@@ -410,6 +410,22 @@ table tbody tr:hover td {
   @apply bg-slate-300;
 }
 
+.ranking {
+  @apply bg-slate-300 text-black border-white;
+}
+
+.ranking-1 {
+  @apply bg-yellow-500 text-yellow-900;
+}
+
+.ranking-2 {
+  @apply bg-gray-400 text-gray-600;
+}
+
+.ranking-3 {
+  @apply bg-orange-800 text-orange-200;
+}
+
 
 /*
  * Dark theme
@@ -614,5 +630,21 @@ table tbody tr:hover td {
 
   table tbody tr:hover td {
     @apply bg-slate-700;
+  }
+
+  .ranking {
+    @apply bg-slate-700 text-white border-black;
+  }
+
+  .ranking-1 {
+    @apply bg-yellow-500 text-yellow-900;
+  }
+
+  .ranking-2 {
+    @apply bg-gray-400 text-gray-800;
+  }
+
+  .ranking-3 {
+    @apply bg-amber-800 text-amber-100;
   }
 }
