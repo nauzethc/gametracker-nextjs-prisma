@@ -89,7 +89,7 @@ export default function SearchForm ({
           placeholder="Search games..."
           onChange={handleChange}
           disabled={pending} />
-        <button className="group inline-flex items-center justify-center rounded-full p-2 text-sm" type="submit" disabled={pending}>
+        <button className="group inline-flex items-center justify-center rounded-full p-2 text-sm" type="submit" disabled={pending} aria-label="search">
           {pending
             ? <RefreshIcon className="w-6 h-6 animate-spin" />
             : <SearchIcon className="w-6 h-6" />

@@ -17,7 +17,7 @@ export default function UserButton ({ className = '', extended }: { className?: 
 
   return (session && session.user)
     ? <Menu as="div" className="dropdown h-10">
-      <Menu.Button className="btn h-10 text-sm font-semibold px-1">
+      <Menu.Button className="btn h-10 text-sm font-semibold px-1" aria-label="user menu">
         {
           // @ts-ignore
           <Avatar src={session.user.image || session.user.picture} alt={session.user.name} />
@@ -35,7 +35,7 @@ export default function UserButton ({ className = '', extended }: { className?: 
         </Menu.Item>
         <hr className="w-full border-slate-300 dark:border-slate-700" />
         <Menu.Item>
-          <button className="dropdown-item" onClick={handleLogout}>
+          <button className="dropdown-item" onClick={handleLogout} aria-label="logout">
             <span className="text-sm">Logout</span>
             <LogoutIcon className="w-5 h-5" />
           </button>

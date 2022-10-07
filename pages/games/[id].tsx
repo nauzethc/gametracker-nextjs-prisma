@@ -46,11 +46,11 @@ export default function GameDetail ({ id, data, error }: GameDetailProps) {
       <GamePreview data={game.state.data} />
 
       <HeaderPortal>
-        <button onClick={() => setEditModal(true)} className="h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold">
+        <button onClick={() => setEditModal(true)} className="h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold" aria-label="edit">
           <PencilIcon className="h-6 w-6" />
           <span className="hidden sm:block">Edit</span>
         </button>
-        <button onClick={() => setDeleteModal(true)} className="btn-danger h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold">
+        <button onClick={() => setDeleteModal(true)} className="btn-danger h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold" aria-label="delete">
           <TrashIcon className="h-6 w-6" />
           <span className="hidden sm:block">Delete</span>
         </button>
@@ -71,8 +71,8 @@ export default function GameDetail ({ id, data, error }: GameDetailProps) {
             Delete {game.state.data.name}?
           </Dialog.Title>
           <div className="flex items-center justify-end gap-2">
-            <button className="btn-invisible h-10 px-4 text-sm font-semibold" onClick={() => setDeleteModal(false)}>Cancel</button>
-            <button className="btn-danger h-10 px-4 text-sm font-semibold" onClick={handleDelete}>
+            <button className="btn-invisible h-10 px-4 text-sm font-semibold" onClick={() => setDeleteModal(false)} aria-label="cancel">Cancel</button>
+            <button className="btn-danger h-10 px-4 text-sm font-semibold" onClick={handleDelete} aria-label="confirm delete">
               <TrashIcon className="h-6 w-6" />
               <span>Delete</span>
             </button>

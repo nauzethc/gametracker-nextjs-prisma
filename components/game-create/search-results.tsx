@@ -1,4 +1,5 @@
 import { PlusCircleIcon } from '@heroicons/react/solid'
+import { platform } from 'os'
 import { Fragment } from 'react'
 import { IGDBGame, IGDBPlatform, IGDBSearch, IGDBGameSelected } from '../../types/igdb'
 import Cover from '../common/cover'
@@ -39,7 +40,8 @@ function Result ({ data, onSelect }: ResultProps) {
             <button
               key={p.igdbId}
               className="text-sm font-semibold gap-1 px-2 py-1 rounded-full"
-              onClick={() => handleSelect(p)}>
+              onClick={() => handleSelect(p)}
+              aria-label={platform.name}>
               <PlusCircleIcon className="w-5 h-5" />
               <span>{p.abbreviation ?? p.name}</span>
             </button>

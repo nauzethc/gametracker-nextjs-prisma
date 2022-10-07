@@ -152,7 +152,8 @@ export default function GameForm ({
       <div className="modal-action col-span-full flex justify-center">
         <button className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm w-full sm:w-64"
           disabled={pending}
-          type="submit">Save</button>
+          type="submit"
+          aria-label="save">Save</button>
       </div>
     </form>
   )

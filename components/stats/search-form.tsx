@@ -89,7 +89,7 @@ export default function SearchForm ({
       </div>
 
       <div className="col-span-full flex justify-end">
-        <button className="h-10 md:w-10 px-4 md:p-2" type="submit" disabled={pending}>
+        <button className="h-10 md:w-10 px-4 md:p-2" type="submit" disabled={pending} aria-label="search">
           {pending
             ? <RefreshIcon className="w-6 h-6 animate-spin" />
             : <SearchIcon className="w-6 h-6" />

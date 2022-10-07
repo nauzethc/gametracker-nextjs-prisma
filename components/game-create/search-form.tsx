@@ -56,7 +56,7 @@ export default function SearchForm ({
           onChange={handleChange}
           disabled={pending}
           required />
-          <button className="h-10 w-10 p-2" type="submit" disabled={pending}>
+          <button className="h-10 w-10 p-2" type="submit" disabled={pending} aria-label="search">
             {pending
               ? <RefreshIcon className="w-6 h-6 animate-spin" />
               : <SearchIcon className="w-6 h-6" />

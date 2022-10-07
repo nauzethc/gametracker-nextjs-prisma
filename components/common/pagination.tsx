@@ -46,7 +46,13 @@ export default function Pagination ({
             ? <span key={index}>...</span>
             : numPage === page
               ? <span className="current w-8 h-8 flex items-center justify-center rounded-lg" key={index}>{numPage}</span>
-              : <button onClick={() => handleChange(numPage)} className="w-8 h-8 rounded-lg" key={index}>{numPage}</button>
+              : <button
+                  onClick={() => handleChange(numPage)}
+                  className="w-8 h-8 rounded-lg"
+                  key={index}
+                  aria-label={`page ${numPage}`}>
+                  {numPage}
+                </button>
         )}
       </div>
       : null
