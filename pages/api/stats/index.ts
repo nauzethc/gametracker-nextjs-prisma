@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
-import { getStats } from '../../../services/games'
-import { toString } from '../../../utils/url'
+import { findStats } from '../../../services/games'
+import { parseStatsQuery } from '../../../utils/games'
 import { authOptions } from '../auth/[...nextauth]'
 
 type error = {
@@ -17,8 +17,8 @@ export default async function handler (
   try {
     switch (req.method) {
       case 'GET': {
-        const period = toString(req.query.period)
-        const stats = await getStats(user.id, period)
+        const query = parseStatsQuery(req.query)
+        const stats = await findStats(user.id, query)
         res.status(200).json(stats)
         break
       }

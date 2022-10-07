@@ -28,7 +28,7 @@ export interface StatusStats {
   _avg: { totalHours: number | null }
 }
 
-export type GameStats = Pick<Game, 'igdbId'|'id'|'name'|'cover'> & {
+export type GameStats = Pick<Game, 'igdbId'|'name'|'cover'> & {
   _count: { _all: number },
   _sum: { totalHours: number | null },
   _max: { finishedOn: Date | null }
@@ -43,4 +43,11 @@ export interface AllStats {
   status: StatusStats[],
   games: GameStats[],
   platforms: PlatformStats[]
+}
+
+export interface StatsQueryParams {
+  period: string,
+  from?: Date,
+  to?: Date,
+  platformId?: number
 }

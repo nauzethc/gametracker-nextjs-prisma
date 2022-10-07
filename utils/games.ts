@@ -1,4 +1,4 @@
-import { GameCreate, GameUpdate, GameQueryParams } from '../types/games'
+import { GameCreate, GameUpdate, GameQueryParams, StatsQueryParams } from '../types/games'
 
 function toNumber (num: undefined | string): number | null {
   return num !== undefined ? Number(num) : null
@@ -89,4 +89,57 @@ export function parseGameUpdate (data: Record<string, any>): GameUpdate {
     platform: data.platform
   }
   return game
+}
+
+export function parseStatsQuery (data: Record<string, any>): StatsQueryParams {
+  const period = ['custom', 'all', 'year', 'semester']
+    .includes(toString(data.period) ?? '')
+    ? toString(data.period) ?? 'year'
+    : 'year'
+  return {
+    period,
+    from: toDate(data.from) ?? undefined,
+    to: toDate(data.to) ?? undefined,
+    platformId: toNumber(data.platformId) ?? undefined
+  }
+}
+
+export function sanitizeStatsQuery (query: StatsQueryParams): any {
+  // Today
+  const today = new Date()
+  // Initial query
+  const options = {}
+
+  // Set period
+  switch (query.period) {
+    case 'year':
+      Object.assign(options, {
+        startedOn: {
+          gte: new Date(Date.now() - (86400 * 365 * 1000)),
+          lte: today
+        }
+      })
+      break
+    case 'semester':
+      Object.assign(options, {
+        startedOn: {
+          gte: new Date(Date.now() - (86400 * 183 * 1000)),
+          lte: today
+        }
+      })
+      break
+    case 'custom':
+      if (query.from && query.to) {
+        Object.assign(options, {
+          startedOn: {
+            gte: new Date(query.from),
+            lte: new Date(query.to)
+          }
+        })
+      }
+      break
+  }
+  // Set platform
+  if (query.platformId) Object.assign(options, { platformId: query.platformId })
+  return options
 }

@@ -6,8 +6,10 @@ import {
   GameUpdate,
   GameWithPlatform,
   GameSearch,
-  AllStats
+  AllStats,
+  StatsQueryParams
 } from '../types/games'
+import { sanitizeStatsQuery } from '../utils/games'
 
 async function createOrUpdatePlatform (data: Platform): Promise<Platform> {
   return prisma.platform.upsert({
@@ -89,35 +91,14 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   }
 }
 
-function getPeriodQuery (period?: string) {
-  const today = new Date()
-  switch (period) {
-    case 'year':
-      return {
-        gte: new Date(Date.now() - (86400 * 365 * 1000)),
-        lte: today
-      }
-    case 'semester':
-      return {
-        gte: new Date(Date.now() - (86400 * 183 * 1000)),
-        lte: today
-      }
-    case 'all':
-    default:
-      return {
-        lte: today
-      }
-  }
-}
-
-export async function getStats (userId: string, period?: string): Promise<AllStats> {
-  // Filter results by period
-  const startedOn = getPeriodQuery(period)
+export async function findStats (userId: string, params: StatsQueryParams): Promise<AllStats> {
+  // Get query params
+  const query = sanitizeStatsQuery(params)
 
   // Get total hours and games count by status
   const status = await prisma.game.groupBy({
     by: ['status'],
-    where: { userId, startedOn },
+    where: { userId, ...query },
     _count: {
       _all: true
     },
@@ -131,8 +112,8 @@ export async function getStats (userId: string, period?: string): Promise<AllSta
 
   // Get most played games
   const games = await prisma.game.groupBy({
-    by: ['igdbId', 'id', 'name', 'cover'],
-    where: { userId, startedOn },
+    by: ['igdbId', 'name', 'cover'],
+    where: { userId, ...query },
     _count: {
       _all: true
     },
@@ -153,7 +134,7 @@ export async function getStats (userId: string, period?: string): Promise<AllSta
   // Get games count and total hours grouped by platform
   const platformStats = await prisma.game.groupBy({
     by: ['platformId'],
-    where: { userId, startedOn },
+    where: { userId, ...query },
     _count: {
       _all: true
     },
@@ -171,7 +152,7 @@ export async function getStats (userId: string, period?: string): Promise<AllSta
           userId: {
             equals: userId
           },
-          startedOn
+          ...query
         }
       }
     },
