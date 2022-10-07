@@ -68,7 +68,7 @@ table tbody td:not(:first-child) {
  */
 
 .grid-form {
-  @apply grid grid-cols-1 gap-y-8 gap-x-6;
+  @apply grid grid-cols-1 gap-y-8 gap-x-6 items-end;
 }
 
 form label {
@@ -410,20 +410,20 @@ table tbody tr:hover td {
   @apply bg-slate-300;
 }
 
-.ranking {
-  @apply bg-slate-300 text-black border-white;
+.game-item .badge {
+  @apply bg-slate-200 text-black border-slate-300;
 }
 
-.ranking-1 {
-  @apply bg-yellow-500 text-yellow-900;
+.game-item.ranking-1 .badge {
+  @apply bg-yellow-300 text-yellow-900 border-yellow-500;
 }
 
-.ranking-2 {
-  @apply bg-gray-400 text-gray-600;
+.game-item.ranking-2 .badge {
+  @apply bg-gray-400 text-gray-600 border-gray-300;
 }
 
-.ranking-3 {
-  @apply bg-orange-800 text-orange-200;
+.game-item.ranking-3 .badge {
+  @apply bg-amber-500 text-amber-800 border-amber-600;
 }
 
 
@@ -632,19 +632,19 @@ table tbody tr:hover td {
     @apply bg-slate-700;
   }
 
-  .ranking {
-    @apply bg-slate-700 text-white border-black;
+  .game-item .badge {
+    @apply bg-slate-700 text-white border-slate-900;
   }
 
-  .ranking-1 {
-    @apply bg-yellow-500 text-yellow-900;
+  .game-item.ranking-1 .badge {
+    @apply bg-yellow-400 text-yellow-900 border-yellow-600;
   }
 
-  .ranking-2 {
-    @apply bg-gray-400 text-gray-800;
+  .game-item.ranking-2 .badge {
+    @apply bg-gray-400 text-gray-600 border-gray-300;
   }
 
-  .ranking-3 {
-    @apply bg-amber-800 text-amber-100;
+  .game-item.ranking-3 .badge {
+    @apply bg-amber-600 text-amber-900 border-amber-700;
   }
 }
