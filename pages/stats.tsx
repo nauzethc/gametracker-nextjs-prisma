@@ -1,5 +1,5 @@
 import { GetServerSidePropsContext } from 'next'
-import { getStats } from '../services/games'
+import { findPlatforms, findStats } from '../services/games'
 import { AllStats } from '../types/games'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
@@ -14,7 +14,9 @@ import { useEffect, useState } from 'react'
 import { useDidMount } from '../hooks/lifecycle'
 import { useEndpoint } from '../hooks/http'
 import { useRouter } from 'next/router'
-import { toString } from '../utils/url'
+import SearchForm from '../components/stats/search-form'
+import { parseStatsQuery } from '../utils/games'
+import { Platform } from '@prisma/client'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
@@ -22,10 +24,12 @@ function toFixed (hours: number | null): string {
 
 export default function StatsView ({
   query: initialQuery,
+  platforms,
   data,
   error
 }: {
   query?: Record<string, any>,
+  platforms: Platform[],
   data: AllStats,
   error: any
 }) {
@@ -34,7 +38,7 @@ export default function StatsView ({
   const stats = useEndpoint<AllStats>('/api/stats', { data, error })
   const router = useRouter()
 
-  const handlePeriodChange = (period: string) => setQuery({ ...query, period })
+  const handleSubmit = (newQuery: Record<string, any>) => setQuery(newQuery)
 
   // Update stats on query change
   useEffect(() => {
@@ -56,22 +60,12 @@ export default function StatsView ({
             </a>
           </Link>
         </HeaderPortal>
-
         <Error error={error} />
-
-        <form onSubmit={e => e.preventDefault()}>
-          <div className="field">
-            <label className="text-sm font-semibold" htmlFor="period">Period</label>
-            <select
-              className="form-input"
-              onChange={(e) => handlePeriodChange(e.target.value)}
-              value={query.period}>
-              <option value="all">All</option>
-              <option value="year">Last year</option>
-              <option value="semester">Last 6 months</option>
-            </select>
-          </div>
-        </form>
+        <SearchForm
+          initialData={query}
+          platforms={platforms}
+          pending={stats.state.pending}
+          onSubmit={handleSubmit} />
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Most played</h3>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -141,13 +135,15 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
     context.res,
     authOptions
   )
-  const query = { period: toString(context.query.period) }
+  const query = parseStatsQuery(context.query)
+  const platforms = await findPlatforms()
   try {
-    const data = await getStats(user.id, query.period)
+    const data = await findStats(user.id, query)
     return {
       props: JSON.parse(JSON.stringify({
         data,
         query,
+        platforms,
         error: null
       }))
     }
@@ -156,6 +152,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
       props: JSON.parse(JSON.stringify({
         data: null,
         query,
+        platforms,
         error
       }))
     }
