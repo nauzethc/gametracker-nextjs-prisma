@@ -69,7 +69,7 @@ export default function TrackView ({
   return (
     <div id="add-game-view">
       <HeaderPortal>
-        <UserButton extended />
+        <UserButton />
       </HeaderPortal>
       <div className="grid py-3 gap-8 md:grid-cols-2">
         <SearchForm
