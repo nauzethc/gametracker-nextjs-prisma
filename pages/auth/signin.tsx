@@ -52,8 +52,12 @@ export default function SignInView () {
           <span>Sign-in with Github</span>
         </button>
         <button className="btn-twitch h-10" onClick={() => signIn('twitch')} aria-label="twitch sign in">
-        <svg viewBox="0 0 500 500" aria-hidden="true" className="h-6 w-6" fill="currentColor"><g><path d="M329.3,384.8h-71.4l-47.6,47.7h-47.6v-47.7H75.5V131l23.7-63.5h325.2v222.2L329.3,384.8z M392.8,273.8V99.3H131v230.1h71.4v47.6l47.6-47.6h87.2L392.8,273.8z"/><path d="M305.5,162.8V258h31.8v-95.3H305.5z M218.2,257.9H250v-95.1h-31.8V257.9z"/></g></svg>
+          <svg viewBox="0 0 500 500" aria-hidden="true" className="h-6 w-6" fill="currentColor"><g><path d="M329.3,384.8h-71.4l-47.6,47.7h-47.6v-47.7H75.5V131l23.7-63.5h325.2v222.2L329.3,384.8z M392.8,273.8V99.3H131v230.1h71.4v47.6l47.6-47.6h87.2L392.8,273.8z"/><path d="M305.5,162.8V258h31.8v-95.3H305.5z M218.2,257.9H250v-95.1h-31.8V257.9z"/></g></svg>
           <span>Sign-in with Twitch</span>
+        </button>
+        <button className="btn-google h-10" onClick={() => signIn('google')} aria-label="google sign in">
+          <svg viewBox="0 0 1024 1024" aria-hidden="true" className="h-6 w-6" fill="currentColor"><path d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8-34.4 23-78.3 36.6-129.9 36.6-99.9 0-184.4-67.5-214.6-158.2-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1 56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100-149.9 0-279.6 86-342.7 211.4-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93 72.5-66.8 114.4-165.2 114.4-282.1 0-27.2-2.4-53.3-6.9-78.5z"/></svg>
+          <span>Sign-in with Google</span>
         </button>
       </div>
 
