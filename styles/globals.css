@@ -138,6 +138,15 @@ button:focus-visible,
  * Components
  */
 
+.app-header {
+  @apply h-20 fixed w-full flex items-center z-40;
+  @apply backdrop-blur;
+}
+
+.app-header+main {
+  @apply pt-20;
+}
+
 .dialog-panel {
   @apply w-full max-w-sm max-h-full rounded-lg p-6 overflow-y-auto;
   @apply flex flex-col gap-4 shadow-lg;
@@ -345,6 +354,10 @@ form [type=submit]:active,
 }
 
 /* Components */
+
+.app-header {
+  @apply bg-white/70;
+}
 
 .progress-bar {
   @apply bg-slate-100;
@@ -583,6 +596,10 @@ table tbody tr:hover td {
 
 
   /* Components */
+
+  .app-header {
+    @apply bg-black/70;
+  }
 
   .progress-bar {
     @apply bg-slate-900;

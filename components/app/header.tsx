@@ -33,8 +33,8 @@ export function HeaderPortal ({ children }: { children?: any }) {
 export default function Header () {
   const { data: session } = useSession()
   return (session && session.user)
-    ? <header className="py-6">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    ? <header className="app-header">
+      <div className="w-full mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="relative z-50 flex justify-between">
           <div className="flex items-center md:gap-x-12">
             <Link href="/">
