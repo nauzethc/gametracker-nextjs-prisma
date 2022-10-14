@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useDidMount } from '../hooks/lifecycle'
 
 import Link from 'next/link'
-import { PlusCircleIcon } from '@heroicons/react/solid'
+import { PlusCircleIcon, TableIcon, ViewGridIcon } from '@heroicons/react/solid'
 import SearchForm from '../components/home/search-form'
 import SearchResults from '../components/home/search-results'
 import Pagination from '../components/common/pagination'
@@ -17,6 +17,7 @@ import UserButton from '../components/common/user-button'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import { Platform } from '@prisma/client'
+import Toggle from '../components/common/toggle'
 
 export default function HomeView ({
   query: initialQuery,
@@ -31,6 +32,7 @@ export default function HomeView ({
 }) {
   const didMount = useDidMount()
   const [query, setQuery] = useState<Record<string, any>>(initialQuery)
+  const [showTable, setTable] = useState<boolean>(false)
   const games = useEndpoint<GameSearch>('/api/games', { data, error })
   const router = useRouter()
 
@@ -58,7 +60,21 @@ export default function HomeView ({
           onSubmit={handleSubmit}
           platforms={platforms}
           pending={games.state.pending} />
+        <div className="flex items-center justify-between gap-6 col-span-full">
+          <div>
+            {games.state.data?.count
+              ? <span className="badge badge-info">{games.state.data.count} games</span>
+              : <span className="badge badge-danger">No games found</span>
+            }
+          </div>
+          <div className="flex items-center gap-2">
+            <ViewGridIcon className="w-6 h-6" />
+            <Toggle checked={showTable} onChange={setTable} />
+            <TableIcon className="w-6 h-6" />
+          </div>
+        </div>
         <SearchResults
+          asTable={showTable}
           {...games.state.data} />
         <Pagination
           className="col-span-full mt-4"
@@ -104,7 +120,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
       props: JSON.parse(JSON.stringify({
         data: { count: 0, data: [] },
         platforms,
-        error,
+        error: `${error}`,
         query
       }))
     }

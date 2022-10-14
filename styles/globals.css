@@ -22,6 +22,10 @@ select {
   print-color-adjust: exact;
 }
 
+svg {
+  @apply inline-block;
+}
+
 a {
   @apply transition-colors;
 }
@@ -166,6 +170,34 @@ button:focus-visible,
 
 .error {
   @apply px-4 py-3 rounded-lg;
+}
+
+.badge {
+  @apply text-sm font-semibold rounded-full px-3 py-1;
+}
+
+.search-results-table {
+  @apply border-collapse;
+}
+
+.search-results-table thead th,
+.search-results-table tbody td {
+  @apply p-0 rounded-none bg-transparent;
+}
+
+.search-results-table tbody td[data-title] {
+  @apply text-left font-semibold px-4;
+}
+
+.search-results-table tbody td[data-status],
+.search-results-table tbody td[data-gameplay],
+.search-results-table tbody td[data-time],
+.search-results-table tbody td[data-date] {
+  @apply px-2;
+}
+
+.search-results-table tbody tr:hover td {
+  @apply bg-transparent;
 }
 
 /*
@@ -411,6 +443,18 @@ form [type=submit]:active,
   @apply bg-red-200 text-red-600;
 }
 
+.badge {
+  @apply bg-slate-100 text-slate-500;
+}
+
+.toggle {
+  @apply bg-slate-200;
+}
+
+.toggle .toggle-input {
+  @apply bg-slate-400;
+}
+
 table thead th {
   @apply bg-slate-200;
 }
@@ -598,7 +642,7 @@ table tbody tr:hover td {
   /* Components */
 
   .app-header {
-    @apply bg-black/70;
+    @apply bg-black/50;
   }
 
   .progress-bar {
@@ -637,6 +681,18 @@ table tbody tr:hover td {
     @apply text-red-200 bg-red-600;
   }
 
+  .badge {
+    @apply bg-slate-800 text-slate-200;
+  }
+
+  .toggle {
+    @apply bg-slate-800;
+  }
+
+  .toggle .toggle-input {
+    @apply bg-white;
+  }
+
   table thead th {
     @apply bg-slate-800;
   }
@@ -647,6 +703,18 @@ table tbody tr:hover td {
 
   table tbody tr:hover td {
     @apply bg-slate-700;
+  }
+
+  .status-finished {
+    @apply text-green-700;
+  }
+
+  .status-pending {
+    @apply text-slate-700;
+  }
+
+  .status-abandoned {
+    @apply text-red-800;
   }
 
   .game-item .badge {
