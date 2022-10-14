@@ -71,7 +71,7 @@ export default function TrackView ({
       <HeaderPortal>
         <UserButton />
       </HeaderPortal>
-      <div className="grid py-3 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 py-3 gap-8 mb-4">
         <SearchForm
           initialData={{ q: '', ...query }}
           className="col-span-full"
@@ -117,7 +117,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: JSON.parse(JSON.stringify({
         data: { count: 0, data: [] },
         platforms: [],
-        error,
+        error: `${error}`,
         query
       }))
     }
