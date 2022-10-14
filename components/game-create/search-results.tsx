@@ -1,6 +1,4 @@
 import { PlusCircleIcon } from '@heroicons/react/solid'
-import { platform } from 'os'
-import { Fragment } from 'react'
 import { IGDBGame, IGDBPlatform, IGDBSearch, IGDBGameSelected } from '../../types/igdb'
 import Cover from '../common/cover'
 
@@ -11,6 +9,27 @@ type SearchResultsProps = {
 type ResultProps = {
   data: IGDBGame,
   onSelect?: (data: IGDBGameSelected) => void
+}
+type PlatformsProps = {
+  data: IGDBPlatform[],
+  onSelect: (data: IGDBPlatform) => void
+}
+
+function Platforms ({ data, onSelect }: PlatformsProps) {
+  return (
+    <>
+      {data.map(p =>
+      <button
+        key={p.igdbId}
+        className="text-sm font-semibold gap-1 px-2 py-1 rounded-full"
+        onClick={() => onSelect(p)}
+        aria-label={p.name}>
+        <PlusCircleIcon className="w-5 h-5" />
+        <span>{p.abbreviation ?? p.name}</span>
+      </button>
+      )}
+    </>
+  )
 }
 
 function Result ({ data, onSelect }: ResultProps) {
@@ -36,16 +55,7 @@ function Result ({ data, onSelect }: ResultProps) {
           <span className="text-sm sm:text-base">{data.publishers.join(', ')}</span>
         </div>
         <div className="col-span-full flex flex-wrap items-center gap-2 my-2">
-          {data.platforms.map(p =>
-            <button
-              key={p.igdbId}
-              className="text-sm font-semibold gap-1 px-2 py-1 rounded-full"
-              onClick={() => handleSelect(p)}
-              aria-label={platform.name}>
-              <PlusCircleIcon className="w-5 h-5" />
-              <span>{p.abbreviation ?? p.name}</span>
-            </button>
-          )}
+          <Platforms data={data.platforms} onSelect={handleSelect} />
         </div>
       </div>
     </div>
@@ -54,11 +64,13 @@ function Result ({ data, onSelect }: ResultProps) {
 
 export default function SearchResults ({ results, onSelect }: SearchResultsProps) {
   return (
-    <Fragment>
+    <>
       {results !== null && Array.isArray(results?.data)
-        ? results?.data.map(data => <Result key={data.igdbId} data={data} onSelect={onSelect} />)
+        ? results?.data.map(data =>
+          <Result key={data.igdbId} data={data} onSelect={onSelect} />
+        )
         : null
       }
-    </Fragment>
+    </>
   )
 }
