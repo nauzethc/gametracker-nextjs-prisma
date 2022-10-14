@@ -1,5 +1,5 @@
 import { Menu } from '@headlessui/react'
-import { ChartBarIcon, LogoutIcon, UserCircleIcon } from '@heroicons/react/solid'
+import { ChartBarIcon, DownloadIcon, LogoutIcon, UserCircleIcon } from '@heroicons/react/solid'
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 
@@ -30,6 +30,14 @@ export default function UserButton ({ className = '', extended }: { className?: 
             <a className="btn dropdown-item">
               <span className="text-sm">Stats</span>
               <ChartBarIcon className="w-5 h-5" />
+            </a>
+          </Link>
+        </Menu.Item>
+        <Menu.Item>
+          <Link href="/api/download">
+            <a className="btn dropdown-item">
+              <span className="text-sm">Download</span>
+              <DownloadIcon className="w-5 h-5" />
             </a>
           </Link>
         </Menu.Item>

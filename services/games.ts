@@ -10,6 +10,7 @@ import {
   StatsQueryParams
 } from '../types/games'
 import { sanitizeStatsQuery } from '../utils/games'
+import { Readable } from 'stream'
 
 async function createOrUpdatePlatform (data: Platform): Promise<Platform> {
   return prisma.platform.upsert({
@@ -91,6 +92,38 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   }
 }
 
+export function streamGames (userId: string, batchSize: number): Readable {
+  const _batchSize = Math.max(batchSize, 50)
+  let cursorId: string
+
+  return new Readable({
+    objectMode: true,
+    highWaterMark: _batchSize,
+    async read () {
+      try {
+        const games = await prisma.game.findMany({
+          where: { userId },
+          orderBy: { startedOn: 'asc' },
+          include: { platform: true },
+          take: _batchSize,
+          skip: cursorId ? 1 : 0,
+          cursor: cursorId ? { id: cursorId } : undefined
+        })
+        for (const game of games) {
+          this.push(game)
+        }
+        if (games.length < _batchSize) {
+          this.push(null)
+          return
+        }
+        cursorId = games[games.length - 1].id
+      } catch (err) {
+        this.destroy(err as Error)
+      }
+    }
+  })
+}
+
 export async function findStats (userId: string, params: StatsQueryParams): Promise<AllStats> {
   // Get query params
   const query = sanitizeStatsQuery(params)
@@ -131,6 +164,18 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
     take: 6
   })
 
+  // Get games grouped by genres
+  const genres = await prisma.$queryRaw`
+    SELECT COUNT(*) as "_count", "genre", "userId"
+    FROM "games"
+    CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
+    WHERE "userId" = ${userId}
+    AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
+    AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
+    GROUP BY "genre", "userId"
+    ORDER BY 1 DESC
+  `
+
   // Get games count and total hours grouped by platform
   const platformStats = await prisma.game.groupBy({
     by: ['platformId'],
@@ -164,6 +209,9 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
   return {
     games,
     status,
+    genres: JSON.parse(JSON.stringify(genres,
+      (_, v) => typeof v === 'bigint' ? Number(v.toString()) : v
+    )),
     platforms: platformData.map((platform, index) => ({
       ...platform,
       ...platformStats[index]
