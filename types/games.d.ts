@@ -42,6 +42,7 @@ export type PlatformStats = Pick<Platform, 'igdbId'|'name'> & {
 export interface AllStats {
   status: StatusStats[],
   games: GameStats[],
+  genres?: any,
   platforms: PlatformStats[]
 }
 

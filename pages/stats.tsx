@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { findPlatforms, findStats } from '../services/games'
 import { AllStats } from '../types/games'
@@ -10,13 +11,13 @@ import { HeaderPortal } from '../components/app/header'
 import UserButton from '../components/common/user-button'
 import { PlusCircleIcon } from '@heroicons/react/solid'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { useDidMount } from '../hooks/lifecycle'
 import { useEndpoint } from '../hooks/http'
 import { useRouter } from 'next/router'
 import SearchForm from '../components/stats/search-form'
 import { parseStatsQuery } from '../utils/games'
 import { Platform } from '@prisma/client'
+import GenresChart from '../components/stats/genres-chart'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
@@ -60,18 +61,23 @@ export default function StatsView ({
             </a>
           </Link>
         </HeaderPortal>
-        <Error error={error} />
         <SearchForm
           initialData={query}
           platforms={platforms}
           pending={stats.state.pending}
           onSubmit={handleSubmit} />
+        <Error error={error} />
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Most played</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className={`w-full grid gap-3 sm:grid-rows-3 sm:grid-flow-col ${(stats.state.data?.games.length ?? 3) > 3 ? 'sm:grid-cols-2' : ''}`}>
           {stats.state.data?.games.map((game, index) =>
             <GameItem ranking={index + 1} key={game.igdbId} data={game} />
           )}
+        </div>
+
+        <h3 className="text-lg font-semibold border-b-2 -mb-4">Genres</h3>
+        <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+          <GenresChart genres={stats.state.data?.genres} />
         </div>
 
         <table>
@@ -153,7 +159,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
         data: null,
         query,
         platforms,
-        error
+        error: `${error}`
       }))
     }
   }
