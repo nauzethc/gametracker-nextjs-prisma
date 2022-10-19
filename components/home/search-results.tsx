@@ -30,7 +30,7 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
               <span className="sr-only">Name</span>
             </th>
             <th className="hidden md:table-cell">
-              <span className="hidden lg:block">Gameplay</span>
+              <span className="sr-only">Gameplay</span>
             </th>
             <th className="">
               <span className="sr-only">Platform</span>

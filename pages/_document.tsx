@@ -6,7 +6,8 @@ export default function Document () {
       <Head>
         <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       </Head>
-      <body className="flex flex-col min-h-full">
+      <body className="flex flex-col min-h-full bg-transparent">
+        <div className="app-background fixed h-screen w-screen -z-10" />
         <Main />
         <NextScript />
       </body>

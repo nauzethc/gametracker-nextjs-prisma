@@ -63,7 +63,7 @@ export default function HomeView ({
         <div className="flex items-center justify-between gap-6 col-span-full">
           <div>
             {games.state.data?.count
-              ? <span className="badge badge-info">{games.state.data.count} games</span>
+              ? <span className="badge">{games.state.data.count} {games.state.data.count > 1 ? 'games' : 'game'}</span>
               : <span className="badge badge-danger">No games found</span>
             }
           </div>

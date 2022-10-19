@@ -43,11 +43,11 @@ blockquote::after {
 }
 
 table {
-  @apply border-separate border-spacing-1;
+  @apply border-separate border-spacing-1 rounded-lg shadow-sm;
 }
 
 table caption {
-  @apply text-left text-lg font-semibold border-b-2 mb-1;
+  @apply text-left text-lg font-semibold border-b-2 mb-2;
 }
 
 table thead th {
@@ -156,6 +156,14 @@ button:focus-visible,
   @apply flex flex-col gap-4 shadow-lg;
 }
 
+.progress-bar {
+  @apply rounded-lg shadow-sm;
+}
+
+.progress-bar .fill-bar {
+  @apply rounded-lg shadow-sm;
+}
+
 .dropdown {
   @apply relative inline-block;
 }
@@ -173,11 +181,11 @@ button:focus-visible,
 }
 
 .badge {
-  @apply text-sm font-semibold rounded-full px-3 py-1;
+  @apply text-sm font-semibold rounded-full px-3 py-1 shadow-sm;
 }
 
 .search-results-table {
-  @apply border-collapse;
+  @apply border-collapse bg-transparent shadow-none;
 }
 
 .search-results-table thead th,
@@ -189,11 +197,15 @@ button:focus-visible,
   @apply text-left font-semibold px-4;
 }
 
+.search-results-table tbody td[data-time] {
+  @apply font-semibold;
+}
+
 .search-results-table tbody td[data-status],
 .search-results-table tbody td[data-gameplay],
 .search-results-table tbody td[data-time],
 .search-results-table tbody td[data-date] {
-  @apply px-2;
+  @apply px-4;
 }
 
 .search-results-table tbody tr:hover td {
@@ -205,7 +217,11 @@ button:focus-visible,
  */
 
 body {
-  @apply bg-white text-black;
+  @apply text-black;
+}
+
+.app-background {
+  @apply bg-gradient-to-br from-white to-gray-100;
 }
 
 a:hover {
@@ -259,7 +275,7 @@ form input[type='radio']:focus {
 
 button,
 .btn {
-  @apply bg-slate-200 text-slate-600;
+  @apply bg-slate-300/80 text-slate-600;
 }
 
 button:focus-visible,
@@ -269,12 +285,12 @@ button:focus-visible,
 
 button:hover,
 .btn:hover {
-  @apply text-slate-100 bg-slate-500;
+  @apply text-slate-100 bg-slate-500/80;
 }
 
 button:active,
 .btn:active {
-  @apply text-slate-200 bg-slate-600;
+  @apply text-slate-200 bg-slate-600/80;
 }
 
 /* Primary button */
@@ -392,27 +408,27 @@ form [type=submit]:active,
 }
 
 .progress-bar {
-  @apply bg-slate-100;
+  @apply bg-slate-400/40;
 }
 
 .progress-bar .fill-bar {
-  @apply bg-slate-300;
+  @apply bg-slate-400 text-slate-900;
 }
 
 .progress-bar.finished {
-  @apply bg-green-100;
+  @apply bg-green-500/30;
 }
 
 .progress-bar.finished .fill-bar {
-  @apply bg-green-500;
+  @apply bg-green-500 text-green-900;
 }
 
 .progress-bar.abandoned {
-  @apply bg-red-100;
+  @apply bg-red-500/30;
 }
 
 .progress-bar.abandoned .fill-bar {
-  @apply bg-red-500;
+  @apply bg-red-500 text-red-900;
 }
 
 .dialog-panel {
@@ -444,7 +460,15 @@ form [type=submit]:active,
 }
 
 .badge {
-  @apply bg-slate-100 text-slate-500;
+  @apply bg-slate-200/80 text-slate-500;
+}
+
+.badge-danger {
+  @apply bg-red-200/80 text-red-600;
+}
+
+.badge-info {
+  @apply bg-blue-200/80 text-blue-600;
 }
 
 .toggle {
@@ -453,6 +477,10 @@ form [type=submit]:active,
 
 .toggle .toggle-input {
   @apply bg-slate-400;
+}
+
+table {
+  @apply bg-white/80;
 }
 
 table thead th {
@@ -490,7 +518,11 @@ table tbody tr:hover td {
 
 @media (prefers-color-scheme: dark) {
   body {
-    @apply bg-black text-white;
+    @apply text-white;
+  }
+
+  .app-background {
+    @apply bg-gradient-to-b from-black to-gray-900;
   }
 
   a:hover {
@@ -544,7 +576,7 @@ table tbody tr:hover td {
 
   button,
   .btn {
-    @apply bg-slate-800 text-slate-400;
+    @apply bg-slate-700/80 text-slate-400;
   }
 
   button:focus-visible,
@@ -554,12 +586,12 @@ table tbody tr:hover td {
 
   button:hover,
   .btn:hover {
-    @apply text-slate-100 bg-slate-500;
+    @apply text-slate-100 bg-slate-500/80;
   }
 
   button:active,
   .btn:active {
-    @apply text-slate-200 bg-slate-400;
+    @apply text-slate-200 bg-slate-400/80;
   }
 
   /* Primary button */
@@ -646,27 +678,27 @@ table tbody tr:hover td {
   }
 
   .progress-bar {
-    @apply bg-slate-900;
+    @apply bg-slate-700/40;
   }
 
   .progress-bar .fill-bar {
-    @apply bg-slate-700;
+    @apply bg-slate-700 text-slate-200;
   }
 
   .progress-bar.finished {
-    @apply bg-green-900/30;
+    @apply bg-green-800/40;
   }
 
   .progress-bar.finished .fill-bar {
-    @apply bg-green-800;
+    @apply bg-green-800 text-green-200;
   }
 
   .progress-bar.abandoned {
-    @apply bg-red-900/30;
+    @apply bg-red-800/40;
   }
 
   .progress-bar.abandoned .fill-bar {
-    @apply bg-red-800;
+    @apply bg-red-800 text-red-200;
   }
 
   .dialog-panel {
@@ -682,7 +714,11 @@ table tbody tr:hover td {
   }
 
   .badge {
-    @apply bg-slate-800 text-slate-200;
+    @apply bg-slate-700/80 text-slate-200;
+  }
+
+  .badge-danger {
+    @apply bg-red-600/60 text-red-200;
   }
 
   .toggle {
@@ -691,6 +727,10 @@ table tbody tr:hover td {
 
   .toggle .toggle-input {
     @apply bg-white;
+  }
+
+  table {
+    @apply bg-black/40;
   }
 
   table thead th {

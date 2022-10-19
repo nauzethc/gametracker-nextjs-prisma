@@ -17,8 +17,8 @@ export default function ProgressBar ({
 }) {
   const percent = clamp(min, max, value) * 100 / max
   return (
-    <div className={`progress-bar relative h-6 rounded-lg w-full ${className}`}>
-      <div className="fill-bar absolute h-6 rounded-lg flex items-center" style={{ width: `${percent}%` }}>
+    <div className={`progress-bar relative h-6 w-full ${className}`}>
+      <div className="fill-bar absolute h-6 flex items-center" style={{ width: `${percent}%` }}>
         {children}
       </div>
     </div>
