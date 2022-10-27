@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 import { streamGames } from '../../../services/games'
 import { authOptions } from '../auth/[...nextauth]'
-import { transformGameCSV } from '../../../utils/streams'
+import { transformGameCSV, transformGameListJSON } from '../../../utils/streams'
 
 type error = {
   message: string
@@ -18,24 +18,35 @@ export default async function handler (
     switch (req.method) {
       case 'GET': {
         const games = streamGames(user.id, 50)
-        res.status(200)
-        res.setHeader('Content-Type', 'text/csv')
-        res.setHeader('Content-Disposition', `attachment; filename=gametracker-${new Date().toISOString().slice(0, 10)}.csv`)
-        res.write([
-          'name',
-          'gameplayType',
-          'platform',
-          'status',
-          'startedOn',
-          'finishedOn',
-          'totalHours',
-          'progress',
-          'achievementsUnlocked',
-          'achievementsTotal',
-          'rating',
-          'comment'
-        ].join(';').concat('\n'))
-        games.pipe(transformGameCSV).pipe(res)
+        const { format = 'csv' } = req.query
+        if (format === 'json') {
+          res.status(200)
+          res.setHeader('Content-Type', 'application/json')
+          res.setHeader('Content-Disposition', `attachment; filename=gametracker-${new Date().toISOString().slice(0, 10)}.json`)
+          res.write('[')
+          games.pipe(transformGameListJSON())
+            .on('data', data => res.write(data))
+            .on('end', () => res.end(']'))
+        } else {
+          res.status(200)
+          res.setHeader('Content-Type', 'text/csv')
+          res.setHeader('Content-Disposition', `attachment; filename=gametracker-${new Date().toISOString().slice(0, 10)}.csv`)
+          res.write([
+            'name',
+            'gameplayType',
+            'platform',
+            'status',
+            'startedOn',
+            'finishedOn',
+            'totalHours',
+            'progress',
+            'achievementsUnlocked',
+            'achievementsTotal',
+            'rating',
+            'comment'
+          ].join(';').concat('\n'))
+          games.pipe(transformGameCSV).pipe(res)
+        }
         break
       }
       default:
