@@ -72,8 +72,8 @@ export function parseGameCreate (data: Record<string, any>): GameCreate {
 export function parseGameUpdate (data: Record<string, any>): GameUpdate {
   const game: GameUpdate = {
     // Metadata
-    fixed: null,
-    favorite: null,
+    fixed: Boolean(data.fixed),
+    favorite: Boolean(data.favorite),
 
     // Gameplay
     gameplayType: data.gameplayType,
