@@ -1,5 +1,5 @@
-import { StarIcon } from '@heroicons/react/solid'
-import { StarIcon as EmptyStarIcon } from '@heroicons/react/outline'
+import { StarIcon } from '@heroicons/react/24/solid'
+import { StarIcon as EmptyStarIcon } from '@heroicons/react/24/outline'
 import { HalfStarIcon } from './icons'
 
 export default function Rating ({

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useDidMount } from '../hooks/lifecycle'
 
 import Link from 'next/link'
-import { PlusCircleIcon, TableIcon, ViewGridIcon } from '@heroicons/react/solid'
+import { PlusCircleIcon, QueueListIcon, Squares2X2Icon } from '@heroicons/react/24/solid'
 import SearchForm from '../components/home/search-form'
 import SearchResults from '../components/home/search-results'
 import Pagination from '../components/common/pagination'
@@ -68,9 +68,9 @@ export default function HomeView ({
             }
           </div>
           <div className="flex items-center gap-2">
-            <ViewGridIcon className="w-6 h-6" />
+            <Squares2X2Icon className="w-6 h-6" />
             <Toggle checked={showTable} onChange={setTable} />
-            <TableIcon className="w-6 h-6" />
+            <QueueListIcon className="w-6 h-6" />
           </div>
         </div>
         <SearchResults

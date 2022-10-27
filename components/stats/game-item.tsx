@@ -1,6 +1,6 @@
 import { GameStats } from '../../types/games'
 import Cover from '../common/cover'
-import { ClockIcon, CalendarIcon } from '@heroicons/react/solid'
+import { ClockIcon, CalendarIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 
 type GameItemProps = {

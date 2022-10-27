@@ -1,4 +1,4 @@
-import { PlusCircleIcon } from '@heroicons/react/solid'
+import { PlusCircleIcon } from '@heroicons/react/24/solid'
 import { IGDBGame, IGDBPlatform, IGDBSearch, IGDBGameSelected } from '../../types/igdb'
 import Cover from '../common/cover'
 

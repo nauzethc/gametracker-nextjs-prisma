@@ -1,5 +1,5 @@
 import { useForm } from '../../hooks/forms'
-import { RefreshIcon, SearchIcon } from '@heroicons/react/solid'
+import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { IGDBPlatform } from '../../types/igdb'
 
 type SearchData = {
@@ -58,8 +58,8 @@ export default function SearchForm ({
           required />
           <button className="h-10 w-10 p-2" type="submit" disabled={pending} aria-label="search">
             {pending
-              ? <RefreshIcon className="w-6 h-6 animate-spin" />
-              : <SearchIcon className="w-6 h-6" />
+              ? <ArrowPathIcon className="w-6 h-6 animate-spin" />
+              : <MagnifyingGlassIcon className="w-6 h-6" />
             }
           </button>
       </div>

@@ -1,5 +1,5 @@
 import { useForm } from '../../hooks/forms'
-import { RefreshIcon, SearchIcon } from '@heroicons/react/solid'
+import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { Platform } from '@prisma/client'
 
 type SearchData = {
@@ -91,8 +91,8 @@ export default function SearchForm ({
           disabled={pending} />
         <button className="group inline-flex items-center justify-center rounded-full p-2 text-sm" type="submit" disabled={pending} aria-label="search">
           {pending
-            ? <RefreshIcon className="w-6 h-6 animate-spin" />
-            : <SearchIcon className="w-6 h-6" />
+            ? <ArrowPathIcon className="w-6 h-6 animate-spin" />
+            : <MagnifyingGlassIcon className="w-6 h-6" />
           }
         </button>
       </div>
