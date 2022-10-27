@@ -212,6 +212,11 @@ button:focus-visible,
   @apply bg-transparent;
 }
 
+.search-results-table tbody tr.is-playing td[data-title],
+.game-item.is-playing .title {
+  @apply font-extrabold;
+}
+
 /*
  * Light theme
  */
@@ -511,6 +516,20 @@ table tbody tr:hover td {
   @apply bg-amber-500 text-amber-800 border-amber-600;
 }
 
+.search-results-table tbody tr.is-playing .bookmark,
+.game-item.is-playing .bookmark {
+  @apply text-red-500;
+}
+
+.search-results-table tbody tr.is-playing .progress-bar,
+.game-item.is-playing .progress-bar {
+  @apply bg-amber-400/40;
+}
+
+.search-results-table tbody tr.is-playing .progress-bar .fill-bar,
+.game-item.is-playing .progress-bar .fill-bar {
+  @apply bg-amber-400 text-amber-900;
+}
 
 /*
  * Dark theme
@@ -771,5 +790,20 @@ table tbody tr:hover td {
 
   .game-item.ranking-3 .badge {
     @apply bg-amber-600 text-amber-900 border-amber-700;
+  }
+
+  .search-results-table tbody tr.is-playing .bookmark,
+  .game-item.is-playing .bookmark {
+    @apply text-red-600;
+  }
+
+  .search-results-table tbody tr.is-playing .progress-bar,
+  .game-item.is-playing .progress-bar {
+    @apply bg-amber-600/40;
+  }
+
+  .search-results-table tbody tr.is-playing .progress-bar .fill-bar,
+  .game-item.is-playing .progress-bar .fill-bar {
+    @apply bg-amber-600 text-amber-200;
   }
 }
