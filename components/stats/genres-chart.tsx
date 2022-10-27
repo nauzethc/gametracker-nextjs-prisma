@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import { useColorScheme } from '../../hooks/color'
 import {
   Radar,
   RadarChart,
@@ -14,25 +15,7 @@ type GenresChartProps = {
 
 export default function GenresChart ({ genres }: GenresChartProps) {
   const max = Math.max.apply(genres?.map(genre => genre._count) ?? [5])
-  const [colorScheme, setColorScheme] = useState<string>('light')
-
-  const handleColorSchemeEvent = (event: MediaQueryListEvent) => {
-    setColorScheme(event.matches ? 'dark' : 'light')
-  }
-  useEffect(() => {
-    setColorScheme(
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    )
-    window.matchMedia('(prefers-color-scheme: dark)')
-      .addEventListener('change', handleColorSchemeEvent)
-    return () => {
-      window.matchMedia('(prefers-color-scheme: dark)')
-        .removeEventListener('change', handleColorSchemeEvent)
-    }
-  }, [])
-
+  const { colorScheme } = useColorScheme()
   return (
     Array.isArray(genres)
       ? <ResponsiveContainer width="100%" height="100%">
