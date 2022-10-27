@@ -1,13 +1,15 @@
 import Cover from '../common/cover'
 import { capitalize } from '../../utils/strings'
 import { GameWithPlatform } from '../../types/games'
-import { CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/solid'
+import { BookmarkIcon, CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/24/solid'
+import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
 import { GamepadAltIcon, TrophyIcon, StatusIcon, GameplayIcon } from '../common/icons'
 import Rating from '../common/rating'
 import ProgressBar from '../common/progress-bar'
 
 type GamePreviewProps = {
-  data: GameWithPlatform
+  data: GameWithPlatform,
+  onBookmark?: Function
 }
 
 function getStatus (status: string, date: Date | null): string {
@@ -34,15 +36,27 @@ function Stat ({ label, children } : { label: string, children?: any }) {
   )
 }
 
-export default function GamePreview ({ data }: GamePreviewProps) {
+export default function GamePreview ({ data, onBookmark }: GamePreviewProps) {
+  const handleBookmark = () => {
+    if (onBookmark && typeof onBookmark === 'function') {
+      onBookmark()
+    }
+  }
   return (
     <div className="game-preview grid">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 relative">
         <div className="w-32 flex-shrink-0">
           <Cover src={data.cover || undefined} alt={data.name} />
         </div>
         <div className="flex flex-col flex-grow gap-2">
-          <h1 className="text-xl font-semibold">{data.name}</h1>
+          <h1 className="text-xl font-semibold flex items-center gap-2 justify-between">{data.name}
+          <button onClick={handleBookmark} className="btn-invisible h-10 w-10" aria-label="pinned">
+            {data.fixed
+              ? <BookmarkIcon className="w-6 h-6" />
+              : <BookmarkOutlineIcon className="w-6 h-6" />
+            }
+          </button>
+        </h1>
           <div className="field flex flex-col">
             <span className="font-semibold text-sm">Developer</span>
             <span>{data.developers.join(', ')}</span>

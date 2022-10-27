@@ -1,4 +1,4 @@
-import { CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/solid'
+import { CalendarIcon, ChartPieIcon, ClockIcon, BookmarkIcon } from '@heroicons/react/24/solid'
 import { Fragment } from 'react'
 import { GameWithPlatform } from '../../types/games'
 import { GamepadAltIcon, GameplayIcon } from '../common/icons'
@@ -52,11 +52,12 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
         </thead>
         <tbody>
           {data.map(game =>
-            <tr key={game.id} className="">
-              <td className="">
+            <tr key={game.id} className={game.fixed ? 'is-playing' : ''}>
+              <td className="relative">
                 <Link href={`/games/${game.id}`}>
                   <a><Cover className="w-16" src={game.cover || undefined} alt={game.name} /></a>
                 </Link>
+                {game.fixed ? <BookmarkIcon className="w-4 h-4 absolute top-0 -mt-1 right-0 mr-1 bookmark" /> : null}
               </td>
               <td className="" data-title>
                 <Link href={`/games/${game.id}`}>

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import GamePreview from '../../components/game-detail/game-preview'
 import GameForm, { GameplayData } from '../../components/game-create/game-form'
 import { HeaderPortal } from '../../components/app/header'
-import { PencilIcon, TrashIcon } from '@heroicons/react/solid'
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/solid'
 import Modal from '../../components/common/modal'
 import { Dialog } from '@headlessui/react'
 import { parseGameUpdate } from '../../utils/games'
@@ -34,6 +34,11 @@ export default function GameDetail ({ id, data, error }: GameDetailProps) {
     if (!game.state.error) setEditModal(false)
   }
 
+  async function handleBookmark () {
+    // Send request
+    await game.update({ fixed: !game.state.data?.fixed })
+  }
+
   async function handleDelete () {
     // Send request
     await game.delete()
@@ -43,7 +48,9 @@ export default function GameDetail ({ id, data, error }: GameDetailProps) {
 
   return game.state.data
     ? <div id="game-detail-view" className="grid px-4 py-3">
-      <GamePreview data={game.state.data} />
+      <GamePreview
+        data={game.state.data}
+        onBookmark={handleBookmark} />
 
       <HeaderPortal>
         <button onClick={() => setEditModal(true)} className="h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold" aria-label="edit">

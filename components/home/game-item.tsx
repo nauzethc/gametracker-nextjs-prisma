@@ -1,7 +1,7 @@
 import { GameWithPlatform } from '../../types/games'
 import Cover from '../common/cover'
 import { GamepadAltIcon, GameplayIcon } from '../common/icons'
-import { CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/solid'
+import { BookmarkIcon, CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
 import { capitalize } from '../../utils/strings'
 import ProgressBar from '../common/progress-bar'
@@ -13,19 +13,20 @@ type GameItemProps = {
 
 export default function GameItem ({ data } : GameItemProps) {
   return (
-    <div className="game-item flex flex-col gap-2">
+    <div className={`game-item flex flex-col gap-2 ${data.fixed ? 'is-playing' : ''}`}>
       <div className="flex gap-x-6">
         <div className="media w-16 sm:w-24 flex-shrink-0">
           <Link href={`/games/${data.id}`}>
-            <a>
+            <a className="relative">
               <Cover src={data.cover || undefined} alt={data.name} />
+              {data.fixed ? <BookmarkIcon className="w-5 h-5 sm:w-6 sm:h-6 absolute top-0 -mt-2 right-0 mr-1 bookmark" /> : null}
             </a>
           </Link>
           <Rating value={data.rating ?? 0} size={5} />
         </div>
         <div className="meta flex-grow grid grid-cols-2 place-content-start gap-y-2 gap-x-4 sm:gap-y-3 md:grid-cols-1">
           <div className="col-span-full grid">
-            <h1 className="font-semibold text-lg leading-6 whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="font-semibold text-lg leading-6 whitespace-nowrap overflow-hidden text-ellipsis title">
               <Link href={`/games/${data.id}`}><a>{data.name}</a></Link>
             </h1>
           </div>
