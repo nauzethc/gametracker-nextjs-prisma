@@ -50,8 +50,8 @@ export function parseGameCreate (data: Record<string, any>): GameCreate {
     igdbRating: data.rating ?? null,
     igdbId: data.igdbId,
     igdbUrl: data.url,
-    fixed: null,
-    favorite: null,
+    fixed: Boolean(data.fixed),
+    favorite: Boolean(data.favorite),
 
     // Gameplay
     gameplayType: data.gameplayType,
