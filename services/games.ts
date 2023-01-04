@@ -68,7 +68,7 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   const options = {
     skip: Math.max(PAGE - 1, 0) * PAGE_SIZE,
     take: PAGE_SIZE,
-    orderBy: [{ [ORDER_BY]: SORT }],
+    orderBy: [{ fixed: 'desc' }, { [ORDER_BY]: SORT }],
     include: { platform: true }
   }
   const where = { userId }
@@ -81,6 +81,15 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   }
   if (params.status) {
     Object.assign(where, { status: { equals: params.status } })
+  }
+  if (params.genre) {
+    Object.assign(where, { genres: { has: params.genre } })
+  }
+  if (params.developer) {
+    Object.assign(where, { developers: { has: params.developer } })
+  }
+  if (params.publisher) {
+    Object.assign(where, { publishers: { has: params.publisher } })
   }
   if (params.igdbId) {
     Object.assign(where, { igdbId: { equals: params.igdbId } })
@@ -122,6 +131,20 @@ export function streamGames (userId: string, batchSize: number): Readable {
       }
     }
   })
+}
+
+export async function findGenres (userId: string): Promise<string[]> {
+  // Get games grouped by genres
+  const genres = await prisma.$queryRaw`
+    SELECT DISTINCT "genre"
+    FROM "games"
+    CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
+    WHERE "userId" = ${userId}
+    ORDER BY "genre" ASC
+  `
+  return JSON.parse(JSON.stringify(genres,
+    (_, v) => typeof v === 'bigint' ? Number(v.toString()) : v
+  )).map(({ genre }: { genre: string }) => genre)
 }
 
 export async function findStats (userId: string, params: StatsQueryParams): Promise<AllStats> {

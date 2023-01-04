@@ -21,6 +21,9 @@ export function parseGameQuery (data: Record<string, any>): GameQueryParams {
     page_size,
     sort,
     platformId,
+    genre,
+    publisher,
+    developer,
     status
   } = data
   return {
@@ -31,6 +34,9 @@ export function parseGameQuery (data: Record<string, any>): GameQueryParams {
     order_by: toString(order_by) ?? 'startedOn',
     sort: toString(sort) === 'asc' ? 'asc' : 'desc',
     platformId: toNumber(platformId) ?? undefined,
+    genre: toString(genre) ?? undefined,
+    publisher: toString(publisher) ?? undefined,
+    developer: toString(developer) ?? undefined,
     status: toString(status) ?? undefined
   }
 }

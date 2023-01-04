@@ -12,7 +12,10 @@ export interface GameQueryParams {
   page?: number
   order_by?: string
   sort?: 'asc' | 'desc'
-  platformId?: number
+  platformId?: number,
+  genre?: string,
+  developer?: string,
+  publisher?: string,
   status?: string
 }
 
