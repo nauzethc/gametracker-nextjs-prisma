@@ -6,6 +6,7 @@ import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline
 import { GamepadAltIcon, TrophyIcon, StatusIcon, GameplayIcon } from '../common/icons'
 import Rating from '../common/rating'
 import ProgressBar from '../common/progress-bar'
+import Link from 'next/link'
 
 type GamePreviewProps = {
   data: GameWithPlatform,
@@ -59,11 +60,27 @@ export default function GamePreview ({ data, onBookmark }: GamePreviewProps) {
         </h1>
           <div className="field flex flex-col">
             <span className="font-semibold text-sm">Developer</span>
-            <span>{data.developers.join(', ')}</span>
+            <ul className="comma-list">
+              {data.developers.map((developer, index) =>
+                <li key={index}>
+                  <Link href={`/?developer=${developer}`}>
+                    <a>{developer}</a>
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
           <div className="field flex flex-col">
             <span className="font-semibold text-sm">Publisher</span>
-            <span>{data.publishers.join(', ')}</span>
+            <ul className="comma-list">
+              {data.publishers.map((publisher, index) =>
+                <li key={index}>
+                  <Link href={`/?publisher=${publisher}`}>
+                    <a>{publisher}</a>
+                  </Link>
+                </li>
+              )}
+            </ul>
           </div>
           <div className="field flex flex-col">
             <span className="font-semibold text-sm">Release date</span>
@@ -110,7 +127,7 @@ export default function GamePreview ({ data, onBookmark }: GamePreviewProps) {
           <span>{`${data.achievementsUnlocked} of ${data.achievementsTotal}`}</span>
         </Stat>
         <div className="col-span-full flex flex-col gap-4 items-center justify-center">
-          <Rating max={5} value={Number(data.rating)} size={8} />
+          <Rating className="text-yellow-400 dark:text-yellow-500" max={5} value={Number(data.rating)} size={8} />
           {data.comment ? <blockquote className="px-4">{data.comment}</blockquote> : null}
         </div>
       </div>

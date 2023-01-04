@@ -66,6 +66,24 @@ table tbody td:not(:first-child) {
   @apply text-center;
 }
 
+ul.comma-list {
+  display: inline;
+  list-style: none;
+  padding: 0px;
+}
+
+ul.comma-list li {
+  display: inline;
+}
+
+ul.comma-list li::after {
+  content: ", ";
+}
+
+ul.comma-list li:last-child::after {
+  content: "";
+}
+
 
 /**
  * Forms
