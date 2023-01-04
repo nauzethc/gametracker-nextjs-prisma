@@ -1,5 +1,5 @@
 import prisma from '../lib/prisma'
-import { Platform, Game } from '@prisma/client'
+import { Platform, Game, Prisma } from '@prisma/client'
 import {
   GameCreate,
   GameQueryParams,
@@ -63,12 +63,12 @@ export async function findGames (userId: string, params: GameQueryParams): Promi
   const PAGE_SIZE = params.page_size ?? 10
   const PAGE = params.page ?? 1
   const ORDER_BY = params.order_by ?? 'startedOn'
-  const SORT = params.sort ?? 'desc'
+  const SORT = params.sort ?? Prisma.SortOrder.desc
 
   const options = {
     skip: Math.max(PAGE - 1, 0) * PAGE_SIZE,
     take: PAGE_SIZE,
-    orderBy: [{ fixed: 'desc' }, { [ORDER_BY]: SORT }],
+    orderBy: [{ fixed: Prisma.SortOrder.desc }, { [ORDER_BY]: SORT }],
     include: { platform: true }
   }
   const where = { userId }
