@@ -67,14 +67,16 @@ export default function HomeView ({
           platforms={platforms}
           genres={genres}
           pending={games.state.pending} />
-        <div className="flex items-center justify-between gap-6 col-span-full">
-          <div className="flex items-center gap-2">
+        <div className="flex items-start justify-between gap-6 col-span-full">
+          <div className="flex flex-wrap items-start gap-2">
             {games.state.data?.count
               ? <span className="badge">{games.state.data.count} {games.state.data.count > 1 ? 'games' : 'game'}</span>
               : <span className="badge badge-danger">No games found</span>
             }
             {filters.map(([key, value]) =>
-              <span key={key} className="badge badge-info"><span className="font-normal">{capitalize(key)}:</span> {value}</span>
+              <span key={key} className="badge badge-info">
+                <span className="font-normal hidden sm:inline-block">{capitalize(key)}:</span> {value}
+              </span>
             )}
           </div>
           <div className="flex items-center gap-2">
