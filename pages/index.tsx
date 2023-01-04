@@ -10,7 +10,7 @@ import { PlusCircleIcon, QueueListIcon, Squares2X2Icon } from '@heroicons/react/
 import SearchForm from '../components/home/search-form'
 import SearchResults from '../components/home/search-results'
 import Pagination from '../components/common/pagination'
-import { findGames, findPlatforms } from '../services/games'
+import { findGames, findGenres, findPlatforms } from '../services/games'
 import { parseGameQuery } from '../utils/games'
 import { HeaderPortal } from '../components/app/header'
 import UserButton from '../components/common/user-button'
@@ -22,12 +22,14 @@ import Toggle from '../components/common/toggle'
 export default function HomeView ({
   query: initialQuery,
   platforms = [],
+  genres = [],
   data,
   error
 }: {
   query: GameQueryParams,
   data: GameSearch,
   platforms?: Platform[],
+  genres?: string[],
   error: any
 }) {
   const didMount = useDidMount()
@@ -59,6 +61,7 @@ export default function HomeView ({
           className="col-span-full mb-4"
           onSubmit={handleSubmit}
           platforms={platforms}
+          genres={genres}
           pending={games.state.pending} />
         <div className="flex items-center justify-between gap-6 col-span-full">
           <div>
@@ -105,12 +108,14 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
   )
   const query: GameQueryParams = parseGameQuery(context.query)
   const platforms = await findPlatforms()
+  const genres = await findGenres(user.id)
   try {
     const data = await findGames(user.id, query)
     return {
       props: JSON.parse(JSON.stringify({
         data,
         platforms,
+        genres,
         error: null,
         query
       }))
@@ -120,6 +125,7 @@ export async function getServerSideProps (context: GetServerSidePropsContext) {
       props: JSON.parse(JSON.stringify({
         data: { count: 0, data: [] },
         platforms,
+        genres,
         error: `${error}`,
         query
       }))

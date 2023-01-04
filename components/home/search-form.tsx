@@ -6,6 +6,7 @@ type SearchData = {
   q?: string,
   status?: string,
   platformId?: number | string,
+  genre?: string,
   order_by?: string
 }
 
@@ -13,12 +14,14 @@ const defaults: SearchData = {
   q: '',
   status: '',
   platformId: '',
+  genre: '',
   order_by: 'startedOn'
 }
 
 export default function SearchForm ({
   className = '',
   platforms = [],
+  genres = [],
   pending,
   initialData,
   onSubmit
@@ -26,14 +29,15 @@ export default function SearchForm ({
   className?: string,
   pending?: boolean,
   initialData?: SearchData,
-  platforms?: Platform[]
+  platforms?: Platform[],
+  genres?: string[],
   onSubmit?: Function
 }) {
   const { data, handleChange, handleSubmit } = useForm<SearchData>({ defaults, initialData, onSubmit })
   return (
-    <form onSubmit={handleSubmit} className={`grid grid-cols-3 md:grid-cols-5 gap-2 ${className}`}>
+    <form onSubmit={handleSubmit} className={`grid grid-cols-2 md:grid-cols-6 gap-x-2 gap-y-4 ${className}`}>
       <div className="field">
-        <label htmlFor="status">Platform</label>
+        <label htmlFor="platformId">Platform</label>
         <select
           name="platformId"
           value={data.platformId}
@@ -44,6 +48,23 @@ export default function SearchForm ({
           {platforms.map(platform =>
             <option key={platform.igdbId} value={platform.igdbId}>
               {platform.name}
+            </option>
+          )}
+        </select>
+      </div>
+
+      <div className="field">
+        <label htmlFor="genre">Genre</label>
+        <select
+          name="genre"
+          value={data.genre}
+          aria-label="genre"
+          onChange={handleChange}
+          disabled={pending}>
+          <option value="">Any</option>
+          {genres.map((genre, index) =>
+            <option key={index}>
+              {genre}
             </option>
           )}
         </select>
@@ -79,7 +100,7 @@ export default function SearchForm ({
         </select>
       </div>
 
-      <div className="col-span-full md:col-span-2 flex items-end gap-2">
+      <div className="col-start-1 row-start-1 col-span-full md:col-span-2 md:col-start-5 flex items-end gap-3">
         <input
           className="flex-grow"
           type="text"
