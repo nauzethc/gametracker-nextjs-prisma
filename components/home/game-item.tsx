@@ -22,7 +22,7 @@ export default function GameItem ({ data } : GameItemProps) {
               {data.fixed ? <BookmarkIcon className="w-5 h-5 sm:w-6 sm:h-6 absolute top-0 -mt-2 right-0 mr-1 bookmark" /> : null}
             </a>
           </Link>
-          <Rating value={data.rating ?? 0} size={5} />
+          <Rating className="text-yellow-400 dark:text-yellow-500" value={data.rating ?? 0} size={5} />
         </div>
         <div className="meta flex-grow grid grid-cols-2 place-content-start gap-y-2 gap-x-4 sm:gap-y-3 md:grid-cols-1">
           <div className="col-span-full grid">
