@@ -18,6 +18,7 @@ import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import { Platform } from '@prisma/client'
 import Toggle from '../components/common/toggle'
+import { capitalize } from '../utils/strings'
 
 export default function HomeView ({
   query: initialQuery,
@@ -37,6 +38,9 @@ export default function HomeView ({
   const [showTable, setTable] = useState<boolean>(false)
   const games = useEndpoint<GameSearch>('/api/games', { data, error })
   const router = useRouter()
+  const filters = ['developer', 'publisher']
+    .map(key => [key, query[key]])
+    .filter(([key, value]) => value)
 
   const handlePageChange = (page: number) => setQuery({ ...query, page })
   const handleSubmit = (query: Record<string, any>) => {
@@ -64,11 +68,14 @@ export default function HomeView ({
           genres={genres}
           pending={games.state.pending} />
         <div className="flex items-center justify-between gap-6 col-span-full">
-          <div>
+          <div className="flex items-center gap-2">
             {games.state.data?.count
               ? <span className="badge">{games.state.data.count} {games.state.data.count > 1 ? 'games' : 'game'}</span>
               : <span className="badge badge-danger">No games found</span>
             }
+            {filters.map(([key, value]) =>
+              <span key={key} className="badge badge-info"><span className="font-normal">{capitalize(key)}:</span> {value}</span>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <Squares2X2Icon className="w-6 h-6" />

@@ -758,6 +758,10 @@ table tbody tr:hover td {
     @apply bg-red-600/60 text-red-200;
   }
 
+  .badge-info {
+    @apply bg-blue-600/60 text-blue-200;
+  }
+
   .toggle {
     @apply bg-slate-800;
   }
