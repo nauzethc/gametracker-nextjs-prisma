@@ -235,6 +235,14 @@ button:focus-visible,
   @apply font-extrabold;
 }
 
+.carousel .swiper-slide {
+  @apply opacity-50 transition-opacity;
+}
+
+.carousel .swiper-slide.swiper-slide-active {
+  @apply opacity-100;
+}
+
 /*
  * Light theme
  */
