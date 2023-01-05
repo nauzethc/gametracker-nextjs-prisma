@@ -11,15 +11,19 @@ import { Dialog } from '@headlessui/react'
 import { parseGameUpdate } from '../../utils/games'
 import { useRouter } from 'next/router'
 import { retrieveGame } from '../../services/games'
+import { findGameById } from '../../services/igdb'
 import { toString } from '../../utils/url'
+import { IGDBGame } from '../../types/igdb'
+import Carousel from '../../components/common/carousel'
 
 type GameDetailProps = {
   id: string,
   data?: GameWithPlatform,
+  metadata?: IGDBGame,
   error?: Error
 }
 
-export default function GameDetail ({ id, data, error }: GameDetailProps) {
+export default function GameDetail ({ id, data, metadata, error }: GameDetailProps) {
   const game = useEndpoint<GameWithPlatform>(`/api/games/${id}`, { data, error })
   const [showEditModal, setEditModal] = useState(false)
   const [showDeleteModal, setDeleteModal] = useState(false)
@@ -51,6 +55,14 @@ export default function GameDetail ({ id, data, error }: GameDetailProps) {
       <GamePreview
         data={game.state.data}
         onBookmark={handleBookmark} />
+
+      {metadata?.screenshots && metadata.screenshots.length > 0
+        ? <Carousel
+            className="w-full mt-8"
+            images={metadata?.screenshots ?? []}
+            alt={game.state.data?.name ?? 'Game'} />
+        : null
+      }
 
       <HeaderPortal>
         <button onClick={() => setEditModal(true)} className="h-10 w-10 sm:w-auto sm:px-4 text-sm font-semibold" aria-label="edit">
@@ -100,10 +112,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   try {
     const data = await retrieveGame(gameId)
+    const metadata = await findGameById(`${data.igdbId}`)
     return {
       props: {
         id,
         data: JSON.parse(JSON.stringify(data)),
+        metadata: JSON.parse(JSON.stringify(metadata)),
         error: null
       }
     }
@@ -112,6 +126,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       props: {
         id,
         data: null,
+        metadata: null,
         error: `${error}`
       }
     }
