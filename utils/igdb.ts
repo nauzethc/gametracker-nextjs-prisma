@@ -1,5 +1,11 @@
 import { DEFAULT_PAGE_SIZE } from '../config'
-import { IGDBGame, IGDBQueryParams, IGDBGameResult, IGDBPlatformResult, IGDBPlatform } from '../types/igdb'
+import {
+  IGDBGame,
+  IGDBQueryParams,
+  IGDBGameResult,
+  IGDBPlatformResult,
+  IGDBPlatform
+} from '../types/igdb'
 import { toNumber, toString } from './url'
 
 const IGDB_IMG_BASE_URL = process.env.IGDB_IMG_BASE_URL ?? ''
@@ -57,6 +63,15 @@ export function sanitizePlatformRetrieve (igdbData: IGDBPlatformResult): IGDBPla
   }
 }
 
+export function sanitizeScreenshotRetrieve (igdbData: {
+  width: number,
+  height: number,
+  image_id: string,
+  url: string
+}): string {
+  return getImageURL(igdbData.image_id, 'screenshot_big')
+}
+
 export function sanitizeGameRetrieve (igdbData: IGDBGameResult): IGDBGame {
   return {
     igdbId: igdbData.id,
@@ -75,9 +90,9 @@ export function sanitizeGameRetrieve (igdbData: IGDBGameResult): IGDBGame {
       .filter(({ publisher }) => publisher)
       .map(({ company }) => company.name),
     type: getCategory(igdbData.category),
-    genres: (igdbData.genres ?? [])
-      .map(({ name }) => name),
-    platforms: (igdbData.platforms ?? []).map(sanitizePlatformRetrieve)
+    genres: (igdbData.genres ?? []).map(({ name }) => name),
+    platforms: (igdbData.platforms ?? []).map(sanitizePlatformRetrieve),
+    screenshots: (igdbData.screenshots ?? []).map(sanitizeScreenshotRetrieve)
   }
 }
 

@@ -67,7 +67,8 @@ export interface IGDBGame {
   publishers: string[]
   type: string
   genres: string[]
-  platforms: IGDBPlatform[]
+  platforms: IGDBPlatform[],
+  screenshots: string[]
 }
 
 export type IGDBGameSelected = Omit<IGDBGame, 'platforms'> & { platform: IGDBPlatform }
