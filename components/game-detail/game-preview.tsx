@@ -9,6 +9,7 @@ import ProgressBar from '../common/progress-bar'
 import Link from 'next/link'
 
 type GamePreviewProps = {
+  className?: string,
   data: GameWithPlatform,
   onBookmark?: Function
 }
@@ -37,14 +38,14 @@ function Stat ({ label, children } : { label: string, children?: any }) {
   )
 }
 
-export default function GamePreview ({ data, onBookmark }: GamePreviewProps) {
+export default function GamePreview ({ className = '', data, onBookmark }: GamePreviewProps) {
   const handleBookmark = () => {
     if (onBookmark && typeof onBookmark === 'function') {
       onBookmark()
     }
   }
   return (
-    <div className="game-preview grid">
+    <div className={`game-preview grid ${className}`}>
       <div className="flex flex-wrap gap-4 relative">
         <div className="w-32 flex-shrink-0">
           <Cover src={data.cover || undefined} alt={data.name} />
