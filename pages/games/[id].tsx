@@ -23,6 +23,12 @@ type GameDetailProps = {
   error?: Error
 }
 
+function getRandomItem<T> (items: T[]): T | undefined {
+  return items.length > 0
+    ? items[Math.floor(Math.random() * items.length)]
+    : undefined
+}
+
 export default function GameDetail ({ id, data, metadata, error }: GameDetailProps) {
   const game = useEndpoint<GameWithPlatform>(`/api/games/${id}`, { data, error })
   const [showEditModal, setEditModal] = useState(false)
@@ -51,14 +57,20 @@ export default function GameDetail ({ id, data, metadata, error }: GameDetailPro
   }
 
   return game.state.data
-    ? <div id="game-detail-view" className="grid px-4 py-3">
+    ? <div id="game-detail-view" className="grid">
+      {metadata?.screenshots && metadata.screenshots.length > 0
+        ? <div className="background-image" style={{ backgroundImage: `url(${getRandomItem(metadata.screenshots)})` }}><div className="filter" /></div>
+        : null
+      }
+
       <GamePreview
+        className="mt-4"
         data={game.state.data}
         onBookmark={handleBookmark} />
 
       {metadata?.screenshots && metadata.screenshots.length > 0
         ? <Carousel
-            className="w-full mt-8"
+            className="w-full my-8"
             images={metadata?.screenshots ?? []}
             alt={game.state.data?.name ?? 'Game'} />
         : null

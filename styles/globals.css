@@ -243,6 +243,21 @@ button:focus-visible,
   @apply opacity-100;
 }
 
+.background-image {
+  @apply fixed w-screen left-0;
+  height: auto;
+  min-height: 50%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  mask-image: linear-gradient(rgba(255,255,255,0.4), transparent);
+}
+.background-image .filter {
+  @apply w-full h-full;
+  backdrop-filter: saturate(50%) blur(3px);
+}
+
 /*
  * Light theme
  */
