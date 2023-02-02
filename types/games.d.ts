@@ -37,15 +37,21 @@ export type GameStats = Pick<Game, 'igdbId'|'name'|'cover'> & {
   _max: { finishedOn: Date | null }
 }
 
-export type PlatformStats = Pick<Platform, 'igdbId'|'name'> & {
+export type PlatformStats = Pick<Platform, 'igdbId'|'name'|'abbreviation'> & {
   _count: { _all: number },
   _sum: { totalHours: number | null }
+}
+
+export type GenreStats = {
+  genre: string,
+  _count: number,
+  _totalHours: number | null
 }
 
 export interface AllStats {
   status: StatusStats[],
   games: GameStats[],
-  genres?: any,
+  genres: GenreStats[],
   platforms: PlatformStats[]
 }
 
