@@ -18,9 +18,22 @@ import SearchForm from '../components/stats/search-form'
 import { parseStatsQuery } from '../utils/games'
 import { Platform } from '@prisma/client'
 import GenresChart from '../components/stats/genres-chart'
+import GamesChart from '../components/stats/games-chart'
+import PlatformsChart from '../components/stats/platforms-chart'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
+}
+
+function getStatusColor (status: string): string {
+  switch (status) {
+    case 'finished':
+      return 'bg-green-400 dark:bg-green-800'
+    case 'abandoned':
+      return 'bg-red-400 dark:bg-red-800'
+    default:
+      return 'bg-gray-400 dark:bg-gray-800'
+  }
 }
 
 export default function StatsView ({
@@ -76,59 +89,102 @@ export default function StatsView ({
         </div>
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Genres</h3>
-        <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
-          <GenresChart genres={stats.state.data?.genres} />
+        <div className="grid items-center lg:grid-cols-2 gap-8">
+          <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+            <GenresChart genres={stats.state.data?.genres} />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th className="text-left">Genre</th>
+                <th className="w-32">Hours</th>
+                <th className="w-32">Games</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.state.data?.genres.map(genre =>
+              <tr key={genre.genre}>
+                <td>{genre.genre}</td>
+                <td>{genre._totalHours}</td>
+                <td>{genre._count}</td>
+              </tr>
+              )}
+            </tbody>
+          </table>
         </div>
 
-        <table>
-          <caption>Games</caption>
-          <thead>
-            <tr>
-              <th className="text-left">Status</th>
-              <th className="w-32">Average</th>
-              <th className="w-32">Hours</th>
-              <th className="w-32">Games</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.state.data?.status.map(status =>
-            <tr key={status.status}>
-              <td>
-                <Link href={`/?status=${status.status}`}>
-                  <a>{capitalize(status.status)}</a>
-                </Link>
-              </td>
-              <td>{toFixed(status._avg.totalHours)}</td>
-              <td>{status._sum.totalHours}h</td>
-              <td>{status._count._all}</td>
-            </tr>
-            )}
-          </tbody>
-        </table>
+        <h3 className="text-lg font-semibold border-b-2 -mb-4">Games</h3>
+        <div className="grid items-center lg:grid-cols-2 gap-8">
+          <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+            <GamesChart games={stats.state.data?.status} />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th className="text-left">Status</th>
+                <th className="w-32">Average</th>
+                <th className="w-32">Time</th>
+                <th className="w-32">Games</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.state.data?.status.map(status =>
+              <tr key={status.status}>
+                <td>
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-block rounded-full w-4 h-4 ${getStatusColor(status.status)}`}></span>
+                    <Link href={`/?status=${status.status}`}>
+                      <a>{capitalize(status.status)}</a>
+                    </Link>
+                  </div>
+                </td>
+                <td>{toFixed(status._avg.totalHours)}</td>
+                <td>{status._sum.totalHours}h</td>
+                <td>{status._count._all}</td>
+              </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <table>
-          <caption>Platforms</caption>
-          <thead>
-            <tr>
-              <th className="text-left">Name</th>
-              <th className="w-32">Hours</th>
-              <th className="w-32">Games</th>
-            </tr>
-          </thead>
-          <tbody>
-            {stats.state.data?.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
-            <tr key={platform.igdbId}>
-              <td>
-                <Link href={`/?platformId=${platform.igdbId}`}>
-                  <a>{platform.name}</a>
-                </Link>
-              </td>
-              <td>{platform._sum.totalHours}h</td>
-              <td>{platform._count._all}</td>
-            </tr>
-            )}
-          </tbody>
-        </table>
+        <h3 className="text-lg font-semibold border-b-2 -mb-4">Platforms</h3>
+        <div className="grid items-center lg:grid-cols-2 gap-8">
+          <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+            <PlatformsChart platforms={stats.state.data?.platforms} />
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th className="text-left">Name</th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block rounded-full w-4 h-4 bg-red-400 dark:bg-red-600"></span>
+                    <span>Time</span>
+                  </div>
+                </th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block rounded-full w-4 h-4 bg-blue-400 dark:bg-blue-500"></span>
+                    <span>Games</span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {stats.state.data?.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
+              <tr key={platform.igdbId}>
+                <td>
+                  <Link href={`/?platformId=${platform.igdbId}`}>
+                    <a>{platform.name}</a>
+                  </Link>
+                </td>
+                <td>{platform._sum.totalHours}h</td>
+                <td>{platform._count._all}</td>
+              </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   )
