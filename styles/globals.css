@@ -251,11 +251,11 @@ button:focus-visible,
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  mask-image: linear-gradient(rgba(255,255,255,0.4), transparent);
+  mask-image: linear-gradient(transparent 0%, rgba(255,255,255,0.5) 35%, rgba(255,255,255,0.5) 70%, transparent 100%);
 }
 .background-image .filter {
   @apply w-full h-full;
-  backdrop-filter: saturate(50%) blur(3px);
+  backdrop-filter: saturate(60%) blur(5px);
 }
 
 /*
