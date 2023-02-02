@@ -34,13 +34,14 @@ export default function GenresChart ({ genres }: GenresChartProps) {
           <PolarRadiusAxis
             stroke={colorScheme === 'dark' ? 'white' : 'black'}
             angle={30}
-            fontSize="12px"
             display="none"
             domain={[0, max]} />
           <Radar
             name="Games"
             dataKey="_count"
             stroke="#2563eb"
+            strokeWidth={2}
+            strokeOpacity={0.6}
             fill="#3b82f6"
             fillOpacity={0.6} />
         </RadarChart>
