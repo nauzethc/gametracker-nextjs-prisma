@@ -189,7 +189,7 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
 
   // Get games grouped by genres
   const genres = await prisma.$queryRaw`
-    SELECT COUNT(*) as "_count", "genre", "userId"
+    SELECT COUNT(*) AS "_count", SUM("total_hours") AS "_totalHours", "genre", "userId"
     FROM "games"
     CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
     WHERE "userId" = ${userId}
