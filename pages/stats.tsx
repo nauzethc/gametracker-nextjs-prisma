@@ -97,7 +97,7 @@ export default function StatsView ({
             <thead>
               <tr>
                 <th className="text-left">Genre</th>
-                <th className="w-32">Hours</th>
+                <th className="w-32">Time</th>
                 <th className="w-32">Games</th>
               </tr>
             </thead>
@@ -105,7 +105,7 @@ export default function StatsView ({
               {stats.state.data?.genres.map(genre =>
               <tr key={genre.genre}>
                 <td>{genre.genre}</td>
-                <td>{genre._totalHours}</td>
+                <td>{genre._totalHours}h</td>
                 <td>{genre._count}</td>
               </tr>
               )}
@@ -158,13 +158,13 @@ export default function StatsView ({
                 <th className="text-left">Name</th>
                 <th className="w-32">
                   <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-red-400 dark:bg-red-600"></span>
+                    <span className="inline-block rounded-full w-4 h-4 bg-blue-400 dark:bg-blue-600"></span>
                     <span>Time</span>
                   </div>
                 </th>
                 <th className="w-32">
                   <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-blue-400 dark:bg-blue-500"></span>
+                    <span className="inline-block rounded-full w-4 h-4 bg-red-400 dark:bg-red-500"></span>
                     <span>Games</span>
                   </div>
                 </th>
