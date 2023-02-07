@@ -38,8 +38,9 @@ export type GameStats = Pick<Game, 'igdbId'|'name'|'cover'> & {
 }
 
 export type PlatformStats = Pick<Platform, 'igdbId'|'name'|'abbreviation'> & {
-  _count: { _all: number },
-  _sum: { totalHours: number | null }
+  _count: number,
+  _totalHours: number,
+  status: string
 }
 
 export type GenreStats = {

@@ -151,21 +151,6 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
   // Get query params
   const query = sanitizeStatsQuery(params)
 
-  // Get total hours and games count by status
-  const status = await prisma.game.groupBy({
-    by: ['status'],
-    where: { userId, ...query },
-    _count: {
-      _all: true
-    },
-    _avg: {
-      totalHours: true
-    },
-    _sum: {
-      totalHours: true
-    }
-  })
-
   // Get most played games
   const games = await prisma.game.groupBy({
     by: ['igdbId', 'name', 'cover'],
@@ -187,6 +172,21 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
     take: 6
   })
 
+  // Get total hours and games count by status
+  const status = await prisma.game.groupBy({
+    by: ['status'],
+    where: { userId, ...query },
+    _count: {
+      _all: true
+    },
+    _avg: {
+      totalHours: true
+    },
+    _sum: {
+      totalHours: true
+    }
+  })
+
   // Get games grouped by genres
   const genres = await prisma.$queryRaw`
     SELECT COUNT(*) AS "_count", SUM("total_hours") AS "_totalHours", "genre", "userId"
@@ -200,34 +200,20 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
   `
 
   // Get games count and total hours grouped by platform
-  const platformStats = await prisma.game.groupBy({
-    by: ['platformId'],
-    where: { userId, ...query },
-    _count: {
-      _all: true
-    },
-    _sum: {
-      totalHours: true
-    },
-    orderBy: {
-      platformId: 'desc'
-    }
-  })
-  const platformData = await prisma.platform.findMany({
-    where: {
-      games: {
-        some: {
-          userId: {
-            equals: userId
-          },
-          ...query
-        }
-      }
-    },
-    orderBy: {
-      igdbId: 'desc'
-    }
-  })
+  const platforms = await prisma.$queryRaw`
+    SELECT
+      COUNT(*) AS "_count",
+      SUM("total_hours") AS "_totalHours",
+      "userId", "status", "abbreviation", "platforms"."name",
+      "platforms"."igdb_id" AS "igdbId"
+    FROM "games"
+    LEFT JOIN "platforms" ON "games"."platformId" = "platforms"."igdb_id"
+    WHERE "userId" = ${userId}
+    AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
+    AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
+    GROUP BY "platforms"."igdb_id", "userId", "status", "abbreviation", "platforms"."name"
+    ORDER BY 1 DESC
+  `
 
   return {
     games,
@@ -235,9 +221,8 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
     genres: JSON.parse(JSON.stringify(genres,
       (_, v) => typeof v === 'bigint' ? Number(v.toString()) : v
     )),
-    platforms: platformData.map((platform, index) => ({
-      ...platform,
-      ...platformStats[index]
-    }))
+    platforms: JSON.parse(JSON.stringify(platforms,
+      (_, v) => typeof v === 'bigint' ? Number(v.toString()) : v
+    ))
   }
 }
