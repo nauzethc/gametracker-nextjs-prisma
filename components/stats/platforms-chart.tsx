@@ -1,37 +1,35 @@
 import React from 'react'
+import { PlatformStats } from '../../types/games'
+import { reducePlatforms } from '../../utils/stats'
 import { useColorScheme } from '../../hooks/color'
 import {
-  ComposedChart,
   Bar,
+  ComposedChart,
   ResponsiveContainer,
   XAxis,
   YAxis,
+  CartesianGrid,
   Line
 } from 'recharts'
 
 type PlatformsChartProps = {
-  platforms?: {
-    name: string,
-    abbreviation: string | null,
-    _count: { _all: number | null },
-    _sum: { totalHours: number | null }
-  }[]
+  platforms?: PlatformStats[]
 }
 
 export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
-  const data = platforms?.map(platform => ({
-    name: platform.name,
-    abbreviation: platform.abbreviation,
-    games: platform._count._all,
-    hours: platform._sum.totalHours
-  }))
-  const maxCount = Math.max(5, Math.max.apply(data?.map(p => p.games)))
-  const maxHours = Math.max.apply(data?.map(p => p.hours))
+  const data = reducePlatforms(platforms ?? [])
+  const maxHours = Math.max(...data.map(platform => platform._totalHours), 20)
+  const maxCount = Math.max(...data.map(platform => platform._count), 5)
   const { colorScheme } = useColorScheme()
   return (
     Array.isArray(data)
-      ? <ResponsiveContainer width="100%" height="100%">
+      ? <ResponsiveContainer width="100%" height="90%">
         <ComposedChart data={data}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            vertical={false}
+            stroke={colorScheme === 'dark' ? 'white' : 'black'}
+            strokeOpacity={0.5} />
           <XAxis
             dataKey="abbreviation"
             fontSize={14}
@@ -39,34 +37,51 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
             stroke={colorScheme === 'dark' ? 'white' : 'black'} />
           <YAxis
             yAxisId="0"
-            dataKey="games"
-            domain={[0, maxCount]}
             orientation="left"
-            scale="linear"
-            fontSize={14}
-            stroke={colorScheme === 'dark' ? 'white' : 'black'} />
-          <YAxis
-            yAxisId="1"
-            dataKey="hours"
             domain={[0, maxHours]}
-            orientation="right"
             scale="linear"
             unit="h"
             fontSize={12}
             stroke={colorScheme === 'dark' ? 'white' : 'black'} />
-          <Bar
+          <YAxis
             yAxisId="1"
-            dataKey="hours"
-            stroke="#2563eb"
+            orientation="right"
+            domain={[0, maxCount]}
+            scale="linear"
+            label="Games"
+            fontSize={12}
+            stroke={colorScheme === 'dark' ? 'white' : 'black'} />
+          <Bar
+            yAxisId="0"
+            stackId="a"
+            dataKey="finished._totalHours"
+            stroke={colorScheme === 'light' ? '#22c55e' : '#166534'}
             strokeWidth={2}
-            strokeOpacity={0.6}
-            fill="#3b82f6"
-            fillOpacity={0.6}
+            fill={colorScheme === 'light' ? '#22c55e' : '#166534'}
+            fillOpacity={0.8}
+            maxBarSize={50} />
+          <Bar
+            yAxisId="0"
+            stackId="a"
+            dataKey="abandoned._totalHours"
+            stroke={colorScheme === 'light' ? '#ef4444' : '#991b1b'}
+            strokeWidth={2}
+            fill={colorScheme === 'light' ? '#ef4444' : '#991b1b'}
+            fillOpacity={0.8}
+            maxBarSize={50} />
+          <Bar
+            yAxisId="0"
+            stackId="a"
+            dataKey="pending._totalHours"
+            stroke={colorScheme === 'light' ? '#64748b' : '#1e293b'}
+            strokeWidth={2}
+            fill={colorScheme === 'light' ? '#64748b' : '#1e293b'}
+            fillOpacity={0.8}
             maxBarSize={50} />
           <Line
-            yAxisId="0"
+            yAxisId="1"
             type="monotone"
-            dataKey="games"
+            dataKey="_count"
             stroke="#dc2626"
             strokeOpacity={0.8}
             strokeWidth={3} />
