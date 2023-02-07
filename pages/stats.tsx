@@ -18,8 +18,9 @@ import SearchForm from '../components/stats/search-form'
 import { parseStatsQuery } from '../utils/games'
 import { Platform } from '@prisma/client'
 import GenresChart from '../components/stats/genres-chart'
-import GamesChart from '../components/stats/games-chart'
+import StatusChart from '../components/stats/status-chart'
 import PlatformsChart from '../components/stats/platforms-chart'
+import { reducePlatforms } from '../utils/stats'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
@@ -113,10 +114,10 @@ export default function StatsView ({
           </table>
         </div>
 
-        <h3 className="text-lg font-semibold border-b-2 -mb-4">Games</h3>
+        <h3 className="text-lg font-semibold border-b-2 -mb-4">Status</h3>
         <div className="grid items-center lg:grid-cols-2 gap-8">
           <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
-            <GamesChart games={stats.state.data?.status} />
+            <StatusChart status={stats.state.data?.status} />
           </div>
           <table>
             <thead>
@@ -149,39 +150,32 @@ export default function StatsView ({
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Platforms</h3>
         <div className="grid items-center lg:grid-cols-2 gap-8">
-          <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+          <div className="flex items-center h-64 mx-auto md:h-96" style={{ width: '99%' }}>
             <PlatformsChart platforms={stats.state.data?.platforms} />
           </div>
           <table>
             <thead>
               <tr>
                 <th className="text-left">Name</th>
-                <th className="w-32">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-blue-400 dark:bg-blue-600"></span>
-                    <span>Time</span>
-                  </div>
-                </th>
-                <th className="w-32">
-                  <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-red-400 dark:bg-red-500"></span>
-                    <span>Games</span>
-                  </div>
-                </th>
+                <th className="w-32">Time</th>
+                <th className="w-32">Games</th>
               </tr>
             </thead>
             <tbody>
-              {stats.state.data?.platforms.sort((a, b) => a.name.localeCompare(b.name)).map(platform =>
-              <tr key={platform.igdbId}>
-                <td>
-                  <Link href={`/?platformId=${platform.igdbId}`}>
-                    <a>{platform.name}</a>
-                  </Link>
-                </td>
-                <td>{platform._sum.totalHours}h</td>
-                <td>{platform._count._all}</td>
-              </tr>
-              )}
+              {reducePlatforms(stats.state.data?.platforms ?? [])
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((platform, index) =>
+                <tr key={index}>
+                  <td>
+                    <Link href={`/?platformId=${platform.igdbId}`}>
+                      <a>{platform.name}</a>
+                    </Link>
+                  </td>
+                  <td>{platform._totalHours}h</td>
+                  <td>{platform._count}</td>
+                </tr>
+                )
+              }
             </tbody>
           </table>
         </div>
