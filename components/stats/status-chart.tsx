@@ -86,8 +86,8 @@ export default function StatusChart ({ status }: StatusChartProps) {
   const { colorScheme } = useColorScheme()
   return (
     Array.isArray(data)
-      ? <div className="w-full h-full flex">
-          <ResponsiveContainer width="50%" height="100%">
+      ? <div className="w-full h-full grid sm:grid-cols-2">
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}
@@ -115,7 +115,7 @@ export default function StatusChart ({ status }: StatusChartProps) {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <ResponsiveContainer width="50%" height="100%">
+          <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={data}

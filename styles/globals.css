@@ -8,6 +8,14 @@
 
 
 /*
+ * Custom sizes
+ */
+.h-128 {
+  height: 32rem;
+}
+
+
+/*
  * Base
  */
 

@@ -116,7 +116,7 @@ export default function StatsView ({
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Status</h3>
         <div className="grid items-center lg:grid-cols-2 gap-8">
-          <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
+          <div className="grid mx-auto h-128 sm:h-64" style={{ width: '99%' }}>
             <StatusChart status={stats.state.data?.status} />
           </div>
           <table>
