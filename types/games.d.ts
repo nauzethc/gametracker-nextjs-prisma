@@ -46,7 +46,7 @@ export type PlatformStats = Pick<Platform, 'igdbId'|'name'|'abbreviation'> & {
 export type GenreStats = {
   genre: string,
   _count: number,
-  _totalHours: number | null
+  _totalHours: number
 }
 
 export interface AllStats {

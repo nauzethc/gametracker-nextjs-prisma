@@ -10,11 +10,16 @@ import {
 } from 'recharts'
 
 type GenresChartProps = {
-  genres?: { _count: number, genre: string }[]
+  genres?: {
+    _count: number,
+    _totalHours: number,
+    genre: string
+  }[]
 }
 
 export default function GenresChart ({ genres }: GenresChartProps) {
-  const max = Math.max.apply(genres?.map(genre => genre._count) ?? [5])
+  const maxGames = Math.max(...genres?.map(genre => genre._count) ?? [5])
+  const maxHours = Math.max(...genres?.map(genre => genre._totalHours) ?? [10])
   const { colorScheme } = useColorScheme()
   return (
     Array.isArray(genres)
@@ -32,18 +37,35 @@ export default function GenresChart ({ genres }: GenresChartProps) {
             fontWeight="600"
             stroke={colorScheme === 'dark' ? 'white' : 'black'} />
           <PolarRadiusAxis
+            radiusAxisId="0"
             stroke={colorScheme === 'dark' ? 'white' : 'black'}
             angle={30}
             display="none"
-            domain={[0, max]} />
+            domain={[0, maxGames]} />
+          <PolarRadiusAxis
+            radiusAxisId="1"
+            stroke={colorScheme === 'dark' ? 'white' : 'black'}
+            angle={30}
+            display="none"
+            domain={[0, maxHours]} />
           <Radar
+            radiusAxisId="0"
             name="Games"
             dataKey="_count"
-            stroke="#2563eb"
-            strokeWidth={2}
+            stroke="#3b82f6"
+            strokeWidth={3}
             strokeOpacity={0.6}
             fill="#3b82f6"
-            fillOpacity={0.6} />
+            fillOpacity={0.3} />
+          <Radar
+            radiusAxisId="1"
+            name="Games"
+            dataKey="_totalHours"
+            stroke="#f59e0b"
+            strokeWidth={3}
+            strokeOpacity={0.6}
+            fill="#f59e0b"
+            fillOpacity={0.3} />
         </RadarChart>
       </ResponsiveContainer>
       : null

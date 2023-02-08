@@ -68,7 +68,7 @@ export default function StatsView ({
       <div className="grid gap-8 pb-8">
         <HeaderPortal>
           <UserButton />
-          <Link href="/track">
+          <Link href="/track" legacyBehavior>
             <a className="btn btn-primary px-4 h-10 text-sm">
               <PlusCircleIcon className="h-6 w-6" />
               <span>Track</span>
@@ -98,8 +98,18 @@ export default function StatsView ({
             <thead>
               <tr>
                 <th className="text-left">Genre</th>
-                <th className="w-32">Time</th>
-                <th className="w-32">Games</th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block rounded-full w-4 h-4 bg-amber-500 dark:bg-amber-600" />
+                    Time
+                  </div>
+                </th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block rounded-full w-4 h-4 bg-blue-500" />
+                    Games
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -134,7 +144,7 @@ export default function StatsView ({
                 <td>
                   <div className="flex items-center gap-2">
                     <span className={`inline-block rounded-full w-4 h-4 ${getStatusColor(status.status)}`}></span>
-                    <Link href={`/?status=${status.status}`}>
+                    <Link href={`/?status=${status.status}`} legacyBehavior>
                       <a>{capitalize(status.status)}</a>
                     </Link>
                   </div>
@@ -167,7 +177,7 @@ export default function StatsView ({
                 .map((platform, index) =>
                 <tr key={index}>
                   <td>
-                    <Link href={`/?platformId=${platform.igdbId}`}>
+                    <Link href={`/?platformId=${platform.igdbId}`} legacyBehavior>
                       <a>{platform.name}</a>
                     </Link>
                   </td>
