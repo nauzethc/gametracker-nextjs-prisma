@@ -48,7 +48,6 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
             orientation="right"
             domain={[0, maxCount]}
             scale="linear"
-            label="Games"
             fontSize={12}
             stroke={colorScheme === 'dark' ? 'white' : 'black'} />
           <Bar
@@ -56,7 +55,7 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
             stackId="a"
             dataKey="finished._totalHours"
             stroke={colorScheme === 'light' ? '#22c55e' : '#166534'}
-            strokeWidth={2}
+            strokeWidth={3}
             fill={colorScheme === 'light' ? '#22c55e' : '#166534'}
             fillOpacity={0.8}
             maxBarSize={50} />
@@ -65,7 +64,7 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
             stackId="a"
             dataKey="abandoned._totalHours"
             stroke={colorScheme === 'light' ? '#ef4444' : '#991b1b'}
-            strokeWidth={2}
+            strokeWidth={3}
             fill={colorScheme === 'light' ? '#ef4444' : '#991b1b'}
             fillOpacity={0.8}
             maxBarSize={50} />
@@ -74,7 +73,7 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
             stackId="a"
             dataKey="pending._totalHours"
             stroke={colorScheme === 'light' ? '#64748b' : '#1e293b'}
-            strokeWidth={2}
+            strokeWidth={3}
             fill={colorScheme === 'light' ? '#64748b' : '#1e293b'}
             fillOpacity={0.8}
             maxBarSize={50} />
