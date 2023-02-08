@@ -64,7 +64,7 @@ export default function GameDetail ({ id, data, metadata, error }: GameDetailPro
       }
 
       <GamePreview
-        className="mt-4"
+        className="mt-4 z-10"
         data={game.state.data}
         onBookmark={handleBookmark} />
 
