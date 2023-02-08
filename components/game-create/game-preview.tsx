@@ -1,12 +1,9 @@
 import Cover from '../common/cover'
 import { IGDBGameSelected } from '../../types/igdb'
+import DateField from '../common/date-field'
 
 type GamePreviewProps = {
   data: IGDBGameSelected|null
-}
-
-function toDateString (date?: Date): string {
-  return date ? new Date(date).toDateString() : 'Unknown release'
 }
 
 export default function GamePreview ({ data }: GamePreviewProps) {
@@ -28,7 +25,10 @@ export default function GamePreview ({ data }: GamePreviewProps) {
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold opacity-70">Release date</span>
-              <span className="text-sm">{toDateString(data.releaseDate)}</span>
+              <DateField className="text-sm"
+                format="medium"
+                value={data.releaseDate}
+                defaultValue="Unknown release date" />
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@ import GameItem from './game-item'
 import Cover from '../common/cover'
 import ProgressBar from '../common/progress-bar'
 import Link from 'next/link'
+import DateField from '../common/date-field'
 
 type SearchResultProps = {
   data?: GameWithPlatform[],
@@ -54,13 +55,13 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
           {data.map(game =>
             <tr key={game.id} className={game.fixed ? 'is-playing' : ''}>
               <td className="relative">
-                <Link href={`/games/${game.id}`}>
+                <Link href={`/games/${game.id}`} legacyBehavior>
                   <a><Cover className="w-16" src={game.cover || undefined} alt={game.name} /></a>
                 </Link>
                 {game.fixed ? <BookmarkIcon className="w-4 h-4 absolute top-0 -mt-1 right-0 mr-1 bookmark" /> : null}
               </td>
               <td className="" data-title>
-                <Link href={`/games/${game.id}`}>
+                <Link href={`/games/${game.id}`} legacyBehavior>
                   <a>{game.name}</a>
                 </Link>
               </td>
@@ -74,7 +75,7 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
               </td>
               <td data-time className="">{game.totalHours}h</td>
               <td data-date className="hidden md:table-cell">
-                {`${game.startedOn}`.slice(0, 10)}
+                <DateField format="medium" value={game.startedOn} />
               </td>
               <td className="w-20 sm:w-24">
                 <ProgressBar value={game.progress} className={game.status}>

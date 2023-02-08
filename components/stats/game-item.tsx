@@ -2,6 +2,7 @@ import { GameStats } from '../../types/games'
 import Cover from '../common/cover'
 import { ClockIcon, CalendarIcon } from '@heroicons/react/24/solid'
 import Link from 'next/link'
+import DateField from '../common/date-field'
 
 type GameItemProps = {
   className?: string,
@@ -14,7 +15,7 @@ export default function GameItem ({ className = '', data, ranking } : GameItemPr
     <div className={`game-item flex flex-col gap-2 ranking-${ranking} ${className}`}>
       <div className="flex gap-x-6">
         <div className="media w-28 flex-shrink-0 relative flex flex-row-reverse items-center gap-4 sm:w-24 md:w-32">
-          <Link href={`/?igdbId=${data.igdbId}`}>
+          <Link href={`/?igdbId=${data.igdbId}`} legacyBehavior>
             <a>
               <Cover src={data.cover || undefined} alt={data.name} />
             </a>
@@ -26,7 +27,7 @@ export default function GameItem ({ className = '', data, ranking } : GameItemPr
         <div className="meta flex-grow grid xs:grid-cols-2 place-content-start gap-y-2 gap-x-4 sm:gap-y-3 md:grid-cols-1">
           <div className="col-span-full grid">
             <h1 className="font-semibold text-lg leading-6 whitespace-nowrap overflow-hidden text-ellipsis">
-              <Link href={`/?igdbId=${data.igdbId}`}><a>{data.name}</a></Link>
+              <Link href={`/?igdbId=${data.igdbId}`} legacyBehavior><a>{data.name}</a></Link>
             </h1>
           </div>
           <div className="field items-center flex gap-3">
@@ -40,10 +41,7 @@ export default function GameItem ({ className = '', data, ranking } : GameItemPr
             <CalendarIcon className="w-6 h-6" />
             <div className="flex flex-col">
               <span className="text-sm font-semibold hidden sm:block">Last time played</span>
-              <span>{data._max.finishedOn
-                ? new Date(data._max.finishedOn).toISOString().slice(0, 10)
-                : 'Unknown'}
-              </span>
+              <DateField format="medium" value={data._max.finishedOn} defaultValue="Unknown" />
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { GamepadAltIcon, TrophyIcon, StatusIcon, GameplayIcon } from '../common/
 import Rating from '../common/rating'
 import ProgressBar from '../common/progress-bar'
 import Link from 'next/link'
+import DateField from '../common/date-field'
 
 type GamePreviewProps = {
   className?: string,
@@ -14,13 +15,20 @@ type GamePreviewProps = {
   onBookmark?: Function
 }
 
-function getStatus (status: string, date: Date | null): string {
-  if (status === 'finished') {
-    return date
-      ? `Finished (${new Date(date).toISOString().substring(0, 10)})`
-      : 'Finished'
-  }
-  return capitalize(status)
+function StatusField ({
+  className = '',
+  status,
+  date
+}: {
+  className?: string,
+  status: string,
+  date: Date | null
+}) {
+  return (status === 'finished')
+    ? date
+      ? <span className={className}>Finished (<DateField format="medium" value={date} />)</span>
+      : <span className={className}>Finished</span>
+    : <span className={className}>{capitalize(status)}</span>
 }
 
 function toDateString (date: Date | null): string {
@@ -64,7 +72,7 @@ export default function GamePreview ({ className = '', data, onBookmark }: GameP
             <ul className="comma-list">
               {data.developers.map((developer, index) =>
                 <li key={index}>
-                  <Link href={`/?developer=${developer}`}>
+                  <Link href={`/?developer=${developer}`} legacyBehavior>
                     <a>{developer}</a>
                   </Link>
                 </li>
@@ -76,7 +84,7 @@ export default function GamePreview ({ className = '', data, onBookmark }: GameP
             <ul className="comma-list">
               {data.publishers.map((publisher, index) =>
                 <li key={index}>
-                  <Link href={`/?publisher=${publisher}`}>
+                  <Link href={`/?publisher=${publisher}`} legacyBehavior>
                     <a>{publisher}</a>
                   </Link>
                 </li>
@@ -93,15 +101,15 @@ export default function GamePreview ({ className = '', data, onBookmark }: GameP
       <div className="grid gap-y-2 sm:grid-cols-2 py-6">
         <Stat label="Started on">
           <CalendarIcon className="w-8 h-8" />
-          <span className="text-lg">
-            {`${new Date(data.startedOn).toISOString().substring(0, 10)}`}
-          </span>
+          <DateField className="text-lg"
+            value={data.startedOn}
+            format="medium" />
         </Stat>
         <Stat label="Status">
           <StatusIcon status={data.status} className="w-8 h-8" />
-          <span className="text-lg">
-            {getStatus(data.status, data.finishedOn)}
-          </span>
+          <StatusField className="text-lg"
+            status={data.status}
+            date={data.finishedOn} />
         </Stat>
         <Stat label="Total hours">
           <ClockIcon className="w-8 h-8" />
