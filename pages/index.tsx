@@ -97,7 +97,7 @@ export default function HomeView ({
       </div>
       <HeaderPortal>
         <UserButton />
-        <Link href="/track">
+        <Link href="/track" legacyBehavior>
           <a className="btn btn-primary px-4 h-10 text-sm">
             <PlusCircleIcon className="h-6 w-6" />
             <span>Track</span>

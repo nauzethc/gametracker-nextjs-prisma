@@ -33,10 +33,10 @@ export default function UserButton ({
           <h3 className="font-semibold">Backup</h3>
           <span className="py-2">Download your tracking data</span>
           <div className="modal-action flex items-center justify-end gap-2">
-            <Link href="/api/download?format=json">
+            <Link href="/api/download?format=json" legacyBehavior>
               <a className="btn btn-primary px-4 py-2">JSON</a>
             </Link>
-            <Link href="/api/download?format=csv">
+            <Link href="/api/download?format=csv" legacyBehavior>
               <a className="btn btn-primary px-4 py-2">CSV</a>
             </Link>
           </div>
@@ -52,7 +52,7 @@ export default function UserButton ({
         </Menu.Button>
         <Menu.Items className="dropdown-menu min-w-full w-36 p-1 grid gap-1">
           <Menu.Item>
-            <Link href="/stats">
+            <Link href="/stats" legacyBehavior>
               <a className="btn dropdown-item">
                 <span className="text-sm">Stats</span>
                 <ChartBarIcon className="w-5 h-5" />
