@@ -5,7 +5,7 @@ function toNumber (num: undefined | string): number | null {
 }
 
 function toDate (date: undefined | string): Date | null {
-  return date !== undefined ? new Date(date) : null
+  return date !== undefined && date ? new Date(date) : null
 }
 
 function toString (value: undefined | string[] | string): string | null {
