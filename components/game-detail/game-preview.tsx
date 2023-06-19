@@ -1,9 +1,9 @@
 import Cover from '../common/cover'
 import { capitalize } from '../../utils/strings'
 import { GameWithPlatform } from '../../types/games'
-import { BookmarkIcon, CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/24/solid'
+import { BookmarkIcon, CalendarIcon, ChartPieIcon, ClockIcon, RocketLaunchIcon, TrophyIcon } from '@heroicons/react/24/solid'
 import { BookmarkIcon as BookmarkOutlineIcon } from '@heroicons/react/24/outline'
-import { GamepadAltIcon, TrophyIcon, StatusIcon, GameplayIcon } from '../common/icons'
+import { GamepadAltIcon, StatusIcon, GameplayIcon } from '../common/icons'
 import Rating from '../common/rating'
 import ProgressBar from '../common/progress-bar'
 import Link from 'next/link'
@@ -135,7 +135,19 @@ export default function GamePreview ({ className = '', data, onBookmark }: GameP
           <TrophyIcon className="w-8 h-8" />
           <span>{`${data.achievementsUnlocked} of ${data.achievementsTotal}`}</span>
         </Stat>
-        <div className="col-span-full flex flex-col gap-4 items-center justify-center">
+        <Stat label="Genres">
+          <RocketLaunchIcon className="w-8 h-8" />
+          <ul className="comma-list">
+            {data.genres.map((genre, index) =>
+              <li key={index}>
+                <Link href={`/?genre=${genre}`} legacyBehavior>
+                  <a>{genre}</a>
+                </Link>
+              </li>
+            )}
+          </ul>
+        </Stat>
+        <div className="col-span-full flex flex-col gap-4 items-center justify-center mt-4">
           <Rating className="text-yellow-400 dark:text-yellow-500" max={5} value={Number(data.rating)} size={8} />
           {data.comment ? <blockquote className="px-4">{data.comment}</blockquote> : null}
         </div>
