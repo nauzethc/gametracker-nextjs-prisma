@@ -81,6 +81,7 @@ export default function SearchForm ({
           <option value="">Any</option>
           <option value="finished">Finished</option>
           <option value="pending">Pending</option>
+          <option value="ongoing">On Going</option>
           <option value="abandoned">Abandoned</option>
         </select>
       </div>

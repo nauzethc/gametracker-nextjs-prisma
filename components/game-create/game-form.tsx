@@ -56,6 +56,7 @@ export default function GameForm ({
           <option value="extended">Extended</option>
           <option value="completionist">Completionist</option>
           <option value="speedrun">Speedrun</option>
+          <option value="online">Online</option>
         </select>
       </div>
 
@@ -83,6 +84,7 @@ export default function GameForm ({
           name="status"
           value={data.status}
           onChange={handleChange}>
+          <option value="ongoing">On Going</option>
           <option value="pending">Pending</option>
           <option value="finished">Finished</option>
           <option value="abandoned">Abandoned</option>
