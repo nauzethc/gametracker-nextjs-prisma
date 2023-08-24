@@ -1,10 +1,12 @@
 import {
   QuestionMarkCircleIcon,
   CheckCircleIcon,
+  PlayCircleIcon,
   XCircleIcon,
   ClipboardDocumentCheckIcon,
   ClipboardDocumentListIcon,
-  BookOpenIcon
+  BookOpenIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/solid'
 
 export const SpeedrunIcon = (props: any) =>
@@ -37,6 +39,8 @@ export const GameplayIcon = (props: any) => {
       return <ClipboardDocumentCheckIcon {...otherProps} />
     case 'speedrun':
       return <SpeedrunIcon {...otherProps} />
+    case 'online':
+      return <UserGroupIcon {...otherProps} />
     default:
       return <QuestionMarkCircleIcon {...otherProps} />
   }
@@ -49,6 +53,8 @@ export const StatusIcon = (props: any) => {
       return <XCircleIcon {...otherProps} />
     case 'finished':
       return <CheckCircleIcon {...otherProps} />
+    case 'ongoing':
+      return <PlayCircleIcon {...otherProps} />
     case 'pending':
     default:
       return <QuestionMarkCircleIcon {...otherProps} />

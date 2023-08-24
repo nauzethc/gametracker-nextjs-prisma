@@ -15,6 +15,15 @@ type GamePreviewProps = {
   onBookmark?: Function
 }
 
+function toStatusLabel (status: string): string {
+  switch (status) {
+    case 'ongoing':
+      return 'On Going'
+    default:
+      return capitalize(status)
+  }
+}
+
 function StatusField ({
   className = '',
   status,
@@ -28,7 +37,7 @@ function StatusField ({
     ? date
       ? <span className={className}>Finished (<DateField format="medium" value={date} />)</span>
       : <span className={className}>Finished</span>
-    : <span className={className}>{capitalize(status)}</span>
+    : <span className={className}>{toStatusLabel(status)}</span>
 }
 
 function toDateString (date: Date | null): string {
