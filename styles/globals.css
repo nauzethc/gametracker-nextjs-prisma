@@ -487,6 +487,14 @@ form [type=submit]:active,
   @apply bg-red-500 text-red-900;
 }
 
+.progress-bar.ongoing {
+  @apply bg-sky-500/30;
+}
+
+.progress-bar.ongoing .fill-bar {
+  @apply bg-sky-500 text-sky-900;
+}
+
 .dialog-panel {
   @apply bg-white;
 }
@@ -771,6 +779,14 @@ table tbody tr:hover td {
     @apply bg-red-800 text-red-200;
   }
 
+  .progress-bar.abandoned {
+    @apply bg-sky-800/40;
+  }
+
+  .progress-bar.abandoned .fill-bar {
+    @apply bg-sky-800 text-sky-200;
+  }
+
   .dialog-panel {
     @apply bg-gray-900 shadow-gray-500/30;
   }
@@ -829,6 +845,10 @@ table tbody tr:hover td {
 
   .status-abandoned {
     @apply text-red-800;
+  }
+
+  .status-ongoing {
+    @apply text-blue-800;
   }
 
   .game-item .badge {

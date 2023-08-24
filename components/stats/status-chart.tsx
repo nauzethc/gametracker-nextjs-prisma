@@ -25,6 +25,8 @@ function getFillColor (status: string): string[] {
       return ['#22c55e', '#166534']
     case 'abandoned':
       return ['#ef4444', '#991b1b']
+    case 'ongoing':
+      return ['#0ea5e9', '#075985']
     case 'pending':
     default:
       return ['#64748b', '#1e293b']

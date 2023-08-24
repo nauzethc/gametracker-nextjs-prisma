@@ -26,12 +26,24 @@ function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
 }
 
+function toStatusLabel (status: string): string {
+  switch (status) {
+    case 'ongoing':
+      return 'On Going'
+    default:
+      return capitalize(status)
+  }
+}
+
 function getStatusColor (status: string): string {
   switch (status) {
     case 'finished':
       return 'bg-green-400 dark:bg-green-800'
     case 'abandoned':
       return 'bg-red-400 dark:bg-red-800'
+    case 'ongoing':
+      return 'bg-sky-400 dark:bg-blue-400'
+    case 'pending':
     default:
       return 'bg-gray-400 dark:bg-gray-800'
   }
@@ -145,7 +157,7 @@ export default function StatsView ({
                   <div className="flex items-center gap-2">
                     <span className={`inline-block rounded-full w-4 h-4 ${getStatusColor(status.status)}`}></span>
                     <Link href={`/?status=${status.status}`} legacyBehavior>
-                      <a>{capitalize(status.status)}</a>
+                      <a>{toStatusLabel(status.status)}</a>
                     </Link>
                   </div>
                 </td>
