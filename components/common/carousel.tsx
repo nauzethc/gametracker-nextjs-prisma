@@ -29,7 +29,7 @@ export default function Carousel ({ className = '', images, alt }: CarouselProps
           aspectRatio: SCREEN_MED[0] / SCREEN_MED[1]
         }}>
           <Image
-            alt={alt}
+            alt={alt ?? 'Unknown'}
             src={url.replace('t_screenshot_big', 't_screenshot_med')}
             width={SCREEN_MED[0]}
             height={SCREEN_MED[1]} />
