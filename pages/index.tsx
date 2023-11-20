@@ -38,9 +38,11 @@ export default function HomeView ({
   const [showTable, setTable] = useState<boolean>(false)
   const games = useEndpoint<GameSearch>('/api/games', { data, error })
   const router = useRouter()
-  const filters = ['developer', 'publisher']
-    .map(key => [key, query[key]])
-    .filter(([key, value]) => value)
+  const filters = query !== undefined
+    ? ['developer', 'publisher']
+        .map(key => [key, query[key]])
+        .filter(([key, value]) => value)
+    : []
 
   const handlePageChange = (page: number) => setQuery({ ...query, page })
   const handleSubmit = (query: Record<string, any>) => {
