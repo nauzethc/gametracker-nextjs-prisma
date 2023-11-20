@@ -92,7 +92,7 @@ export default function HomeView ({
           {...games.state.data} />
         <Pagination
           className="col-span-full mt-4"
-          page={Number(query.page || 1)}
+          page={Number(query?.page ?? 1)}
           pageSize={10}
           total={games.state.data ? games.state.data.count : 0}
           onChange={handlePageChange} />
