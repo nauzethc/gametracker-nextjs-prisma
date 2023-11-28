@@ -590,6 +590,23 @@ table tbody tr:hover td {
   @apply bg-amber-400 text-amber-900;
 }
 
+.score {
+  @apply grid place-content-center w-16 h-16 rounded-full;
+  @apply text-xl font-semibold bg-gray-200 text-gray-800;
+  @apply border border-white border-4;
+  @apply relative;
+}
+
+.score.good {
+  @apply bg-green-500 text-white;
+}
+.score.medium {
+  @apply bg-amber-500 text-white;
+}
+.score.bad {
+  @apply bg-red-500 text-white;
+}
+
 /*
  * Dark theme
  */
@@ -779,11 +796,11 @@ table tbody tr:hover td {
     @apply bg-red-800 text-red-200;
   }
 
-  .progress-bar.abandoned {
+  .progress-bar.ongoing {
     @apply bg-sky-800/40;
   }
 
-  .progress-bar.abandoned .fill-bar {
+  .progress-bar.ongoing .fill-bar {
     @apply bg-sky-800 text-sky-200;
   }
 
@@ -884,5 +901,15 @@ table tbody tr:hover td {
 
   .background-image {
     mix-blend-mode: screen;
+  }
+
+  .score.good {
+    @apply bg-green-600;
+  }
+  .score.medium {
+    @apply bg-amber-600;
+  }
+  .score.bad {
+    @apply bg-red-600;
   }
 }
