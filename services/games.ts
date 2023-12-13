@@ -188,18 +188,8 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
   })
 
   // Get games grouped by genres
-  const genres = query.platformId
-    ? await prisma.$queryRaw`
-        SELECT COUNT(*) AS "_count", SUM("total_hours") AS "_totalHours", "genre", "userId"
-        FROM "games"
-        CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
-        WHERE "userId" = ${userId}
-        AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
-        AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
-        GROUP BY "genre", "userId"
-        ORDER BY 1 DESC
-      `
-    : await prisma.$queryRaw`
+  const genres = await (query.platformId
+    ? prisma.$queryRaw`
         SELECT COUNT(*) AS "_count", SUM("total_hours") AS "_totalHours", "genre", "userId"
         FROM "games"
         CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
@@ -210,6 +200,19 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
         GROUP BY "genre", "userId"
         ORDER BY 1 DESC
       `
+    : prisma.$queryRaw`
+        SELECT COUNT(*) AS "_count", SUM("total_hours") AS "_totalHours", "genre", "userId"
+        FROM "games"
+        CROSS JOIN LATERAL UNNEST("games"."genres") AS tags("genre")
+        WHERE "userId" = ${userId}
+        AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
+        AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
+        GROUP BY "genre", "userId"
+        ORDER BY 1 DESC
+      `
+  )
+
+  console.log(genres)
 
   // Get games count and total hours grouped by platform
   const platforms = await prisma.$queryRaw`
