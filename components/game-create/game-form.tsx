@@ -18,7 +18,7 @@ export type GameplayData = {
 
 const defaults: GameplayData = {
   gameplayType: 'main',
-  status: 'pending',
+  status: 'ongoing',
   startedOn: new Date().toISOString().slice(0, 10),
   finishedOn: '',
   totalHours: 0,
