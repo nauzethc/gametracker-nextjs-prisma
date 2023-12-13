@@ -42,7 +42,7 @@ function getStatusColor (status: string): string {
     case 'abandoned':
       return 'bg-red-400 dark:bg-red-800'
     case 'ongoing':
-      return 'bg-sky-400 dark:bg-blue-400'
+      return 'bg-sky-400 dark:bg-sky-800'
     case 'pending':
     default:
       return 'bg-gray-400 dark:bg-gray-800'
