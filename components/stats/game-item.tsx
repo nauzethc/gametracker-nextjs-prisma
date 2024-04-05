@@ -41,7 +41,7 @@ export default function GameItem ({ className = '', data, ranking } : GameItemPr
             <CalendarIcon className="w-6 h-6" />
             <div className="flex flex-col">
               <span className="text-sm font-semibold hidden sm:block">Last time played</span>
-              <DateField format="medium" value={data._max.finishedOn} defaultValue="Unknown" />
+              <DateField format="medium" value={data._max.finishedOn || data._max.updatedAt} defaultValue="Unknown" />
             </div>
           </div>
         </div>
