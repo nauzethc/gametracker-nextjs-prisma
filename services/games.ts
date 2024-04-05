@@ -162,7 +162,8 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
       totalHours: true
     },
     _max: {
-      finishedOn: true
+      finishedOn: true,
+      updatedAt: true
     },
     orderBy: {
       _sum: {
@@ -211,8 +212,6 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
         ORDER BY 1 DESC
       `
   )
-
-  console.log(genres)
 
   // Get games count and total hours grouped by platform
   const platforms = await prisma.$queryRaw`

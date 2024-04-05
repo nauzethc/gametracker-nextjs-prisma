@@ -34,7 +34,7 @@ export interface StatusStats {
 export type GameStats = Pick<Game, 'igdbId'|'name'|'cover'> & {
   _count: { _all: number },
   _sum: { totalHours: number | null },
-  _max: { finishedOn: Date | null }
+  _max: { finishedOn: Date | null, updatedAt: Date | null }
 }
 
 export type PlatformStats = Pick<Platform, 'igdbId'|'name'|'abbreviation'> & {
