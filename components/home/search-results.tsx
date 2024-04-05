@@ -56,7 +56,7 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
             <tr key={game.id} className={game.fixed ? 'is-playing' : ''}>
               <td className="relative">
                 <Link href={`/games/${game.id}`} legacyBehavior>
-                  <a><Cover className="w-16" src={game.cover || undefined} alt={game.name} /></a>
+                  <a><Cover className="w-16 mb-1" src={game.cover || undefined} alt={game.name} /></a>
                 </Link>
                 {game.fixed ? <BookmarkIcon className="w-4 h-4 absolute top-0 -mt-1 right-0 mr-1 bookmark" /> : null}
               </td>
