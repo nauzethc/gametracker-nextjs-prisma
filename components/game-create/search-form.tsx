@@ -1,7 +1,7 @@
 import { useForm } from '../../hooks/forms'
 import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { IGDBPlatform } from '../../types/igdb'
-import { Button, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Input, Select, SelectItem, SelectSection } from '@nextui-org/react'
 
 type SearchData = {
   q: string,
@@ -37,7 +37,9 @@ export default function SearchForm ({
         onChange={handleChange}
         disabled={pending}>
         <SelectItem key="">Any</SelectItem>
-        {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        <SelectSection>
+          {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        </SelectSection>
       </Select>
       <div className="relative col-span-2">
         <Input

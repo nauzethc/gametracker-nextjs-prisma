@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useEndpoint } from '../hooks/http'
 import { IGDBSearch, IGDBGameSelected, IGDBQueryParams, IGDBPlatform } from '../types/igdb'
-import { Dialog } from '@headlessui/react'
 import { DEFAULT_PAGE_SIZE } from '../config'
 import { useRouter } from 'next/router'
 

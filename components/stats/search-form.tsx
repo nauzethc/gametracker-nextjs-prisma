@@ -1,6 +1,6 @@
 import { useForm } from '../../hooks/forms'
 import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import { Select, SelectItem, Button } from '@nextui-org/react'
+import { Select, SelectItem, Button, SelectSection } from '@nextui-org/react'
 import DatePicker from '../common/date-picker'
 import { Platform } from '@prisma/client'
 
@@ -43,7 +43,9 @@ export default function SearchForm ({
         onChange={handleChange}
         disabled={pending}>
         <SelectItem key="">Any</SelectItem>
-        {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        <SelectSection>
+          {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        </SelectSection>
       </Select>
 
       <Select

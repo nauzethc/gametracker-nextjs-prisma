@@ -1,6 +1,6 @@
 import { useForm } from '../../hooks/forms'
 import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
-import { Button, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Input, Select, SelectItem, SelectSection } from '@nextui-org/react'
 import { Platform } from '@prisma/client'
 
 type SearchData = {
@@ -45,7 +45,9 @@ export default function SearchForm ({
         onChange={handleChange}
         disabled={pending}>
         <SelectItem key="">Any</SelectItem>
-        {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        <SelectSection>
+          {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+        </SelectSection>
       </Select>
       <Select
         label="Genre"
@@ -55,7 +57,9 @@ export default function SearchForm ({
         onChange={handleChange}
         disabled={pending}>
         <SelectItem key="">Any</SelectItem>
-        {genres.map(genre => <SelectItem key={genre}>{genre}</SelectItem>)}
+        <SelectSection>
+          {genres.map(genre => <SelectItem key={genre}>{genre}</SelectItem>)}
+        </SelectSection>
       </Select>
       <Select
         label="Status"

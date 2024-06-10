@@ -11,6 +11,7 @@ type RatingInputProps = {
 export default function RatingInput ({ color = 'default', size = 5, value, onChange }: RatingInputProps) {
   return (
     <div className={`text-${color}`}>
+      {/* @ts-ignore */}
       <Rating
         start={0}
         stop={5}
