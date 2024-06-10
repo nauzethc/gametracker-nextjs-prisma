@@ -18,7 +18,7 @@ export default function Rating ({
     <div className={`rating flex items-center ${className}`}>
       {[...new Array(fillStars)].map((_, index) => <StarIcon className={`w-${size} h-${size}`} key={index} />)}
       {hasHalf
-        ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`w-${size} h-${size} mask-w-50`}>
+        ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`size-${size} mask-w-50`}>
             <mask id="halfMask">
               <polygon fill="#ffffff" points="0,0 0,24 12,24 12,0"></polygon>
               <polygon fill="rgba(255,255,255,0.3)" points="12,0 12,24 24,24 24,0"></polygon>
