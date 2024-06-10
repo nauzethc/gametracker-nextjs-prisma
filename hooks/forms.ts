@@ -1,4 +1,4 @@
-import { useEffect, useState, SyntheticEvent, FormEventHandler } from 'react'
+import { useEffect, useState, SyntheticEvent, FormEventHandler, ChangeEvent } from 'react'
 
 export function useForm<T> ({
   initialData = {},
@@ -20,16 +20,15 @@ export function useForm<T> ({
 
   // This handle is for using directly with form input's `onChange`
   // property, update automatically form data
-  const handleChange = (e: SyntheticEvent) => {
-    const target = e.target as HTMLFormElement
-    const validity = target.validity as ValidityState
-    const { name } = target
-    if (target.hasAttribute('pattern')) {
+  const handleChange = (e: ChangeEvent<HTMLFormElement>) => {
+    const validity = e.target.validity as ValidityState
+    const { name } = e.target
+    if (e.target.hasAttribute && e.target.hasAttribute('pattern')) {
       if (validity.valid) {
-        setData({ ...data, [name]: target.value })
+        setData({ ...data, [name]: e.target.value })
       }
     } else {
-      setData({ ...data, [name]: target.value })
+      setData({ ...data, [name]: e.target.value })
     }
   }
 
