@@ -10,6 +10,7 @@
 /*
  * Custom sizes
  */
+
 .h-128 {
   height: 32rem;
 }
@@ -19,23 +20,8 @@
  * Base
  */
 
-select {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-  background-position: right .5rem center;
-  background-repeat: no-repeat;
-  background-size: 1.5em 1.5em;
-  padding-right: 2.5rem;
-  -webkit-print-color-adjust: exact;
-  color-adjust: exact;
-  print-color-adjust: exact;
-}
-
 svg {
   @apply inline-block;
-}
-
-a {
-  @apply transition-colors;
 }
 
 blockquote {
@@ -48,30 +34,6 @@ blockquote::before {
 
 blockquote::after {
   content: close-quote;
-}
-
-table {
-  @apply border-separate border-spacing-1 rounded-lg shadow-sm;
-}
-
-table caption {
-  @apply text-left text-lg font-semibold border-b-2 mb-2;
-}
-
-table thead th {
-  @apply rounded px-2 py-1 font-semibold;
-}
-
-table tbody td {
-  @apply rounded px-2 py-1;
-}
-
-table tbody td:first-child {
-  @apply font-semibold;
-}
-
-table tbody td:not(:first-child) {
-  @apply text-center;
 }
 
 ul.comma-list {
@@ -92,75 +54,18 @@ ul.comma-list li:last-child::after {
   content: "";
 }
 
-
 /**
- * Forms
+ * Animations
  */
 
-.grid-form {
-  @apply grid grid-cols-1 gap-y-8 gap-x-6 items-end;
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
 }
 
-form label {
-  @apply block text-sm font-medium opacity-70;
-}
-
-form input[type='text'],
-form input[type='password'],
-form input[type='email'],
-form input[type='number'],
-form input[type='url'],
-form input[type='date'],
-form input[type='datetime-local'],
-form input[type='month'],
-form input[type='week'],
-form input[type='time'],
-form input[type='search'],
-form input[type='tel'],
-form select,
-form select[multiple],
-form textarea,
-.form-input {
-  @apply rounded-md w-full mt-1;
-  @apply shadow-sm;
-  @apply transition-colors;
-}
-
-form input[type='checkbox'],
-form input[type='radio'] {}
-
-
-/**
- * Buttons
- */
-
-button,
-.btn {
-  @apply inline-flex items-center gap-2 justify-center rounded-full transition-colors;
-}
-
-button:focus,
-.btn:focus {
-  @apply outline-none;
-}
-
-button:focus-visible,
-.btn:focus-visible {
-  @apply outline-2 outline-offset-2;
-}
-
-
-@screen sm {
-  .grid-form {
-    @apply grid-cols-2;
-  }
-
-  form input[type=text],
-  form input[type=date],
-  form textarea,
-  form select {
-    @apply text-sm;
-  }
+.fade-in {
+  animation-name: fadeIn;
+  animation-duration: 1000ms;
 }
 
 
@@ -268,648 +173,49 @@ button:focus-visible,
   backdrop-filter: saturate(50%) blur(3px);
 }
 
-/*
- * Light theme
- */
-
-body {
-  @apply text-black;
-}
-
-.app-background {
-  @apply bg-gradient-to-br from-white to-gray-100;
-}
-
-a:hover {
-  @apply text-blue-600;
-}
-
-form input[type='text'],
-form input[type='password'],
-form input[type='email'],
-form input[type='number'],
-form input[type='url'],
-form input[type='date'],
-form input[type='datetime-local'],
-form input[type='month'],
-form input[type='week'],
-form input[type='time'],
-form input[type='search'],
-form input[type='tel'],
-form select,
-form select[multiple],
-form textarea,
-.form-input {
-  @apply border-slate-200 bg-slate-100;
-}
-
-.form-input.disabled {
-  @apply bg-slate-200;
-}
-
-form input[type='text']:focus,
-form input[type='password']:focus,
-form input[type='email']:focus,
-form input[type='number']:focus,
-form input[type='url']:focus,
-form input[type='date']:focus,
-form input[type='datetime-local']:focus,
-form input[type='month']:focus,
-form input[type='week']:focus,
-form input[type='time']:focus,
-form input[type='search']:focus,
-form input[type='tel']:focus,
-form select:focus,
-form select[multiple]:focus,
-form textarea:focus,
-form input[type='checkbox']:focus,
-form input[type='radio']:focus {
-  @apply border-blue-300 ring ring-blue-200 ring-opacity-50;
-}
-
-/* Standard button */
-
-button,
-.btn {
-  @apply bg-slate-300/80 text-slate-600;
-}
-
-button:focus-visible,
-.btn:focus-visible {
-  @apply outline-slate-600;
-}
-
-button:hover,
-.btn:hover {
-  @apply text-slate-100 bg-slate-500/80;
-}
-
-button:active,
-.btn:active {
-  @apply text-slate-200 bg-slate-600/80;
-}
-
-/* Primary button */
-
-form [type=submit],
-.btn-primary {
-  @apply font-semibold bg-blue-600 text-white;
-}
-
-form [type=submit]:focus-visible,
-.btn-primary:focus-visible {
-  @apply outline-blue-600;
-}
-
-form [type=submit]:hover,
-.btn-primary:hover {
-  @apply text-slate-100 bg-blue-500;
-}
-
-form [type=submit]:active,
-.btn-primary:active {
-  @apply bg-blue-800 text-blue-100;
-}
-
-/* Danger button */
-
-.btn-danger {
-  @apply font-semibold bg-red-600 text-white;
-}
-
-.btn-danger:focus-visible {
-  @apply outline-red-600;
-}
-
-.btn-danger:hover {
-  @apply text-slate-100 bg-red-500;
-}
-
-.btn-danger:active {
-  @apply bg-red-800 text-red-100;
-}
-
-/* Invisible button */
-
-.btn-invisible {
-  @apply font-semibold bg-transparent text-inherit;
-}
-
-.btn-invisible:focus-visible {
-  @apply outline-slate-600;
-}
-
-.btn-invisible:hover {
-  @apply text-slate-100 bg-slate-500;
-}
-
-.btn-invisible:active {
-  @apply text-slate-200 bg-slate-600;
-}
-
-/* Third-parties buttons */
-
-.btn-github {
-  @apply bg-black text-white;
-}
-
-.btn-github:focus-visible {
-  @apply outline-black;
-}
-
-.btn-github:hover {
-  @apply bg-gray-700;
-}
-
-.btn-github:active {
-  @apply bg-gray-900 text-gray-100;
-}
-
-.btn-google {
-  @apply bg-blue-600 text-white;
-}
-
-.btn-google:focus-visible {
-  @apply outline-blue-400;
-}
-
-.btn-google:hover {
-  @apply bg-blue-500;
-}
-
-.btn-google:active {
-  @apply bg-blue-600 text-gray-100;
-}
-
-.btn-twitch {
-  @apply text-white bg-purple-500;
-}
-
-.btn-twitch:focus-visible {
-  @apply outline-purple-500;
-}
-
-.btn-twitch:hover {
-  @apply bg-purple-600 text-gray-100;
-}
-
-.btn-twitch:active {
-  @apply bg-purple-700 text-gray-200;
-}
-
-/* Components */
-
-.app-header {
-  @apply bg-white/70;
-}
-
-.progress-bar {
-  @apply bg-slate-400/40;
-}
-
-.progress-bar .fill-bar {
-  @apply bg-slate-400 text-slate-900;
-}
-
-.progress-bar.finished {
-  @apply bg-green-500/30;
-}
-
-.progress-bar.finished .fill-bar {
-  @apply bg-green-500 text-green-900;
-}
-
-.progress-bar.abandoned {
-  @apply bg-red-500/30;
-}
-
-.progress-bar.abandoned .fill-bar {
-  @apply bg-red-500 text-red-900;
-}
-
-.progress-bar.ongoing {
-  @apply bg-sky-500/30;
-}
-
-.progress-bar.ongoing .fill-bar {
-  @apply bg-sky-500 text-sky-900;
-}
-
-.dialog-panel {
-  @apply bg-white;
-}
-
-.dropdown .dropdown-menu {
-  @apply bg-slate-200 text-slate-800;
-}
-
-.dropdown .dropdown-item {
-  @apply text-inherit;
+.medal {
+  @apply block rounded-full relative;
+  @apply bg-gradient-to-b;
 }
+.medal .inner {
+  @apply absolute top-1 left-1 right-1 bottom-1 grid place-content-center;
+  @apply rounded-full bg-gradient-to-t;
 
-.dropdown .dropdown-item:hover {
-  @apply bg-blue-500 text-white;
 }
 
-.cover .placeholder {
-  @apply bg-gray-500;
+.medal,
+.medal .inner {
+  @apply from-stone-200 to-stone-400 text-stone-500;
 }
 
-.pagination .current {
-  @apply bg-blue-600 text-white font-semibold;
+.medal-1,
+.medal-1 .inner {
+  @apply from-yellow-400 via-yellow-200 to-yellow-600 text-yellow-800;
 }
 
-.error {
-  @apply bg-red-200 text-red-600;
+.medal-2,
+.medal-2 .inner {
+  @apply from-gray-300 via-gray-100 to-gray-400 text-gray-500;
 }
 
-.badge {
-  @apply bg-slate-200/80 text-slate-500;
+.medal-3,
+.medal-3 .inner {
+  @apply from-amber-600 via-amber-400 to-amber-700 text-amber-800;
 }
 
-.badge-danger {
-  @apply bg-red-200/80 text-red-600;
+.table {
+  @apply shadow-none bg-default-100 border-separate border-spacing-1 rounded-lg;
 }
-
-.badge-info {
-  @apply bg-blue-200/80 text-blue-600;
-}
-
-.toggle {
-  @apply bg-slate-200;
-}
-
-.toggle .toggle-input {
-  @apply bg-slate-400;
-}
-
-table {
-  @apply bg-white/80;
-}
-
-table thead th {
-  @apply bg-slate-200;
-}
-
-table tbody td {
-  @apply bg-slate-100;
-}
-
-table tbody tr:hover td {
-  @apply bg-slate-300;
-}
-
-.game-item .badge {
-  @apply bg-slate-200 text-black border-slate-300;
-}
-
-.game-item.ranking-1 .badge {
-  @apply bg-yellow-300 text-yellow-900 border-yellow-500;
-}
-
-.game-item.ranking-2 .badge {
-  @apply bg-gray-400 text-gray-600 border-gray-300;
-}
-
-.game-item.ranking-3 .badge {
-  @apply bg-amber-500 text-amber-800 border-amber-600;
-}
-
-.search-results-table tbody tr.is-playing .bookmark,
-.game-item.is-playing .bookmark {
-  @apply text-red-500;
-}
-
-.search-results-table tbody tr.is-playing .progress-bar,
-.game-item.is-playing .progress-bar {
-  @apply bg-amber-400/40;
-}
-
-.search-results-table tbody tr.is-playing .progress-bar .fill-bar,
-.game-item.is-playing .progress-bar .fill-bar {
-  @apply bg-amber-400 text-amber-900;
-}
-
-.score {
-  @apply grid place-content-center w-16 h-16 rounded-full;
-  @apply text-xl font-semibold bg-gray-200 text-gray-800;
-  @apply border border-white border-4;
-  @apply relative;
-}
-
-.score.good {
-  @apply bg-green-500 text-white;
+.table thead th {
+  @apply bg-default-200 text-foreground-500 h-10 px-3 text-sm rounded-md;
 }
-.score.medium {
-  @apply bg-amber-500 text-white;
+.table tbody td {
+  @apply h-10 px-3 rounded-md;
 }
-.score.bad {
-  @apply bg-red-500 text-white;
+.table tbody tr:hover {
+  @apply bg-primary-100;
 }
-
-/*
- * Dark theme
- */
-
-@media (prefers-color-scheme: dark) {
-  body {
-    @apply text-white;
-  }
-
-  .app-background {
-    @apply bg-gradient-to-b from-black to-gray-900;
-  }
-
-  a:hover {
-    @apply text-blue-500;
-  }
-
-  form input[type='text'],
-  form input[type='password'],
-  form input[type='email'],
-  form input[type='number'],
-  form input[type='url'],
-  form input[type='date'],
-  form input[type='datetime-local'],
-  form input[type='month'],
-  form input[type='week'],
-  form input[type='time'],
-  form input[type='search'],
-  form input[type='tel'],
-  form select,
-  form select[multiple],
-  form textarea,
-  .form-input {
-    @apply border-gray-700 bg-slate-800 shadow-white/20;
-  }
-
-  .form-input.disabled {
-    @apply bg-gray-900;
-  }
-
-  form input[type='text']:focus,
-  form input[type='password']:focus,
-  form input[type='email']:focus,
-  form input[type='number']:focus,
-  form input[type='url']:focus,
-  form input[type='date']:focus,
-  form input[type='datetime-local']:focus,
-  form input[type='month']:focus,
-  form input[type='week']:focus,
-  form input[type='time']:focus,
-  form input[type='search']:focus,
-  form input[type='tel']:focus,
-  form select:focus,
-  form select[multiple]:focus,
-  form textarea:focus,
-  form input[type='checkbox']:focus,
-  form input[type='radio']:focus {
-    @apply border-blue-700 ring ring-blue-800 ring-opacity-50;
-  }
-
-  /* Standard button */
-
-  button,
-  .btn {
-    @apply bg-slate-700/80 text-slate-400;
-  }
-
-  button:focus-visible,
-  .btn:focus-visible {
-    @apply outline-slate-600;
-  }
-
-  button:hover,
-  .btn:hover {
-    @apply text-slate-100 bg-slate-500/80;
-  }
-
-  button:active,
-  .btn:active {
-    @apply text-slate-200 bg-slate-400/80;
-  }
-
-  /* Primary button */
-
-  form [type=submit],
-  .btn-primary {
-    @apply font-semibold bg-blue-600 text-white;
-  }
-
-  form [type=submit]:focus-visible,
-  .btn-primary:focus-visible {
-    @apply outline-blue-600;
-  }
-
-  form [type=submit]:hover,
-  .btn-primary:hover {
-    @apply text-slate-100 bg-blue-500;
-  }
-
-  form [type=submit]:active,
-  .btn-primary:active {
-    @apply bg-blue-800 text-blue-100;
-  }
-
-  /* Danger button */
-
-  .btn-danger {
-    @apply font-semibold bg-red-600 text-white;
-  }
-
-  .btn-danger:focus-visible {
-    @apply outline-red-600;
-  }
-
-  .btn-danger:hover {
-    @apply text-slate-100 bg-red-500;
-  }
-
-  .btn-danger:active {
-    @apply bg-red-800 text-red-100;
-  }
-
-  /* Invisible button */
-
-  .btn-invisible {
-    @apply font-semibold bg-transparent text-inherit;
-  }
-
-  .btn-invisible:focus-visible {
-    @apply outline-slate-600;
-  }
-
-  .btn-invisible:hover {
-    @apply text-slate-100 bg-slate-500;
-  }
-
-  .btn-invisible:active {
-    @apply bg-slate-800 text-slate-100;
-  }
-
-  /* Third-parties buttons */
-
-  .btn-github {
-    @apply text-black bg-white;
-  }
-
-  .btn-github:focus-visible {
-    @apply outline-white;
-  }
-
-  .btn-github:hover {
-    @apply bg-gray-300 text-gray-900;
-  }
-
-  .btn-github:active {
-    @apply bg-gray-100 text-gray-900;
-  }
-
-
-  /* Components */
-
-  .app-header {
-    @apply bg-black/50;
-  }
-
-  .progress-bar {
-    @apply bg-slate-700/40;
-  }
-
-  .progress-bar .fill-bar {
-    @apply bg-slate-700 text-slate-200;
-  }
-
-  .progress-bar.finished {
-    @apply bg-green-800/40;
-  }
-
-  .progress-bar.finished .fill-bar {
-    @apply bg-green-800 text-green-200;
-  }
-
-  .progress-bar.abandoned {
-    @apply bg-red-800/40;
-  }
-
-  .progress-bar.abandoned .fill-bar {
-    @apply bg-red-800 text-red-200;
-  }
-
-  .progress-bar.ongoing {
-    @apply bg-sky-800/40;
-  }
-
-  .progress-bar.ongoing .fill-bar {
-    @apply bg-sky-800 text-sky-200;
-  }
-
-  .dialog-panel {
-    @apply bg-gray-900 shadow-gray-500/30;
-  }
-
-  .dropdown .dropdown-menu {
-    @apply text-slate-200 bg-slate-800;
-  }
-
-  .error {
-    @apply text-red-200 bg-red-600;
-  }
-
-  .badge {
-    @apply bg-slate-700/80 text-slate-200;
-  }
-
-  .badge-danger {
-    @apply bg-red-600/60 text-red-200;
-  }
-
-  .badge-info {
-    @apply bg-blue-600/60 text-blue-200;
-  }
-
-  .toggle {
-    @apply bg-slate-800;
-  }
-
-  .toggle .toggle-input {
-    @apply bg-white;
-  }
-
-  table {
-    @apply bg-black/40;
-  }
-
-  table thead th {
-    @apply bg-slate-800;
-  }
-
-  table tbody td {
-    @apply bg-slate-900;
-  }
-
-  table tbody tr:hover td {
-    @apply bg-slate-700;
-  }
-
-  .status-finished {
-    @apply text-green-700;
-  }
-
-  .status-pending {
-    @apply text-slate-700;
-  }
-
-  .status-abandoned {
-    @apply text-red-800;
-  }
-
-  .status-ongoing {
-    @apply text-blue-800;
-  }
-
-  .game-item .badge {
-    @apply bg-slate-700 text-white border-slate-900;
-  }
-
-  .game-item.ranking-1 .badge {
-    @apply bg-yellow-400 text-yellow-900 border-yellow-600;
-  }
-
-  .game-item.ranking-2 .badge {
-    @apply bg-gray-400 text-gray-600 border-gray-300;
-  }
-
-  .game-item.ranking-3 .badge {
-    @apply bg-amber-600 text-amber-900 border-amber-700;
-  }
-
-  .search-results-table tbody tr.is-playing .bookmark,
-  .game-item.is-playing .bookmark {
-    @apply text-red-600;
-  }
-
-  .search-results-table tbody tr.is-playing .progress-bar,
-  .game-item.is-playing .progress-bar {
-    @apply bg-amber-600/40;
-  }
-
-  .search-results-table tbody tr.is-playing .progress-bar .fill-bar,
-  .game-item.is-playing .progress-bar .fill-bar {
-    @apply bg-amber-600 text-amber-200;
-  }
-
-  .background-image {
-    mix-blend-mode: screen;
-  }
 
-  .score.good {
-    @apply bg-green-600;
-  }
-  .score.medium {
-    @apply bg-amber-600;
-  }
-  .score.bad {
-    @apply bg-red-600;
-  }
+.background {
+  min-height: 24rem;
 }
