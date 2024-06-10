@@ -8,7 +8,7 @@ import {
 } from '../types/igdb'
 import { toNumber, toString } from './url'
 
-const IGDB_IMG_BASE_URL = process.env.IGDB_IMG_BASE_URL ?? ''
+const IGDB_IMG_BASE_URL = process.env.NEXT_PUBLIC_IGDB_IMG_BASE_URL ?? ''
 
 function toDateISO (epoch = 0): Date | undefined {
   return epoch > 0
