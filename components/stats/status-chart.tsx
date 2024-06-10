@@ -1,6 +1,5 @@
 import React from 'react'
 import { capitalize } from '../../utils/strings'
-import { useColorScheme } from '../../hooks/color'
 import {
   Cell,
   Pie,
@@ -8,6 +7,8 @@ import {
   PieChart,
   ResponsiveContainer
 } from 'recharts'
+import { semanticColors } from '@nextui-org/react'
+import { useTheme } from 'next-themes'
 
 type StatusChartProps = {
   status?: {
@@ -18,18 +19,18 @@ type StatusChartProps = {
   }[]
 }
 
-function getFillColor (status: string): string[] {
+function getFillColor (status: string): Array<string|undefined> {
   // Get [light, dark] colors
   switch (status) {
     case 'finished':
-      return ['#22c55e', '#166534']
+      return [semanticColors.light.success[400], semanticColors.dark.success[400]]
     case 'abandoned':
-      return ['#ef4444', '#991b1b']
+      return [semanticColors.light.danger[400], semanticColors.dark.danger[400]]
     case 'ongoing':
-      return ['#0ea5e9', '#075985']
+      return [semanticColors.light.primary[400], semanticColors.dark.primary[400]]
     case 'pending':
     default:
-      return ['#64748b', '#1e293b']
+      return [semanticColors.light.default[400], semanticColors.dark.default[400]]
   }
 }
 
@@ -85,7 +86,7 @@ export default function StatusChart ({ status }: StatusChartProps) {
     avgHours: stat._avg.totalHours,
     count: stat._count._all
   }))
-  const { colorScheme } = useColorScheme()
+  const { theme } = useTheme()
   return (
     Array.isArray(data)
       ? <div className="w-full h-full grid sm:grid-cols-2">
@@ -99,13 +100,13 @@ export default function StatusChart ({ status }: StatusChartProps) {
                 cy="50%"
                 innerRadius="30%"
                 outerRadius="55%"
-                label={entry => <PercentLabel {...entry} scheme={colorScheme} />}>
+                label={entry => <PercentLabel {...entry} scheme={theme} />}>
                   {data.map((entry, index) =>
                     <Cell
                       key={`cell-${index}`}
-                      fill={colorScheme === 'dark' ? entry.fill[1] : entry.fill[0]}
+                      fill={theme === 'dark' ? entry.fill[1] : entry.fill[0]}
                       fillOpacity={0.8}
-                      stroke={colorScheme === 'dark' ? entry.fill[1] : entry.fill[0]}
+                      stroke={theme === 'dark' ? entry.fill[1] : entry.fill[0]}
                       strokeWidth={3} />
                   )}
                 <Label
@@ -113,7 +114,7 @@ export default function StatusChart ({ status }: StatusChartProps) {
                   position="center"
                   fontSize="14"
                   fontWeight="600"
-                  fill={colorScheme === 'dark' ? 'white' : 'black'} />
+                  fill={theme === 'dark' ? 'white' : 'black'} />
               </Pie>
             </PieChart>
           </ResponsiveContainer>
@@ -128,13 +129,13 @@ export default function StatusChart ({ status }: StatusChartProps) {
                 spacing={10}
                 innerRadius="30%"
                 outerRadius="55%"
-                label={entry => <PercentLabel {...entry} scheme={colorScheme} />}>
+                label={entry => <PercentLabel {...entry} scheme={theme} />}>
                   {data.map((entry, index) =>
                     <Cell
                       key={`cell-${index}`}
-                      fill={colorScheme === 'dark' ? entry.fill[1] : entry.fill[0]}
+                      fill={theme === 'dark' ? entry.fill[1] : entry.fill[0]}
                       fillOpacity={0.8}
-                      stroke={colorScheme === 'dark' ? entry.fill[1] : entry.fill[0]}
+                      stroke={theme === 'dark' ? entry.fill[1] : entry.fill[0]}
                       strokeWidth={3} />
                   )}
                   <Label
@@ -142,7 +143,7 @@ export default function StatusChart ({ status }: StatusChartProps) {
                     position="center"
                     fontSize="14"
                     fontWeight="600"
-                    fill={colorScheme === 'dark' ? 'white' : 'black'} />
+                    fill={theme === 'dark' ? 'white' : 'black'} />
               </Pie>
             </PieChart>
           </ResponsiveContainer>

@@ -10,7 +10,6 @@ import GameItem from '../components/stats/game-item'
 import { HeaderPortal } from '../components/app/header'
 import UserButton from '../components/common/user-button'
 import { PlusCircleIcon } from '@heroicons/react/24/solid'
-import Link from 'next/link'
 import { useDidMount } from '../hooks/lifecycle'
 import { useEndpoint } from '../hooks/http'
 import { useRouter } from 'next/router'
@@ -21,6 +20,7 @@ import GenresChart from '../components/stats/genres-chart'
 import StatusChart from '../components/stats/status-chart'
 import PlatformsChart from '../components/stats/platforms-chart'
 import { reducePlatforms } from '../utils/stats'
+import { Button, Link } from '@nextui-org/react'
 
 function toFixed (hours: number | null): string {
   return hours ? `${Math.floor(hours)}h` : '-'
@@ -38,14 +38,14 @@ function toStatusLabel (status: string): string {
 function getStatusColor (status: string): string {
   switch (status) {
     case 'finished':
-      return 'bg-green-400 dark:bg-green-800'
+      return 'bg-success-400'
     case 'abandoned':
-      return 'bg-red-400 dark:bg-red-800'
+      return 'bg-danger-400'
     case 'ongoing':
-      return 'bg-sky-400 dark:bg-sky-800'
+      return 'bg-primary-400'
     case 'pending':
     default:
-      return 'bg-gray-400 dark:bg-gray-800'
+      return 'bg-default-400'
   }
 }
 
@@ -80,12 +80,9 @@ export default function StatsView ({
       <div className="grid gap-8 pb-8">
         <HeaderPortal>
           <UserButton />
-          <Link href="/track" legacyBehavior>
-            <a className="btn btn-primary px-4 h-10 text-sm">
-              <PlusCircleIcon className="h-6 w-6" />
-              <span>Track</span>
-            </a>
-          </Link>
+          <Button as={Link} color="primary" href="/track" radius="full">
+            <PlusCircleIcon className="size-6" /> Track
+          </Button>
         </HeaderPortal>
         <SearchForm
           initialData={query}
@@ -106,19 +103,19 @@ export default function StatsView ({
           <div className="h-64 mx-auto md:h-96" style={{ width: '99%' }}>
             <GenresChart genres={stats.state.data?.genres} />
           </div>
-          <table>
+          <table className="table text-center">
             <thead>
               <tr>
                 <th className="text-left">Genre</th>
                 <th className="w-32">
                   <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-amber-500 dark:bg-amber-600" />
+                    <span className="inline-block rounded-full size-4 bg-primary-400" />
                     Time
                   </div>
                 </th>
                 <th className="w-32">
                   <div className="flex items-center justify-center gap-2">
-                    <span className="inline-block rounded-full w-4 h-4 bg-blue-500" />
+                    <span className="inline-block rounded-full size-4 bg-secondary-400" />
                     Games
                   </div>
                 </th>
@@ -127,7 +124,7 @@ export default function StatsView ({
             <tbody>
               {stats.state.data?.genres.map(genre =>
               <tr key={genre.genre}>
-                <td>{genre.genre}</td>
+                <td className="text-left"><Link href={`/?genre=${genre.genre}`}>{genre.genre}</Link></td>
                 <td>{genre._totalHours}h</td>
                 <td>{genre._count}</td>
               </tr>
@@ -141,7 +138,7 @@ export default function StatsView ({
           <div className="grid mx-auto h-128 sm:h-64" style={{ width: '99%' }}>
             <StatusChart status={stats.state.data?.status} />
           </div>
-          <table>
+          <table className="table text-center">
             <thead>
               <tr>
                 <th className="text-left">Status</th>
@@ -153,12 +150,10 @@ export default function StatsView ({
             <tbody>
               {stats.state.data?.status.map(status =>
               <tr key={status.status}>
-                <td>
+                <td className="text-left">
                   <div className="flex items-center gap-2">
-                    <span className={`inline-block rounded-full w-4 h-4 ${getStatusColor(status.status)}`}></span>
-                    <Link href={`/?status=${status.status}`} legacyBehavior>
-                      <a>{toStatusLabel(status.status)}</a>
-                    </Link>
+                    <span className={`inline-block rounded-full size-4 ${getStatusColor(status.status)}`}></span>
+                    <Link href={`/?status=${status.status}`}>{toStatusLabel(status.status)}</Link>
                   </div>
                 </td>
                 <td>{toFixed(status._avg.totalHours)}</td>
@@ -175,12 +170,25 @@ export default function StatsView ({
           <div className="flex items-center h-64 mx-auto md:h-96" style={{ width: '99%' }}>
             <PlatformsChart platforms={stats.state.data?.platforms} />
           </div>
-          <table>
+          <table className="table text-center">
             <thead>
               <tr>
-                <th className="text-left">Name</th>
-                <th className="w-32">Time</th>
-                <th className="w-32">Games</th>
+                <th className="text-left">Platform</th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center">
+                    <span className="inline-block rounded-l-full h-4 w-2 bg-success-400" />
+                    <span className="inline-block w-2 h-4 bg-primary-400" />
+                    <span className="inline-block w-2 h-4 bg-danger-400" />
+                    <span className="inline-block rounded-r-full h-4 w-2 bg-default-400" />
+                    <span className="ml-2">Time</span>
+                  </div>
+                </th>
+                <th className="w-32">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="inline-block rounded-full size-4 bg-secondary-400" />
+                    Games
+                  </div>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -188,10 +196,8 @@ export default function StatsView ({
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((platform, index) =>
                 <tr key={index}>
-                  <td>
-                    <Link href={`/?platformId=${platform.igdbId}`} legacyBehavior>
-                      <a>{platform.name}</a>
-                    </Link>
+                  <td className="text-left">
+                    <Link href={`/?platformId=${platform.igdbId}`}>{platform.name}</Link>
                   </td>
                   <td>{platform._totalHours}h</td>
                   <td>{platform._count}</td>
