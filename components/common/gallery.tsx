@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { getImageURL } from '../../utils/igdb'
 import { MouseEvent, useState, useEffect } from 'react'
 import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/solid'
+import Touchable from './touchable'
 
 function getPhotoId (url: string): string | undefined {
   return url.split('/').pop()?.replace('.jpg', '')
@@ -80,13 +81,16 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
           </Link>
         : null
     )}
-      <Modal isOpen={Boolean(photoId)} onClose={handleClose} size="5xl" backdrop="blur">
+      <Modal isOpen={Boolean(photoId)} onClose={handleClose} size="5xl" backdrop="blur" className="self-center">
         <ModalContent className="relative">
           <Image
             removeWrapper
             src={getImageURL(`${photoId}`, '1080p')}
             alt="Screenshot" />
-          <div className="absolute z-10 inset-0 flex items-center justify-between px-4 opacity-0 hover:opacity-100 transition">
+          <Touchable
+            className="absolute z-10 inset-0 flex items-center justify-between px-4 opacity-0 hover:opacity-100 transition"
+            onSwipeLeft={() => handleImageChange(-1)}
+            onSwipeRight={() => handleImageChange(1)}>
             <Button
               aria-label="previous"
               isIconOnly
@@ -98,10 +102,10 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
               aria-label="next"
               isIconOnly
               radius="full"
-              onClick={() => handleImageChange()}>
+              onClick={() => handleImageChange(1)}>
               <ArrowRightIcon className="size-5" />
             </Button>
-          </div>
+          </Touchable>
         </ModalContent>
       </Modal>
     </>
