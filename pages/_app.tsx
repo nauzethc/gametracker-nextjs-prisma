@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import Header from '../components/app/header'
 import Head from 'next/head'
+import { Providers } from '../lib/providers'
 
 export default function App ({
   Component,
@@ -46,8 +47,10 @@ export default function App ({
         <meta property="og:image" content="https://gametracker-nextjs.vercel.app/icons/touch-icon-retina.png" />
       </Head>
       <Header />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Component {...pageProps} />
+      <main className="max-w-[1024px] mx-auto px-6 relative">
+        <Providers>
+          <Component {...pageProps} />
+        </Providers>
       </main>
     </SessionProvider>
   )

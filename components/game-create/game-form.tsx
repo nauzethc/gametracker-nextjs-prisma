@@ -1,7 +1,7 @@
 import { useForm } from '../../hooks/forms'
-
-// @ts-ignore
-import ReactStars from 'react-rating-stars-component'
+import { Button, DatePicker, Input, Select, SelectItem, Slider, Textarea } from '@nextui-org/react'
+import { ZonedDateTime, parseAbsoluteToLocal } from '@internationalized/date'
+import RatingInput from '../common/rating-input'
 
 export type GameplayData = {
   gameplayType: string,
@@ -19,7 +19,7 @@ export type GameplayData = {
 const defaults: GameplayData = {
   gameplayType: 'main',
   status: 'ongoing',
-  startedOn: new Date().toISOString().slice(0, 10),
+  startedOn: new Date().toISOString(),
   finishedOn: '',
   totalHours: 0,
   progress: 0,
@@ -27,12 +27,6 @@ const defaults: GameplayData = {
   achievementsUnlocked: 0,
   comment: '',
   rating: 0
-}
-
-function toDateString (date?: string | Date | null): string {
-  return date !== null
-    ? (date instanceof Date ? date.toISOString() : date ?? '').slice(0, 10)
-    : ''
 }
 
 export default function GameForm ({
@@ -45,117 +39,118 @@ export default function GameForm ({
   onSubmit?: (data: GameplayData) => void
 }) {
   const { data, setData, handleChange, handleSubmit } = useForm<GameplayData>({ defaults, initialData, onSubmit })
-  const handleRating = (rating: number) => setData({ ...data, rating })
+
+  function handleDate (field: 'startedOn'|'finishedOn', value: ZonedDateTime) {
+    setData({ ...data, [field]: new Date(value.toDate()).toISOString() })
+  }
+  function handleNumber (field: 'rating'|'progress', value: number) {
+    setData({ ...data, [field]: value })
+  }
 
   return (
-    <form className="grid-form" onSubmit={handleSubmit}>
-      <div className="form-control">
-        <label htmlFor="gameplayType">Gameplay</label>
-        <select name="gameplayType" value={data.gameplayType} onChange={handleChange}>
-          <option value="main">Main</option>
-          <option value="extended">Extended</option>
-          <option value="completionist">Completionist</option>
-          <option value="speedrun">Speedrun</option>
-          <option value="online">Online</option>
-        </select>
-      </div>
+    <form className="grid gap-2" onSubmit={handleSubmit}>
+      <Select
+        label="Gameplay type"
+        name="gameplayType"
+        selectedKeys={[data.gameplayType ?? '']}
+        aria-label="gameplay type"
+        onChange={handleChange}
+        disabled={pending}>
+        <SelectItem key="main">Main</SelectItem>
+        <SelectItem key="extended">Extended</SelectItem>
+        <SelectItem key="completionist">Completionist</SelectItem>
+        <SelectItem key="speedrun">Speedrun</SelectItem>
+        <SelectItem key="online">Online</SelectItem>
+      </Select>
 
-      <div className="form-control">
-        <label htmlFor="startedOn">Started</label>
-        <input
-          type="date"
-          name="startedOn"
-          value={toDateString(data.startedOn)}
-          onChange={handleChange} />
-      </div>
+      <DatePicker
+        label="Started on"
+        name="startedOn"
+        granularity="day"
+        value={data.startedOn ? parseAbsoluteToLocal(`${data.startedOn}`) : null}
+        onChange={value => handleDate('startedOn', value)} />
 
-      <div className="form-control">
-        <label htmlFor="finishedOn">Finished</label>
-        <input
-          type="date"
-          name="finishedOn"
-          value={toDateString(data.finishedOn)}
-          onChange={handleChange} />
-      </div>
+      <DatePicker
+        label="Finished on"
+        name="finishedOn"
+        granularity="day"
+        value={data.finishedOn ? parseAbsoluteToLocal(`${data.finishedOn}`) : null}
+        onChange={value => handleDate('finishedOn', value)} />
 
-      <div className="form-control">
-        <label htmlFor="status">Status</label>
-        <select
-          name="status"
-          value={data.status}
-          onChange={handleChange}>
-          <option value="ongoing">On Going</option>
-          <option value="pending">Pending</option>
-          <option value="finished">Finished</option>
-          <option value="abandoned">Abandoned</option>
-        </select>
-      </div>
+      <Select
+        label="Status"
+        name="status"
+        selectedKeys={[data.status ?? '']}
+        aria-label="status"
+        onChange={handleChange}
+        disabled={pending}>
+        <SelectItem key="">Any</SelectItem>
+        <SelectItem key="ongoing" className="text-primary">On Going</SelectItem>
+        <SelectItem key="pending">Pending</SelectItem>
+        <SelectItem key="finished" className="text-success">Finished</SelectItem>
+        <SelectItem key="abandoned" className="text-danger">Abandoned</SelectItem>
+      </Select>
 
-      <div className="form-control">
-        <label htmlFor="achievementsTotal">Achievements</label>
-        <div className="flex items-center">
-          <input
-            className="input input-bordered flex-grow flex-shrink w-full"
-            pattern="[0-9]+"
-            type="text"
-            placeholder="0"
-            name="achievementsUnlocked"
-            value={data.achievementsUnlocked ?? 0}
-            onChange={handleChange} />
-          <span className="px-2">of</span>
-          <input
-            className="input input-bordered flex-grow flex-shrink w-full"
-            pattern="[0-9]+"
-            type="text"
-            placeholder="total"
-            name="achievementsTotal"
-            value={data.achievementsTotal ?? 0}
-            onChange={handleChange} />
-        </div>
-      </div>
-
-      <div className="form-control">
-        <label htmlFor="totalHours">Hours</label>
-        <input
-          type="text"
+      <div className="flex items-end">
+        <Input
+          type="number"
+          label="Unlocked"
+          placeholder="0"
           pattern="[0-9]+"
-          name="totalHours"
-          value={data.totalHours ?? 0}
+          name="achievementsUnlocked"
+          value={`${data.achievementsUnlocked || '0'}`}
+          onChange={handleChange} />
+        <span className="p-2">of</span>
+        <Input
+          type="number"
+          label="Achievements"
+          placeholder="12"
+          pattern="[0-9]+"
+          name="achievementsTotal"
+          value={`${data.achievementsTotal || '0'}`}
           onChange={handleChange} />
       </div>
 
-      <div className="form-control col-span-full">
-        <label htmlFor="progress">Progress ({data.progress}%)</label>
-        <input
-          className="w-full mt-2"
-          type="range"
-          min="0"
-          max="100"
-          step="1"
-          name="progress"
-          value={data.progress ?? 0}
-          onChange={handleChange} />
-      </div>
+      <Input
+        type="number"
+        label="Played hours"
+        pattern="[0-9]+"
+        name="totalHours"
+        value={`${data.totalHours || 0}`}
+        onChange={handleChange} />
 
-      <div className="form-control col-span-full">
-        <label htmlFor="comment">Rating</label>
-        <textarea
+      <Slider
+        label="Completion progress"
+        className="my-4"
+        name="progress"
+        getValue={(progress) => `${progress}%`}
+        step={1}
+        minValue={0}
+        maxValue={100}
+        value={data.progress}
+        onChange={value => handleNumber('progress', Array.isArray(value) ? value[0] : value)} />
+
+      <div className="flex flex-col items-center gap-2">
+        <Textarea
+          placeholder="Enter your comments about game..."
           name="comment"
-          rows={4}
           value={data.comment ?? ''}
           onChange={handleChange} />
-        <div className="flex justify-center h-12">
-          <ReactStars count={5} isHalf={true} size={32}
-            onChange={handleRating}
-            value={data.rating} />
+        <div className="react-stars">
+          <RatingInput
+            color="warning"
+            size={8}
+            value={data.rating}
+            onChange={(value: number) => handleNumber('rating', value)} />
         </div>
       </div>
-
-      <div className="modal-action col-span-full flex justify-center">
-        <button className="group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm w-full sm:w-64"
-          disabled={pending}
+      <div className="flex flex-row gap-2 py-2 justify-end">
+        <Button
+          aria-label="save"
           type="submit"
-          aria-label="save">Save</button>
+          color="primary">
+          Save
+        </Button>
       </div>
     </form>
   )

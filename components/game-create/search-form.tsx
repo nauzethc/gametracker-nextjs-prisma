@@ -1,6 +1,7 @@
 import { useForm } from '../../hooks/forms'
 import { ArrowPathIcon, MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { IGDBPlatform } from '../../types/igdb'
+import { Button, Input, Select, SelectItem } from '@nextui-org/react'
 
 type SearchData = {
   q: string,
@@ -27,41 +28,35 @@ export default function SearchForm ({
 }) {
   const { data, handleChange, handleSubmit } = useForm<SearchData>({ defaults, initialData, onSubmit })
   return (
-    <form onSubmit={handleSubmit} className={`grid grid-cols-3 gap-2 ${className}`}>
-      <div className="field col-span-full md:col-span-1">
-        <label htmlFor="platformId">Platform</label>
-        <select
-          className="flex-shrink"
-          name="platformId"
-          value={data.platformId}
-          aria-label="platform"
-          onChange={handleChange}
-          disabled={pending}>
-          <option value="">Any</option>
-          {platforms.map(platform =>
-            <option key={platform.igdbId} value={platform.igdbId}>
-              {platform.name}
-            </option>
-          )}
-        </select>
-      </div>
-      <div className="col-span-full md:col-span-2 flex items-end gap-2">
-        <input
-          className="w-full"
-          type="text"
+    <form onSubmit={handleSubmit} className={`grid gap-2 grid-cols-3 ${className}`}>
+      <Select
+        label="Platform"
+        name="platformId"
+        selectedKeys={[data.platformId ?? '']}
+        aria-label="platform"
+        onChange={handleChange}
+        disabled={pending}>
+        <SelectItem key="">Any</SelectItem>
+        {platforms.map(p => <SelectItem key={p.igdbId}>{p.name}</SelectItem>)}
+      </Select>
+      <div className="relative col-span-2">
+        <Input
+          color="primary"
           name="q"
+          label="Name"
           value={data.q}
           aria-label="search"
-          placeholder="Search games..."
+          placeholder="i.e.: 'zelda'"
           onChange={handleChange}
           disabled={pending}
-          required />
-          <button className="h-10 w-10 p-2" type="submit" disabled={pending} aria-label="search">
-            {pending
-              ? <ArrowPathIcon className="w-6 h-6 animate-spin" />
-              : <MagnifyingGlassIcon className="w-6 h-6" />
-            }
-          </button>
+          endContent={
+            <Button className="self-center" color="primary" variant="light" type="submit" isIconOnly radius="full">
+              {pending
+                ? <ArrowPathIcon className="size-6 animate-spin" />
+                : <MagnifyingGlassIcon className="size-6" />
+              }
+            </Button>
+          } />
       </div>
     </form>
   )

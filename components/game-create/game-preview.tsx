@@ -1,6 +1,6 @@
-import Cover from '../common/cover'
 import { IGDBGameSelected } from '../../types/igdb'
 import DateField from '../common/date-field'
+import { Image } from '@nextui-org/react'
 
 type GamePreviewProps = {
   data: IGDBGameSelected|null
@@ -11,7 +11,7 @@ export default function GamePreview ({ data }: GamePreviewProps) {
     ? <div className="game-preview grid">
         <div className="flex gap-4">
           <div className="w-24 flex-shrink-0">
-            <Cover src={data.cover || undefined} alt={data.name} />
+            <Image src={data.cover || undefined} alt={data.name} />
           </div>
           <div className="flex flex-col flex-grow gap-1 justify-start">
             <h1 className="text-xl font-semibold">{data.name}</h1>

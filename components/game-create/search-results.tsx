@@ -1,6 +1,8 @@
-import { PlusCircleIcon } from '@heroicons/react/24/solid'
+import { PlusCircleIcon } from '@heroicons/react/20/solid'
 import { IGDBGame, IGDBPlatform, IGDBSearch, IGDBGameSelected } from '../../types/igdb'
-import Cover from '../common/cover'
+import { Image, Button, Card, CardFooter, CardBody } from '@nextui-org/react'
+import { useImageColors } from '../../hooks/color'
+import CardBackground from '../common/card-background'
 
 type SearchResultsProps = {
   results: IGDBSearch|null,
@@ -19,14 +21,16 @@ function Platforms ({ data, onSelect }: PlatformsProps) {
   return (
     <>
       {data.map(p =>
-      <button
+      <Button
         key={p.igdbId}
-        className="text-sm font-semibold gap-1 px-2 py-1 rounded-full"
+        color="primary"
+        radius="full"
+        size="sm"
         onClick={() => onSelect(p)}
         aria-label={p.name}>
-        <PlusCircleIcon className="w-5 h-5" />
-        <span>{p.abbreviation ?? p.name}</span>
-      </button>
+        <PlusCircleIcon className="w-4 h-4" />
+        <span className="font-semibold">{p.abbreviation ?? p.name}</span>
+      </Button>
       )}
     </>
   )
@@ -39,26 +43,32 @@ function Result ({ data, onSelect }: ResultProps) {
       onSelect({ ...game, platform })
     }
   }
+  const { color, background } = useImageColors(data.cover)
   return (
-    <div className="flex gap-4">
-      <div className="w-24 flex-shrink-0">
-        <Cover src={data.cover} alt={data.name} />
-      </div>
-      <div className="flex-grow grid place-content-start gap-1">
-        <h1 className="text-lg font-semibold leading-6 col-span-full">{data.name}</h1>
-        <div className="flex flex-col">
-          <span className="text-sm opacity-70 font-semibold">Developers</span>
-          <span className="text-sm sm:text-base">{data.developers.join(', ')}</span>
+    <Card className="relative transition-colors duration-1000" style={{ color }}>
+      <CardBackground color={background} />
+      <CardBody>
+        <div className="flex items-start gap-4">
+          <div className="w-24 flex-shrink-0">
+            <Image src={data.cover} alt={data.name} />
+          </div>
+          <div className="flex-grow grid place-content-start gap-1">
+            <h1 className="text-lg font-semibold leading-6 col-span-full">{data.name}</h1>
+            <div className="flex flex-col">
+              <span className="text-sm opacity-70 font-semibold">Developers</span>
+              <span className="text-sm sm:text-base">{data.developers.join(', ')}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm opacity-70 font-semibold">Publishers</span>
+              <span className="text-sm sm:text-base">{data.publishers.join(', ')}</span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm opacity-70 font-semibold">Publishers</span>
-          <span className="text-sm sm:text-base">{data.publishers.join(', ')}</span>
-        </div>
-        <div className="col-span-full flex flex-wrap items-center gap-2 my-2">
-          <Platforms data={data.platforms} onSelect={handleSelect} />
-        </div>
-      </div>
-    </div>
+      </CardBody>
+      <CardFooter className="bg-default/20 flex flex-wrap items-center justify-end gap-2 z-10">
+        <Platforms data={data.platforms} onSelect={handleSelect} />
+      </CardFooter>
+    </Card>
   )
 }
 

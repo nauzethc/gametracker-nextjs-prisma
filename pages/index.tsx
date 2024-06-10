@@ -17,8 +17,8 @@ import UserButton from '../components/common/user-button'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import { Platform } from '@prisma/client'
-import Toggle from '../components/common/toggle'
 import { capitalize } from '../utils/strings'
+import { Button, Chip, Switch } from '@nextui-org/react'
 
 export default function HomeView ({
   query: initialQuery,
@@ -61,7 +61,7 @@ export default function HomeView ({
 
   return (
     <div id="home-view">
-      <div className="grid grid-cols-1 md:grid-cols-2 py-3 gap-8 mb-4">
+      <div className="grid">
         <SearchForm
           initialData={query}
           className="col-span-full mb-4"
@@ -72,39 +72,34 @@ export default function HomeView ({
         <div className="flex items-start justify-between gap-6 col-span-full">
           <div className="flex flex-wrap items-start gap-2">
             {games.state.data?.count
-              ? <span className="badge">{games.state.data.count} {games.state.data.count > 1 ? 'games' : 'game'}</span>
-              : <span className="badge badge-danger">No games found</span>
+              ? <Chip>{games.state.data.count} {games.state.data.count > 1 ? 'games' : 'game'}</Chip>
+              : <Chip color="danger">No games found</Chip>
             }
             {filters.map(([key, value]) =>
-              <span key={key} className="badge badge-info">
-                <span className="font-normal hidden sm:inline-block">{capitalize(key)}:</span> {value}
-              </span>
+              <Chip key={key} color="secondary">{capitalize(key)}: {value}</Chip>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <Squares2X2Icon className="w-6 h-6" />
-            <Toggle checked={showTable} onChange={setTable} />
-            <QueueListIcon className="w-6 h-6" />
+            <Squares2X2Icon className="size-6" />
+            <Switch isSelected={showTable} onValueChange={setTable} className="-mr-2" />
+            <QueueListIcon className="size-6" />
           </div>
         </div>
-        <SearchResults
-          asTable={showTable}
-          {...games.state.data} />
+        <div className="grid gap-4 py-6 md:grid-cols-2">
+          <SearchResults asTable={showTable} {...games.state.data} />
+        </div>
         <Pagination
           className="col-span-full mt-4"
           page={Number(query?.page ?? 1)}
-          pageSize={10}
+          pageSize={Number(query?.page_size ?? 10)}
           total={games.state.data ? games.state.data.count : 0}
           onChange={handlePageChange} />
       </div>
       <HeaderPortal>
         <UserButton />
-        <Link href="/track" legacyBehavior>
-          <a className="btn btn-primary px-4 h-10 text-sm">
-            <PlusCircleIcon className="h-6 w-6" />
-            <span>Track</span>
-          </a>
-        </Link>
+        <Button as={Link} color="primary" href="/track" radius="full">
+          <PlusCircleIcon className="size-6" /> Track
+        </Button>
       </HeaderPortal>
     </div>
   )

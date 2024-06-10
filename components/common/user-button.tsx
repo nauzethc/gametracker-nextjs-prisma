@@ -1,81 +1,107 @@
-import { useState } from 'react'
-import { Menu, Dialog } from '@headlessui/react'
-import { ChartBarIcon, ArrowDownTrayIcon, ArrowRightOnRectangleIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import {
+  ChartBarIcon,
+  ArrowDownTrayIcon,
+  ArrowLeftStartOnRectangleIcon,
+  UserCircleIcon,
+  MoonIcon,
+  SunIcon
+} from '@heroicons/react/24/solid'
 import { useSession, signOut } from 'next-auth/react'
+import { useMediaQuery } from '../../hooks/media-query'
 import Link from 'next/link'
-import Modal from './modal'
+import {
+  Avatar,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from '@nextui-org/react'
+import { useState } from 'react'
+import { useTheme } from 'next-themes'
 
-function Avatar ({ src, alt }: { src?: string | null, alt?: string | null }) {
-  return src
-    ? <img className="w-8 h-8 rounded-full"
-      src={src}
-      alt={alt ?? 'User'} />
-    : <UserCircleIcon className="w-8 h-8" />
-}
-
-export default function UserButton ({
-  className = '',
-  extended
-}: {
-  className?: string,
-  extended?: boolean
-}) {
+export default function UserButton () {
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { data: session } = useSession()
-  const handleLogout = () => signOut()
-  const [showBackupModal, setBackupModal] = useState(false)
+  const isMatching = useMediaQuery('(max-width: 639px)')
+  const { theme, setTheme } = useTheme()
 
+  const handleLogout = () => signOut()
+  const handleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
   if (!(session && session.user)) return null
 
   return (
-    <div className="user-button">
-      <Modal open={showBackupModal} onClose={() => setBackupModal(false)}>
-        <Dialog.Panel className="dialog-panel">
-          <h3 className="font-semibold">Backup</h3>
-          <span className="py-2">Download your tracking data</span>
-          <div className="modal-action flex items-center justify-end gap-2">
-            <Link href="/api/download?format=json" legacyBehavior>
-              <a className="btn btn-primary px-4 py-2">JSON</a>
-            </Link>
-            <Link href="/api/download?format=csv" legacyBehavior>
-              <a className="btn btn-primary px-4 py-2">CSV</a>
-            </Link>
-          </div>
-        </Dialog.Panel>
+    <>
+      <Dropdown>
+        <DropdownTrigger>
+          <Button
+            radius="full"
+            aria-label="user menu"
+            className="relative min-w-0 w-10 sm:w-auto sm:pl-10"
+            isIconOnly={isMatching}>
+            <Avatar
+              className="absolute left-0"
+              showFallback
+              src={session.user.image || undefined}
+              fallback={<UserCircleIcon className="size-8" />} />
+            <span className="hidden sm:block ml-1">
+              {session.user.name ?? session.user.email}
+            </span>
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu aria-label="User menu">
+          <DropdownItem
+            href="/stats"
+            key="stats"
+            startContent={<ChartBarIcon className="size-5" />}>
+            Stats
+          </DropdownItem>
+          <DropdownItem
+            key="backup"
+            onClick={() => setModalOpen(true)}
+            startContent={<ArrowDownTrayIcon className="size-5" />}>
+            Backup
+          </DropdownItem>
+          <DropdownItem
+            showDivider
+            key="switch-theme"
+            onClick={handleTheme}
+            startContent={theme === 'light'
+              ? <MoonIcon className="size-5" />
+              : <SunIcon className="size-5" />
+            }>
+            {theme === 'light' ? 'Dark mode' : 'Light mode'}
+          </DropdownItem>
+          <DropdownItem
+            key="logout"
+            className="text-danger"
+            onClick={handleLogout}
+            startContent={<ArrowLeftStartOnRectangleIcon className="size-5" />}>
+            Logout
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      <Modal
+        size="xs"
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        backdrop="blur">
+        <ModalContent>
+          <ModalHeader>Backup</ModalHeader>
+          <ModalBody>
+            <p className="py-2">Would you like to download your tracking data?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary"as={Link} href="/api/download?format=json">JSON</Button>
+            <Button color="primary"as={Link} href="/api/download?format=csv">CSV</Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
-      <Menu as="div" className="dropdown h-10">
-        <Menu.Button className="btn h-10 text-sm font-semibold px-1" aria-label="user menu">
-          {
-            // @ts-ignore
-            <Avatar src={session.user.image || session.user.picture} alt={session.user.name} />
-          }
-          <span className={`${extended ? 'block' : 'hidden'} pr-2 sm:block`}>{session.user.name ?? session.user.email}</span>
-        </Menu.Button>
-        <Menu.Items className="dropdown-menu min-w-full w-36 p-1 grid gap-1">
-          <Menu.Item>
-            <Link href="/stats" legacyBehavior>
-              <a className="btn dropdown-item">
-                <span className="text-sm">Stats</span>
-                <ChartBarIcon className="w-5 h-5" />
-              </a>
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <a href="#download"
-              onClick={() => setBackupModal(true)}
-              className="btn dropdown-item">
-              <span className="text-sm">Backup</span>
-              <ArrowDownTrayIcon className="w-5 h-5" />
-            </a>
-          </Menu.Item>
-          <hr className="w-full border-slate-300 dark:border-slate-700" />
-          <Menu.Item>
-            <button className="dropdown-item" onClick={handleLogout} aria-label="logout">
-              <span className="text-sm">Logout</span>
-              <ArrowRightOnRectangleIcon className="w-5 h-5" />
-            </button>
-          </Menu.Item>
-        </Menu.Items>
-      </Menu>
-    </div>
+    </>
   )
 }

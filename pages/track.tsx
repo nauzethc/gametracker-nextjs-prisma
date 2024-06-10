@@ -5,7 +5,6 @@ import { Dialog } from '@headlessui/react'
 import { DEFAULT_PAGE_SIZE } from '../config'
 import { useRouter } from 'next/router'
 
-import Modal from '../components/common/modal'
 import Error from '../components/common/error'
 import SearchForm from '../components/game-create/search-form'
 import SearchResults from '../components/game-create/search-results'
@@ -21,6 +20,7 @@ import { GetServerSideProps } from 'next'
 import { findGamesByName, findPlatforms } from '../services/igdb'
 import { useDidMount } from '../hooks/lifecycle'
 import { parseGameQuery } from '../utils/igdb'
+import { Modal, ModalBody, ModalContent, ModalHeader } from '@nextui-org/react'
 
 export default function TrackView ({
   query: initialQuery,
@@ -71,7 +71,7 @@ export default function TrackView ({
       <HeaderPortal>
         <UserButton />
       </HeaderPortal>
-      <div className="grid grid-cols-1 md:grid-cols-2 py-3 gap-8 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <SearchForm
           initialData={{ q: '', ...query }}
           className="col-span-full"
@@ -82,18 +82,22 @@ export default function TrackView ({
           results={igdb.state.data}
           onSelect={game => setSelected(game)} />
         <Pagination
-          className="col-span-full"
+          className="col-span-full flex justify-center"
           pageSize={query?.page_size ?? DEFAULT_PAGE_SIZE}
           total={igdb.state.data?.count ?? 0}
           page={query?.page ?? 1}
           onChange={handlePageChange} />
       </div>
-      <Modal open={Boolean(selected)} onClose={() => setSelected(null)}>
-        <Dialog.Panel className="dialog-panel">
-          <GamePreview data={selected} />
-          <GameForm initialData={{}} onSubmit={handleSubmit} />
-          <Error error={game.state.error} />
-        </Dialog.Panel>
+
+      <Modal backdrop="blur" isOpen={Boolean(selected)} onClose={() => setSelected(null)}>
+        <ModalContent>
+          <ModalHeader>Add game</ModalHeader>
+          <ModalBody>
+            <GamePreview data={selected} />
+            <GameForm initialData={{}} onSubmit={handleSubmit} />
+            <Error error={game.state.error} />
+          </ModalBody>
+        </ModalContent>
       </Modal>
     </div>
   )

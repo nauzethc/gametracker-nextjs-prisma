@@ -1,14 +1,16 @@
-import Image from 'next/image'
+import NextImage from 'next/image'
+import { Image } from '@nextui-org/react'
 
 const COVER = [264, 374]
 
 export default function Cover ({ className = '', src, alt } : { className?: string, src?: string, alt?: string }) {
   return (
-    <figure className={`cover ${className}`}>
-      {src
-        ? <Image className="rounded" src={src} alt={alt ?? 'Unknown'} width={COVER[0]} height={COVER[1]} />
-        : <div className="placeholder rounded" style={{ width: COVER[0], maxWidth: '100%', aspectRatio: `${COVER[0] / COVER[1]}` }} />
-      }
-    </figure>
+    <Image
+      className={`cover ${className}`}
+      as={NextImage}
+      width={COVER[0]}
+      height={COVER[1]}
+      src={src}
+      alt={alt} />
   )
 }

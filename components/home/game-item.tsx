@@ -1,63 +1,65 @@
 import { GameWithPlatform } from '../../types/games'
-import Cover from '../common/cover'
 import { GamepadAltIcon, GameplayIcon } from '../common/icons'
 import { BookmarkIcon, CalendarIcon, ChartPieIcon, ClockIcon } from '@heroicons/react/24/solid'
-import Link from 'next/link'
 import { capitalize } from '../../utils/strings'
-import ProgressBar from '../common/progress-bar'
-import Rating from '../common/rating'
 import DateField from '../common/date-field'
+import { Card, CardBody, Image, Link, Progress } from '@nextui-org/react'
+import { useImageColors } from '../../hooks/color'
+import Rating from '../common/rating'
+import { getStatusColor } from '../../utils/colors'
+import CardBackground from '../common/card-background'
 
-type GameItemProps = {
-  data: GameWithPlatform
+function Bookmark ({ isEnabled = false }: { isEnabled?: boolean | null }) {
+  return isEnabled
+    ? <BookmarkIcon className="text-danger size-5 sm:size-6 absolute top-1 -mt-2 right-0 mr-1 z-10" />
+    : null
 }
 
-export default function GameItem ({ data } : GameItemProps) {
+export default function GameItem ({ data }: { data: GameWithPlatform }) {
+  const { color, background } = useImageColors(data.cover)
+  const ICON_SIZE = 'size-5'
   return (
-    <div className={`game-item flex flex-col gap-2 ${data.fixed ? 'is-playing' : ''}`}>
-      <div className="flex gap-x-6">
-        <div className="media w-16 sm:w-24 flex-shrink-0">
-          <Link href={`/games/${data.id}`} legacyBehavior>
-            <a className="relative">
-              <Cover src={data.cover || undefined} alt={data.name} />
-              {data.fixed ? <BookmarkIcon className="w-5 h-5 sm:w-6 sm:h-6 absolute top-0 -mt-2 right-0 mr-1 bookmark" /> : null}
-            </a>
-          </Link>
-          <Rating className="text-yellow-400 dark:text-yellow-500" value={data.rating ?? 0} size={5} />
-        </div>
-        <div className="meta flex-grow grid grid-cols-2 place-content-start gap-y-2 gap-x-4 sm:gap-y-3 md:grid-cols-1">
-          <div className="col-span-full grid">
-            <h1 className="font-semibold text-lg leading-6 whitespace-nowrap overflow-hidden text-ellipsis title">
-              <Link href={`/games/${data.id}`} legacyBehavior><a>{data.name}</a></Link>
-            </h1>
+    <Card className="relative transition-colors duration-1000" style={{ color }}>
+      <CardBackground color={background} />
+      <CardBody>
+        <div className="flex items-start gap-4 @container">
+          <div className="w-24 flex-shrink-0 relative flex flex-col items-center">
+            <Image src={data.cover || undefined} alt={data.name} />
+            <Bookmark isEnabled={data.fixed} />
           </div>
-          <div className="field hidden sm:flex gap-3 ">
-            <GameplayIcon className="w-6 h-6" gameplay={data.gameplayType} />
-            <span>{capitalize(data.gameplayType)}</span>
-          </div>
-          <div className="field flex gap-3">
-            <GamepadAltIcon className="w-6 h-6" />
-            <span className="hidden sm:block">{data.platform.name}</span>
-            <span className="sm:hidden">{data.platform.abbreviation}</span>
-          </div>
-          <div className="field flex gap-3">
-            <ClockIcon className="w-6 h-6" />
-            <span>{data.totalHours} hours</span>
-          </div>
-          <div className="field hidden sm:flex gap-3">
-            <CalendarIcon className="w-6 h-6" />
-            <DateField format="medium" value={data.startedOn} />
-          </div>
-          <div className="col-span-full field flex gap-3">
-            <ChartPieIcon className="w-6 h-6" />
-            <div className="w-full max-w-xs">
-              <ProgressBar value={data.progress} className={data.status}>
-                <span className="text-sm font-semibold px-2">{data.progress}%</span>
-              </ProgressBar>
+          <div className="flex-grow grid gap-2 text-sm @sm:grid-cols-2">
+            <div className="col-span-full">
+              <h4 className="font-semibold">
+                <Link style={{ color: 'inherit' }} href={`/games/${data.id}`}>{data.name}</Link>
+              </h4>
+            </div>
+            <div className="flex items-center gap-3">
+              <GameplayIcon className={ICON_SIZE} gameplay={data.gameplayType} />
+              <span>{capitalize(data.gameplayType)}</span>
+            </div>
+            <div className="flex gap-3">
+              <GamepadAltIcon className={ICON_SIZE} />
+              <span className="hidden @lg:block">{data.platform.name}</span>
+              <span className="block @lg:hidden">{data.platform.abbreviation}</span>
+            </div>
+            <div className="flex gap-3">
+              <ClockIcon className={ICON_SIZE} />
+              <span>{data.totalHours} hours</span>
+            </div>
+            <div className="flex gap-3">
+              <CalendarIcon className={ICON_SIZE} />
+              <DateField format="medium" value={data.startedOn} />
+            </div>
+            <div className="flex gap-3 items-center col-span-full">
+              <ChartPieIcon className={ICON_SIZE} />
+              <Progress value={data.progress} color={getStatusColor(data.status)} />
+            </div>
+            <div className="col-span-full flex justify-end my-1">
+              <Rating value={data.rating ?? 0} size={4} />
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardBody>
+    </Card>
   )
 }
