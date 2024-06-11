@@ -12,7 +12,7 @@ export default function GameHeader ({ className = '', data, onBookmark }: GamePr
   return (
     <div className={`flex flex-wrap gap-8 ${className}`}>
       <div className="w-24 flex-shrink-0 lg:w-32">
-        <Image className="" src={data.cover || undefined} alt={data.name} />
+        <Image className="shadow" src={data.cover || undefined} alt={data.name} />
       </div>
       <div className="flex flex-col flex-grow justify-end gap-4">
         <h1 className="text-2xl font-semibold">
