@@ -1,11 +1,10 @@
-import { Button, Image, Modal, ModalContent } from '@nextui-org/react'
+import { Image, Modal, ModalContent } from '@nextui-org/react'
 import Link from 'next/link'
 import NextImage from 'next/image'
 import { useRouter } from 'next/router'
 import { getImageURL } from '../../utils/igdb'
-import { MouseEvent, useState, useEffect } from 'react'
-import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/24/solid'
-import Touchable from './touchable'
+import { MouseEvent, useState, useMemo } from 'react'
+import GalleryControls from './gallery-controls'
 
 function getPhotoId (url: string): string | undefined {
   return url.split('/').pop()?.replace('.jpg', '')
@@ -29,20 +28,11 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
   }
 
   function handleImageChange (step = 1) {
-    let newIndex
-    // Next
-    if (step > 0) {
-      if (index + step < images.length) {
-        newIndex = index + step
-      } else {
-        newIndex = 0
-      }
-    } else {
-      if (index + step >= 0) {
-        newIndex = index + step
-      } else {
-        newIndex = images.length - 1
-      }
+    let newIndex = index + step
+    if (newIndex < 0) {
+      newIndex = images.length - 1
+    } else if (newIndex >= images.length) {
+      newIndex = 0
     }
     const newPhotoId = getPhotoId(images[newIndex])
     router.replace(`/games/${router.query.id}?photoId=${newPhotoId}`, undefined, { shallow: true })
@@ -52,14 +42,11 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
     router.replace(`/games/${router.query.id}`, undefined, { shallow: true })
   }
 
-  useEffect(() => {
+  useMemo(() => {
     const { photoId } = router.query
     setPhotoId(photoId ? `${photoId}` : '')
-  }, [router.query])
-
-  useEffect(() => {
     setIndex(images.findIndex(url => getPhotoId(url) === photoId))
-  }, [images, photoId])
+  }, [router.query, images])
 
   return (
     <>
@@ -81,31 +68,22 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
           </Link>
         : null
     )}
-      <Modal isOpen={Boolean(photoId)} onClose={handleClose} size="5xl" backdrop="blur" className="self-center">
+      <Modal
+        isOpen={Boolean(photoId)}
+        placement="center"
+        onClose={handleClose}
+        size="5xl"
+        backdrop="blur">
         <ModalContent className="relative">
           <Image
             removeWrapper
             src={getImageURL(`${photoId}`, '1080p')}
             alt="Screenshot" />
-          <Touchable
-            className="absolute z-10 inset-0 flex items-center justify-between px-4 opacity-0 hover:opacity-100 transition"
-            onSwipeLeft={() => handleImageChange(-1)}
-            onSwipeRight={() => handleImageChange(1)}>
-            <Button
-              aria-label="previous"
-              isIconOnly
-              radius="full"
-              onClick={() => handleImageChange(-1)}>
-              <ArrowLeftIcon className="size-5" />
-            </Button>
-            <Button
-              aria-label="next"
-              isIconOnly
-              radius="full"
-              onClick={() => handleImageChange(1)}>
-              <ArrowRightIcon className="size-5" />
-            </Button>
-          </Touchable>
+          <GalleryControls
+            className="absolute z-10 inset-0"
+            onPrevious={() => handleImageChange(-1)}
+            onNext={() => handleImageChange(1)}>
+          </GalleryControls>
         </ModalContent>
       </Modal>
     </>
