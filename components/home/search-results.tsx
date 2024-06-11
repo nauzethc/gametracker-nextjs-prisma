@@ -7,6 +7,7 @@ import DateField from '../common/date-field'
 import { Image, Progress, Link, Tooltip, Button } from '@nextui-org/react'
 import { getStatusColor } from '../../utils/colors'
 import { capitalize } from '../../utils/strings'
+import { useRouter } from 'next/router'
 
 type SearchResultProps = {
   data?: GameWithPlatform[],
@@ -15,11 +16,17 @@ type SearchResultProps = {
 }
 
 export default function SearchResults ({ data = [], count, asTable }: SearchResultProps) {
+  const router = useRouter()
+
+  function handleItemClick (id: string) {
+    router.push(`/games/${id}`)
+  }
+
   return (
     !asTable
       ? <Fragment>
         {Array.isArray(data)
-          ? data.map(game => <GameItem key={game.id} data={game} />)
+          ? data.map(game => <GameItem key={game.id} data={game} onClick={handleItemClick} />)
           : null
         }
       </Fragment>

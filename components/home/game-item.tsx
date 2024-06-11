@@ -11,21 +11,36 @@ import CardBackground from '../common/card-background'
 
 function Bookmark ({ isEnabled = false }: { isEnabled?: boolean | null }) {
   return isEnabled
-    ? <BookmarkIcon className="text-danger size-5 sm:size-6 absolute top-1 -mt-2 right-0 mr-1 z-10" />
+    ? <BookmarkIcon className="text-danger size-5 sm:size-6 absolute top-0 right-0 -mt-1 mr-2 z-10" />
     : null
 }
 
-export default function GameItem ({ data }: { data: GameWithPlatform }) {
+type GameItemProps = {
+  data: GameWithPlatform,
+  onClick?: (id: string) => void
+}
+
+export default function GameItem ({ data, onClick }: GameItemProps) {
   const { color, background } = useImageColors(data.cover)
   const ICON_SIZE = 'size-5'
+
+  function handleClick () {
+    if (onClick) onClick(data.id)
+  }
+
   return (
-    <Card className="relative transition-colors duration-1000" style={{ color }}>
+    <Card
+      className="relative transition-colors duration-1000"
+      style={{ color }}
+      isPressable={onClick !== undefined}
+      onPress={handleClick}>
       <CardBackground color={background} />
       <CardBody>
         <div className="flex items-start gap-4 @container">
-          <div className="w-24 flex-shrink-0 relative flex flex-col items-center">
+          <div className="w-24 flex-shrink-0 relative flex flex-col items-center gap-3">
             <Image src={data.cover || undefined} alt={data.name} />
             <Bookmark isEnabled={data.fixed} />
+            <Rating className="@sm:hidden" value={data.rating ?? 0} size={4} />
           </div>
           <div className="flex-grow grid gap-2 text-sm @sm:grid-cols-2">
             <div className="col-span-full">
@@ -54,7 +69,7 @@ export default function GameItem ({ data }: { data: GameWithPlatform }) {
               <ChartPieIcon className={ICON_SIZE} />
               <Progress value={data.progress} color={getStatusColor(data.status)} />
             </div>
-            <div className="col-span-full flex justify-end my-1">
+            <div className="col-span-full hidden @sm:flex justify-end my-1">
               <Rating value={data.rating ?? 0} size={4} />
             </div>
           </div>
