@@ -82,8 +82,7 @@ export default function Gallery ({ images = [] }: { images?: string[] }) {
           <GalleryControls
             className="absolute z-10 inset-0"
             onPrevious={() => handleImageChange(-1)}
-            onNext={() => handleImageChange(1)}>
-          </GalleryControls>
+            onNext={() => handleImageChange(1)} />
         </ModalContent>
       </Modal>
     </>
