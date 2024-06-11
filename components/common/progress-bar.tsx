@@ -35,5 +35,9 @@ export default function ProgressBar ({
   children?: any
 }) {
   const percent = clamp(min, max, value) * 100 / max
-  return <Progress className={className} value={percent} color={getColor(status)} />
+  return <Progress
+    className={className}
+    value={percent}
+    color={getColor(status)}
+    aria-label={`${percent}% completed`} />
 }

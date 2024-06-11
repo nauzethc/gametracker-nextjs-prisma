@@ -94,7 +94,10 @@ export default function GameData ({ className = '', data }: GameDataProps) {
 
       <Stat label="Progress">
         <ChartPieIcon className="size-6" />
-        <Progress value={data.progress} color={getStatusColor(data.status)} />
+        <Progress
+          value={data.progress}
+          color={getStatusColor(data.status)}
+          aria-label={`${data.progress}% completed`} />
       </Stat>
 
       <Stat label="Gameplay">

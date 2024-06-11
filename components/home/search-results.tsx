@@ -92,7 +92,10 @@ export default function SearchResults ({ data = [], count, asTable }: SearchResu
                 <DateField format="medium" value={game.startedOn} />
               </td>
               <td className="w-20 sm:w-24">
-                <Progress value={game.progress} color={getStatusColor(game.status)} />
+                <Progress
+                  value={game.progress}
+                  color={getStatusColor(game.status)}
+                  aria-label={`${game.progress}% completed`} />
               </td>
             </tr>
           )}
