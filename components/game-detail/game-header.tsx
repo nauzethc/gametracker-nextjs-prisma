@@ -1,6 +1,7 @@
 import { Image } from '@nextui-org/react'
 import { GameWithPlatform } from '../../types/games'
 import { toHumanReadableString } from '../../utils/strings'
+import { BookmarkIcon } from '@heroicons/react/24/solid'
 
 type GamePreviewProps = {
   className?: string,
@@ -16,7 +17,7 @@ export default function GameHeader ({ className = '', data, onBookmark }: GamePr
       </div>
       <div className="flex flex-col flex-grow justify-end gap-4">
         <h1 className="text-2xl font-semibold">
-          {data.name}
+          {data.name} {data.fixed ? <BookmarkIcon className="size-5" /> : null}
         </h1>
         <div className="field flex flex-col">
           <span className="font-semibold text-sm">Release date</span>

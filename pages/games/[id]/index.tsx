@@ -40,12 +40,10 @@ export default function GameDetail ({ id, data, metadata, error }: GameDetailPro
     if (!game.state.error) setEditModal(false)
   }
 
-  /*
   async function handleBookmark () {
     // Send request
     await game.update({ fixed: !game.state.data?.fixed })
   }
-  */
 
   async function handleDelete () {
     // Send request
@@ -77,7 +75,9 @@ export default function GameDetail ({ id, data, metadata, error }: GameDetailPro
       <HeaderPortal>
         <GameMenu
           onEdit={() => setEditModal(true)}
-          onDelete={() => setDeleteModal(true)} />
+          onDelete={() => setDeleteModal(true)}
+          onBookmark={handleBookmark}
+          isBookmarked={game.state.data.fixed || false} />
       </HeaderPortal>
 
       <Modal backdrop="blur" isOpen={showEditModal} onClose={() => setEditModal(false)}>

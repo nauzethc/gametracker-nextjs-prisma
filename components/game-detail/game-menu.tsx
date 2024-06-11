@@ -7,19 +7,25 @@ import {
   DropdownTrigger
 } from '@nextui-org/react'
 import {
+  BookmarkIcon,
   EllipsisVerticalIcon,
   PencilIcon,
   TrashIcon
 } from '@heroicons/react/24/solid'
 
 type GameMenuProps = {
+  isBookmarked?: boolean
   onEdit?: Function
   onDelete?: Function
+  onBookmark?: Function
 }
 
-export default function GameMenu ({ onEdit, onDelete }: GameMenuProps) {
+export default function GameMenu ({ onEdit, onDelete, onBookmark, isBookmarked }: GameMenuProps) {
   function handleAction (key: Key) {
     switch (key) {
+      case 'bookmark':
+        onBookmark && onBookmark()
+        break
       case 'edit':
         onEdit && onEdit()
         break
@@ -36,6 +42,13 @@ export default function GameMenu ({ onEdit, onDelete }: GameMenuProps) {
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="game actions" onAction={handleAction}>
+        <DropdownItem
+          key="bookmark"
+          color={isBookmarked ? 'primary' : undefined}
+          className={isBookmarked ? 'text-primary' : ''}
+          startContent={<BookmarkIcon className="size-5" />}>
+          Bookmark
+        </DropdownItem>
         <DropdownItem
           key="edit"
           startContent={<PencilIcon className="size-5" />}>
