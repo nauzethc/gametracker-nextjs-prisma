@@ -22,7 +22,6 @@ export default function PlatformsChart ({ platforms }: PlatformsChartProps) {
   const maxHours = Math.max(...data.map(platform => platform._totalHours), 20)
   const maxCount = Math.max(...data.map(platform => platform._count), 5)
   const { theme } = useTheme()
-  console.log(theme)
   return (
     Array.isArray(data)
       ? <ResponsiveContainer width="100%" height="90%">
