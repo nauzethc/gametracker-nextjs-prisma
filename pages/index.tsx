@@ -89,7 +89,7 @@ export default function HomeView ({
           <SearchResults asTable={showTable} {...games.state.data} />
         </div>
         <Pagination
-          className="col-span-full mt-4"
+          className="col-span-full grid justify-center mt-4"
           page={Number(query?.page ?? 1)}
           pageSize={Number(query?.page_size ?? 10)}
           total={games.state.data ? games.state.data.count : 0}
