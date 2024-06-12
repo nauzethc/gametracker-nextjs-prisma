@@ -22,17 +22,26 @@ import {
   ModalBody,
   ModalFooter
 } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
+import { TokenData } from '../../types/token'
 
 export default function UserButton () {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const { data: session } = useSession()
   const isMatching = useMediaQuery('(max-width: 639px)')
   const { theme, setTheme } = useTheme()
+  const [user, setUser] = useState<TokenData|undefined>()
 
   const handleLogout = () => signOut()
   const handleTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
+
+  useEffect(() => {
+    if (session && session.user) {
+      setUser(session.user as TokenData)
+    }
+  }, [session])
+
   if (!(session && session.user)) return null
 
   return (
@@ -43,14 +52,17 @@ export default function UserButton () {
             radius="full"
             aria-label="user menu"
             className="relative min-w-0 w-10 sm:w-auto sm:pl-10"
+            color="primary"
+            variant="flat"
             isIconOnly={isMatching}>
             <Avatar
-              className="absolute left-0"
+              className="absolute left-1"
+              size="sm"
               showFallback
-              src={session.user.image || undefined}
+              src={user?.picture ?? undefined}
               fallback={<UserCircleIcon className="size-8" />} />
             <span className="hidden sm:block ml-1">
-              {session.user.name ?? session.user.email}
+              {user?.name ?? user?.email}
             </span>
           </Button>
         </DropdownTrigger>
