@@ -219,3 +219,44 @@ ul.comma-list li:last-child::after {
 .background {
   min-height: 24rem;
 }
+
+@keyframes slide {
+	0%, 10% {transform:translateX(-100%);}
+	90%, 100% {transform:translateX(100%);}
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+[role="progressbar"][aria-valuetext="100%"] {
+  @apply rounded-full;
+  box-shadow: 0 0 10px #c99846;
+  content: '';
+}
+[role="progressbar"][aria-valuetext="100%"] > * > .bg-success {
+  @apply relative;
+  @apply bg-gradient-to-r from-[#554023] to-[#c99846];
+}
+[role="progressbar"][aria-valuetext="100%"] > * > .bg-success::after {
+  @apply absolute top-0 left-0 right-0 bottom-0;
+  background: linear-gradient(
+    -45deg,
+    transparent 0%,
+    transparent 15%,
+    white 50%,
+    transparent 85%,
+    transparent 100%
+  );
+  opacity: .3;
+  content: '';
+  animation: slide 5s infinite;
+}
