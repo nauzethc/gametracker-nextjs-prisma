@@ -16,7 +16,7 @@ export default function Rating ({
   const hasHalf = Math.ceil(max - value) - Math.floor(max - value)
   return (
     <div className={`rating flex items-center ${className}`}>
-      {[...new Array(fillStars)].map((_, index) => <StarIcon className={`w-${size} h-${size}`} key={index} />)}
+      {[...new Array(fillStars)].map((_, index) => <StarIcon className={`size-${size}`} key={index} />)}
       {hasHalf
         ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={`size-${size} mask-w-50`}>
             <mask id="halfMask">
@@ -31,7 +31,7 @@ export default function Rating ({
           </svg>
         : null
       }
-      {[...new Array(emptyStars)].map((_, index) => <StarIcon className={`w-${size} h-${size} opacity-30`} key={index} />)}
+      {[...new Array(emptyStars)].map((_, index) => <StarIcon className={`size-${size} opacity-30`} key={index} />)}
     </div>
   )
 }
