@@ -58,6 +58,7 @@ export function parseGameCreate (data: Record<string, any>): GameCreate {
     igdbUrl: data.url,
     fixed: Boolean(data.fixed),
     favorite: Boolean(data.favorite),
+    emulated: Boolean(data.emulated),
 
     // Gameplay
     gameplayType: data.gameplayType,
@@ -80,6 +81,7 @@ export function parseGameUpdate (data: Record<string, any>): GameUpdate {
     // Metadata
     fixed: Boolean(data.fixed),
     favorite: Boolean(data.favorite),
+    emulated: Boolean(data.emulated),
 
     // Gameplay
     gameplayType: data.gameplayType,

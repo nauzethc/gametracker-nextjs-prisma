@@ -8,6 +8,7 @@ import { useImageColors } from '../../hooks/color'
 import Rating from '../common/rating'
 import { getStatusColor } from '../../utils/colors'
 import CardBackground from '../common/card-background'
+import EmulatedFlag from '../common/emulated-flag'
 
 function Bookmark ({ isEnabled = false }: { isEnabled?: boolean | null }) {
   return isEnabled
@@ -52,10 +53,11 @@ export default function GameItem ({ data, onClick }: GameItemProps) {
               <GameplayIcon className={ICON_SIZE} gameplay={data.gameplayType} />
               <span>{capitalize(data.gameplayType)}</span>
             </div>
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <GamepadAltIcon className={ICON_SIZE} />
               <span className="hidden @lg:block">{data.platform.name}</span>
               <span className="block @lg:hidden">{data.platform.abbreviation}</span>
+              <EmulatedFlag show={data.emulated} />
             </div>
             <div className="flex gap-3">
               <ClockIcon className={ICON_SIZE} />

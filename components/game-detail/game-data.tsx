@@ -6,6 +6,7 @@ import Rating from '../common/rating'
 import DateField from '../common/date-field'
 import { Link, Progress } from '@nextui-org/react'
 import { getStatusColor } from '../../utils/colors'
+import EmulatedFlag from '../common/emulated-flag'
 
 type GameDataProps = {
   className?: string,
@@ -107,7 +108,12 @@ export default function GameData ({ className = '', data }: GameDataProps) {
 
       <Stat label="Platform">
         <GamepadAltIcon className="size-6" />
-        <Link href={`/?platformId=${data.platformId}`}>{data.platform.name}</Link>
+        <div className="flex items-center gap-2">
+          <Link href={`/?platformId=${data.platformId}`}>
+            {data.platform.name}
+          </Link>
+          <EmulatedFlag show={data.emulated} />
+        </div>
       </Stat>
 
       <Stat label="Achievements">

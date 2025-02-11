@@ -1,5 +1,5 @@
 import { useForm } from '../../hooks/forms'
-import { Button, DatePicker, Input, Select, SelectItem, Slider, Textarea } from '@nextui-org/react'
+import { Button, Checkbox, DatePicker, Input, Select, SelectItem, Slider, Textarea } from '@nextui-org/react'
 import { ZonedDateTime, parseAbsoluteToLocal } from '@internationalized/date'
 import RatingInput from '../common/rating-input'
 
@@ -13,7 +13,8 @@ export type GameplayData = {
   achievementsTotal?: number,
   achievementsUnlocked?: number,
   comment?: string | null,
-  rating?: number | null
+  rating?: number | null,
+  emulated?: boolean | null
 }
 
 const defaults: GameplayData = {
@@ -26,7 +27,8 @@ const defaults: GameplayData = {
   achievementsTotal: 0,
   achievementsUnlocked: 0,
   comment: '',
-  rating: 0
+  rating: 0,
+  emulated: false
 }
 
 export default function GameForm ({
@@ -46,9 +48,12 @@ export default function GameForm ({
   function handleNumber (field: 'rating'|'progress', value: number) {
     setData({ ...data, [field]: value })
   }
+  function handleBoolean (field: 'emulated', value: boolean) {
+    setData({ ...data, [field]: value })
+  }
 
   return (
-    <form className="grid gap-2" onSubmit={handleSubmit}>
+    <form className="grid gap-2 relative" onSubmit={handleSubmit}>
       <Select
         label="Gameplay type"
         name="gameplayType"
@@ -144,7 +149,14 @@ export default function GameForm ({
             onChange={(value: number) => handleNumber('rating', value)} />
         </div>
       </div>
-      <div className="flex flex-row gap-2 py-2 justify-end">
+      <div className="flex flex-row gap-2 py-2 justify-between">
+        <Checkbox
+          defaultSelected={data.emulated ?? false}
+          onValueChange={checked => handleBoolean('emulated', checked)}
+          aria-label="emulated"
+          name="emulated">
+          Emulated
+        </Checkbox>
         <Button
           aria-label="save"
           type="submit"
