@@ -11,4 +11,4 @@ COPY . .
 RUN npm run build
 
 # Run
-CMD ["npm", "start"]
+CMD ["/bin/bash", "entrypoint.sh"]
