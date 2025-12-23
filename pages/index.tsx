@@ -14,7 +14,7 @@ import { findGames, findGenres, findPlatforms } from '../services/games'
 import { parseGameQuery } from '../utils/games'
 import { HeaderPortal } from '../components/app/header'
 import UserButton from '../components/common/user-button'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import { Platform } from '@prisma/client'
 import { capitalize } from '../utils/strings'
@@ -107,7 +107,7 @@ export default function HomeView ({
 
 export async function getServerSideProps (context: GetServerSidePropsContext) {
   // @ts-ignore
-  const { user } = await unstable_getServerSession(
+  const { user } = await getServerSession(
     context.req,
     context.res,
     authOptions

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { streamGames } from '../../../services/games'
 import { authOptions } from '../auth/[...nextauth]'
 import { transformGameCSV, transformGameListJSON } from '../../../utils/streams'
@@ -13,7 +13,7 @@ export default async function handler (
   res: NextApiResponse<any | error>
 ) {
   // @ts-ignore
-  const { user } = await unstable_getServerSession(req, res, authOptions)
+  const { user } = await getServerSession(req, res, authOptions)
   try {
     switch (req.method) {
       case 'GET': {

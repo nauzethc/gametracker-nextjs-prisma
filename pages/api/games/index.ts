@@ -1,6 +1,6 @@
 import { Game } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { createGame, findGames } from '../../../services/games'
 import { GameQueryParams, GameSearch } from '../../../types/games'
 import { parseGameQuery } from '../../../utils/games'
@@ -15,7 +15,7 @@ export default async function handler (
   res: NextApiResponse<Game | GameSearch | error>
 ) {
   // @ts-ignore
-  const { user } = await unstable_getServerSession(req, res, authOptions)
+  const { user } = await getServerSession(req, res, authOptions)
   try {
     switch (req.method) {
       case 'GET': {

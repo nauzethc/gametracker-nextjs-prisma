@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { findGenres } from '../../../services/games'
 import { authOptions } from '../auth/[...nextauth]'
 
@@ -13,7 +13,7 @@ export default async function handler (
 ) {
   try {
     // @ts-ignore
-    const { user } = await unstable_getServerSession(req, res, authOptions)
+    const { user } = await getServerSession(req, res, authOptions)
     switch (req.method) {
       case 'GET': {
         const genres: string[] = await findGenres(user.id)
