@@ -27,8 +27,15 @@ export interface GameSearch {
 export interface StatusStats {
   status: string,
   _count: { _all: number },
-  _sum: { totalHours: number | null },
-  _avg: { totalHours: number | null }
+  _sum: {
+    totalHours: number | null,
+    achievementsUnlocked: number | null,
+    achievementsTotal: number | null
+  },
+  _avg: {
+    totalHours: number | null,
+    progress: number | null
+  }
 }
 
 export type GameStats = Pick<Game, 'igdbId'|'name'|'cover'> & {

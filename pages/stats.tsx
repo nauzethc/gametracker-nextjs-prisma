@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { GetServerSidePropsContext } from 'next'
 import { findPlatforms, findStats } from '../services/games'
 import { AllStats } from '../types/games'
-import { unstable_getServerSession } from 'next-auth'
+import { getServerSession } from 'next-auth'
 import { authOptions } from './api/auth/[...nextauth]'
 import Error from '../components/common/error'
 import { capitalize } from '../utils/strings'
@@ -134,17 +134,19 @@ export default function StatsView ({
         </div>
 
         <h3 className="text-lg font-semibold border-b-2 -mb-4">Status</h3>
-        <div className="grid items-center lg:grid-cols-2 gap-8">
+        <div className="grid items-centerlg:grid-cols-2 gap-8">
           <div className="grid mx-auto h-128 sm:h-64" style={{ width: '99%' }}>
             <StatusChart status={stats.state.data?.status} />
           </div>
-          <table className="table text-center">
+          <table className="table text-center col-span-full">
             <thead>
               <tr>
                 <th className="text-left">Status</th>
-                <th className="w-32">Average</th>
-                <th className="w-32">Time</th>
-                <th className="w-32">Games</th>
+                <th>Time (avg)</th>
+                <th>Time (total)</th>
+                <th>Games</th>
+                <th>Achievements</th>
+                <th>Completion (avg)</th>
               </tr>
             </thead>
             <tbody>
@@ -159,6 +161,8 @@ export default function StatsView ({
                 <td>{toFixed(status._avg.totalHours)}</td>
                 <td>{status._sum.totalHours}h</td>
                 <td>{status._count._all}</td>
+                <td>{status._sum.achievementsUnlocked} / {status._sum.achievementsTotal}</td>
+                <td>{status._avg.progress}%</td>
               </tr>
               )}
             </tbody>
@@ -214,7 +218,7 @@ export default function StatsView ({
 
 export async function getServerSideProps (context: GetServerSidePropsContext) {
   // @ts-ignore
-  const { user } = await unstable_getServerSession(
+  const { user } = await getServerSession(
     context.req,
     context.res,
     authOptions

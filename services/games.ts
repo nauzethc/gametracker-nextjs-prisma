@@ -181,10 +181,13 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
       _all: true
     },
     _avg: {
-      totalHours: true
+      totalHours: true,
+      progress: true
     },
     _sum: {
-      totalHours: true
+      totalHours: true,
+      achievementsTotal: true,
+      achievementsUnlocked: true
     }
   })
 
@@ -214,20 +217,37 @@ export async function findStats (userId: string, params: StatsQueryParams): Prom
   )
 
   // Get games count and total hours grouped by platform
-  const platforms = await prisma.$queryRaw`
-    SELECT
-      COUNT(*) AS "_count",
-      SUM("total_hours") AS "_totalHours",
-      "userId", "status", "abbreviation", "platforms"."name",
-      "platforms"."igdb_id" AS "igdbId"
-    FROM "games"
-    LEFT JOIN "platforms" ON "games"."platformId" = "platforms"."igdb_id"
-    WHERE "userId" = ${userId}
-    AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
-    AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
-    GROUP BY "platforms"."igdb_id", "userId", "status", "abbreviation", "platforms"."name"
-    ORDER BY 1 DESC
-  `
+  const platforms = await (query.platformId
+    ? prisma.$queryRaw`
+        SELECT
+          COUNT(*) AS "_count",
+          SUM("total_hours") AS "_totalHours",
+          "userId", "status", "abbreviation", "platforms"."name",
+          "platforms"."igdb_id" AS "igdbId"
+        FROM "games"
+        LEFT JOIN "platforms" ON "games"."platformId" = "platforms"."igdb_id"
+        WHERE "userId" = ${userId}
+        AND "platformId" = ${query.platformId}
+        AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
+        AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
+        GROUP BY "platforms"."igdb_id", "userId", "status", "abbreviation", "platforms"."name"
+        ORDER BY 1 DESC
+      `
+    : prisma.$queryRaw`
+        SELECT
+          COUNT(*) AS "_count",
+          SUM("total_hours") AS "_totalHours",
+          "userId", "status", "abbreviation", "platforms"."name",
+          "platforms"."igdb_id" AS "igdbId"
+        FROM "games"
+        LEFT JOIN "platforms" ON "games"."platformId" = "platforms"."igdb_id"
+        WHERE "userId" = ${userId}
+        AND "started_on" >= ${query.startedOn?.gte ?? new Date('1970-01-01')}
+        AND "started_on" <= ${query.startedOn?.lte ?? new Date()}
+        GROUP BY "platforms"."igdb_id", "userId", "status", "abbreviation", "platforms"."name"
+        ORDER BY 1 DESC
+      `
+  )
 
   return {
     games,
