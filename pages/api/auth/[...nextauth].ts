@@ -12,7 +12,8 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID ?? '',
-      clientSecret: process.env.GITHUB_CLIENT_SECRET ?? ''
+      clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
+      issuer: 'https://github.com/login/oauth'
     }),
     TwitchProvider({
       clientId: process.env.TWITCH_CLIENT_ID ?? '',
